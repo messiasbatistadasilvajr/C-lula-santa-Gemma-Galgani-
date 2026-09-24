@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7B1113"/>
+      <stop offset="50%" stop-color="#580C14"/>
+      <stop offset="100%" stop-color="#36070D"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF0BE"/>
+      <stop offset="50%" stop-color="#E5C158"/>
+      <stop offset="100%" stop-color="#B8860B"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="42%" r="50%">
+      <stop offset="0%" stop-color="#E5C158" stop-opacity="0.35"/>
+      <stop offset="60%" stop-color="#B8860B" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#7B1113" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  
+  <!-- Subtle Border Inset -->
+  <rect x="16" y="16" width="480" height="480" rx="96" fill="none" stroke="url(#gold)" stroke-width="2.5" stroke-opacity="0.35"/>
+  <circle cx="256" cy="220" r="160" fill="url(#halo)"/>
+
+  <!-- Sacred Cross (Tau / Latin Fusion with Lily petals) -->
+  <g filter="url(#shadow)">
+    <!-- Halo ring around intersection -->
+    <circle cx="256" cy="190" r="48" fill="none" stroke="url(#gold)" stroke-width="4" stroke-opacity="0.75" stroke-dasharray="8 6"/>
+
+    <!-- Vertical Beam -->
+    <path d="M246 90 L266 90 L264 360 L248 360 Z" fill="url(#gold)"/>
+    <polygon points="256,76 244,92 268,92" fill="url(#gold)"/>
+    
+    <!-- Horizontal Beam -->
+    <path d="M150 180 L362 180 L362 200 L150 200 Z" fill="url(#gold)"/>
+    <polygon points="138,190 152,178 152,202" fill="url(#gold)"/>
+    <polygon points="374,190 360,178 360,202" fill="url(#gold)"/>
+
+    <!-- Lily of Saint Gemma (Purity and Passion) at Base -->
+    <path d="M256 310 C240 280 208 270 202 290 C196 310 226 332 256 370 C286 332 316 310 310 290 C304 270 272 280 256 310 Z" fill="url(#gold)" opacity="0.95"/>
+    <path d="M256 325 C250 285 235 250 256 220 C277 250 262 285 256 325 Z" fill="#FFF8E7"/>
+
+    <!-- Dove of Shalom (Peace) hovering in light -->
+    <path d="M256 128 C266 112 286 104 300 110 C290 120 282 126 276 138 C294 134 316 138 324 150 C306 150 288 146 274 152 C270 162 264 170 256 174 C248 170 242 162 238 152 C224 146 206 150 188 150 C196 138 218 134 236 138 C230 126 222 120 212 110 C226 104 246 112 256 128 Z" fill="#FFFFFF" opacity="0.95"/>
+  </g>
+
+  <!-- Typography at bottom -->
+  <text x="256" y="420" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="700" letter-spacing="4" fill="url(#gold)">SANTA GEMMA</text>
+  <text x="256" y="450" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" letter-spacing="6" fill="#FFF0BE" opacity="0.8">SHALOM</text>
+</svg>

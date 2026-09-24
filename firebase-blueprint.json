@@ -1,0 +1,196 @@
+{
+  "entities": {
+    "userProfile": {
+      "title": "Perfil do Usuário",
+      "description": "Dados do membro da célula Santa Gemma Galgani",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 100, "minLength": 2 },
+        "email": { "type": "string", "maxLength": 120 },
+        "avatarUrl": { "type": "string", "maxLength": 500 },
+        "role": { "type": "string", "enum": ["membro", "formador", "admin"] },
+        "birthday": { "type": "string", "maxLength": 20 },
+        "ministry": { "type": "string", "maxLength": 100 },
+        "cellName": { "type": "string", "maxLength": 100 },
+        "joinedDate": { "type": "string", "maxLength": 20 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "bio": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["id", "name", "email", "role"]
+    },
+    "communityPost": {
+      "title": "Postagem da Comunidade",
+      "description": "Publicação de partilha, oração ou aviso no mural da célula",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "authorId": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "maxLength": 100 },
+        "authorRole": { "type": "string", "enum": ["membro", "formador", "admin"] },
+        "authorAvatar": { "type": "string", "maxLength": 500 },
+        "type": { "type": "string", "enum": ["reflexao", "oracao", "testemunho", "aviso", "foto", "momento"] },
+        "title": { "type": "string", "maxLength": 200 },
+        "content": { "type": "string", "maxLength": 5000, "minLength": 2 },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "tag": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string", "maxLength": 100 },
+        "likesCount": { "type": "number" },
+        "commentsCount": { "type": "number" }
+      },
+      "required": ["id", "authorId", "authorName", "content", "type"]
+    },
+    "postComment": {
+      "title": "Comentário da Postagem",
+      "description": "Comentário fraterno no mural",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "authorId": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "maxLength": 100 },
+        "authorAvatar": { "type": "string", "maxLength": 500 },
+        "content": { "type": "string", "maxLength": 1000, "minLength": 1 },
+        "createdAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "authorId", "authorName", "content"]
+    },
+    "prayerIntention": {
+      "title": "Intenção de Oração",
+      "description": "Pedido de oração na cadeia de intercessão da célula",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "authorId": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "maxLength": 100 },
+        "authorRole": { "type": "string", "enum": ["membro", "formador", "admin"] },
+        "category": { "type": "string", "enum": ["familia", "saude", "vocacional", "espiritual", "conversao", "trabalho", "outros"] },
+        "content": { "type": "string", "maxLength": 2000, "minLength": 3 },
+        "prayerCount": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 100 },
+        "urgent": { "type": "boolean" },
+        "answered": { "type": "boolean" }
+      },
+      "required": ["id", "authorId", "authorName", "category", "content"]
+    },
+    "calendarEvent": {
+      "title": "Evento e Encontro da Célula",
+      "description": "Encontro semanal, missa, retiro ou vigília",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 150, "minLength": 2 },
+        "type": { "type": "string", "enum": ["encontro", "missa", "formacao", "retiro", "evento", "escala"] },
+        "date": { "type": "string", "maxLength": 30 },
+        "time": { "type": "string", "maxLength": 20 },
+        "location": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "leader": { "type": "string", "maxLength": 100 },
+        "attendingCount": { "type": "number" },
+        "maybeCount": { "type": "number" },
+        "declinedCount": { "type": "number" }
+      },
+      "required": ["id", "title", "type", "date", "time", "location"]
+    },
+    "chatMessage": {
+      "title": "Mensagem de Chat",
+      "description": "Mensagem em canal fraterno da célula",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "channelId": { "type": "string", "maxLength": 50 },
+        "senderId": { "type": "string", "maxLength": 128 },
+        "senderName": { "type": "string", "maxLength": 100 },
+        "senderRole": { "type": "string", "enum": ["membro", "formador", "admin"] },
+        "senderAvatar": { "type": "string", "maxLength": 500 },
+        "text": { "type": "string", "maxLength": 2000, "minLength": 1 },
+        "timestamp": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "channelId", "senderId", "senderName", "text"]
+    },
+    "cellNotice": {
+      "title": "Aviso da Célula",
+      "description": "Comunicação oficial da coordenação ou formador",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 150 },
+        "content": { "type": "string", "maxLength": 3000 },
+        "priority": { "type": "string", "enum": ["alta", "normal", "baixa"] },
+        "category": { "type": "string", "maxLength": 50 },
+        "date": { "type": "string", "maxLength": 30 },
+        "author": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "title", "content", "priority", "category"]
+    },
+    "cellSong": {
+      "title": "Cântico do Cancioneiro",
+      "description": "Cântico com letra e cifras para louvor e adoração",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 150 },
+        "artist": { "type": "string", "maxLength": 100 },
+        "category": { "type": "string", "enum": ["louvor", "adoracao", "espirito_santo", "mariano", "santa_gemma", "comunhao", "perdao"] },
+        "lyrics": { "type": "string", "maxLength": 10000 },
+        "key": { "type": "string", "maxLength": 10 },
+        "suggestedMoment": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "title", "category", "lyrics"]
+    },
+    "meetingScale": {
+      "title": "Escala de Serviços & Roteiro",
+      "description": "Escalas de serviço (Música, Acolhida, Lanche, Louvor) e roteiro do encontro",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "meetingDate": { "type": "string", "maxLength": 30 },
+        "theme": { "type": "string", "maxLength": 150 },
+        "animator": { "type": "string", "maxLength": 100 },
+        "musicLeader": { "type": "string", "maxLength": 100 },
+        "welcomeLeader": { "type": "string", "maxLength": 100 },
+        "snackLeader": { "type": "string", "maxLength": 100 },
+        "intercessionLeader": { "type": "string", "maxLength": 100 },
+        "notes": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["id", "meetingDate", "theme"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "userProfile",
+      "description": "Perfis dos membros da célula"
+    },
+    "/posts/{postId}": {
+      "schema": "communityPost",
+      "description": "Publicações do mural comunitário"
+    },
+    "/posts/{postId}/comments/{commentId}": {
+      "schema": "postComment",
+      "description": "Comentários em postagens da célula"
+    },
+    "/prayers/{prayerId}": {
+      "schema": "prayerIntention",
+      "description": "Intenções da cadeia de intercessão da célula"
+    },
+    "/events/{eventId}": {
+      "schema": "calendarEvent",
+      "description": "Encontros e eventos do calendário da célula"
+    },
+    "/chats/{channelId}/messages/{messageId}": {
+      "schema": "chatMessage",
+      "description": "Mensagens de chat dos canais fraternos"
+    },
+    "/notices/{noticeId}": {
+      "schema": "cellNotice",
+      "description": "Avisos oficiais da coordenação da célula"
+    },
+    "/songs/{songId}": {
+      "schema": "cellSong",
+      "description": "Cânticos do Cancioneiro da célula"
+    },
+    "/scales/{scaleId}": {
+      "schema": "meetingScale",
+      "description": "Escalas de serviço e roteiro dos encontros"
+    }
+  }
+}

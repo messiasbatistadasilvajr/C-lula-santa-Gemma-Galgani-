@@ -1,0 +1,6 @@
+{
+  "name": "Santa Gemma Galgani",
+  "description": "Plataforma móvel privada e PWA para célula da Comunidade Católica Shalom com mural, intercessão, agenda e formação.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

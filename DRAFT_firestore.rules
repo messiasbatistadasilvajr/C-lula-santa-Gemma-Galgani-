@@ -1,0 +1,136 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net: Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper Primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isCurrentUser(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'messiasbjunior76@gmail.com' ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    function isFormadorOrAdmin() {
+      return isSignedIn() && (
+        isAdmin() ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'formador'])
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Connection test document
+    match /test/{testId} {
+      allow read: if true;
+    }
+
+    // USERS COLLECTION
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isCurrentUser(userId) &&
+        request.resource.data.id == userId &&
+        request.resource.data.name is string && request.resource.data.name.size() <= 100 &&
+        request.resource.data.role in ['membro', 'formador', 'admin'];
+      allow update: if isCurrentUser(userId) && (
+        // Regular members cannot escalate role unless admin
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']) || isAdmin())
+      );
+      allow delete: if isAdmin();
+    }
+
+    // POSTS COLLECTION
+    match /posts/{postId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() &&
+        request.resource.data.authorId == request.auth.uid &&
+        request.resource.data.content is string && request.resource.data.content.size() <= 5000;
+      allow update: if isSignedIn() && (
+        request.auth.uid == resource.data.authorId ||
+        isAdmin() ||
+        // Like toggle
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likesCount', 'hasLiked'])
+      );
+      allow delete: if isSignedIn() && (request.auth.uid == resource.data.authorId || isAdmin());
+
+      match /comments/{commentId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() &&
+          request.resource.data.authorId == request.auth.uid &&
+          request.resource.data.content is string && request.resource.data.content.size() <= 1000;
+        allow delete: if isSignedIn() && (request.auth.uid == resource.data.authorId || isAdmin());
+      }
+    }
+
+    // PRAYERS COLLECTION
+    match /prayers/{prayerId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() &&
+        request.resource.data.authorId == request.auth.uid &&
+        request.resource.data.content is string && request.resource.data.content.size() <= 2000;
+      allow update: if isSignedIn() && (
+        request.auth.uid == resource.data.authorId ||
+        isAdmin() ||
+        // Incrementar contagem de oração ou marcar como respondida
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['prayerCount', 'userPrayed']) ||
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['answered'])
+      );
+      allow delete: if isSignedIn() && (request.auth.uid == resource.data.authorId || isAdmin());
+    }
+
+    // EVENTS & SCALES
+    match /events/{eventId} {
+      allow read: if isSignedIn();
+      allow create, delete: if isFormadorOrAdmin();
+      allow update: if isSignedIn() && (
+        isFormadorOrAdmin() ||
+        // RSVP toggle
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rsvpStatus', 'attendingCount', 'maybeCount', 'declinedCount'])
+      );
+    }
+
+    // CHAT MESSAGES
+    match /chats/{channelId}/messages/{messageId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() &&
+        request.resource.data.senderId == request.auth.uid &&
+        request.resource.data.text is string && request.resource.data.text.size() <= 2000;
+      allow delete: if isSignedIn() && (request.auth.uid == resource.data.senderId || isAdmin());
+    }
+
+    // NOTICES
+    match /notices/{noticeId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isFormadorOrAdmin();
+    }
+
+    // CANCIONEIRO (SONGS)
+    match /songs/{songId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isFormadorOrAdmin();
+    }
+
+    // SCALES & ROTEIRO
+    match /scales/{scaleId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isFormadorOrAdmin();
+    }
+  }
+}
