@@ -136,9 +136,9 @@ export const SimuladorPermissoes: React.FC<SimuladorPermissoesProps> = ({
     { feature: 'Adicionar Fotos à Galeria', membro: true, formador: true, admin: true },
     { feature: 'Publicar Aviso Oficial no Mural', membro: false, formador: true, admin: true },
     { feature: 'Agendar Encontros e Eventos', membro: false, formador: true, admin: true },
-    { feature: 'Definir Escalas de Serviço', membro: false, formador: false, admin: true },
+    { feature: 'Definir Escalas de Serviço', membro: false, formador: true, admin: true },
     { feature: 'Avisos com Prioridade Alta / Urgente', membro: false, formador: true, admin: true },
-    { feature: 'Moderação de Canais do Chat', membro: false, formador: false, admin: true },
+    { feature: 'Moderação de Canais do Chat & Ofertas', membro: false, formador: true, admin: true },
   ];
 
   return (
@@ -340,14 +340,14 @@ export const SimuladorPermissoes: React.FC<SimuladorPermissoesProps> = ({
             </div>
           </button>
 
-          {/* Test Button 3: Moderação de Canais do Chat */}
+          {/* Test Button 3: Moderação de Canais do Chat & Ofertas */}
           <button
             type="button"
             onClick={() => runTest(
               'Moderação Geral e Canais de Liderança',
-              ['admin'],
-              'Permissão CONCEDIDA! Coordenação tem acesso completo aos canais restritos e moderação da célula.',
-              'Acesso BLOQUEADO! Moderação é exclusiva da Coordenação Geral / Administrador da Célula.',
+              ['admin', 'formador'],
+              'Permissão CONCEDIDA! Coordenadores, Administradores e Formadores (Cristiane Alves e Francisco José) têm acesso total aos canais e moderação da célula.',
+              'Acesso BLOQUEADO! Moderação é exclusiva da Coordenação, Administração e Formação da Célula.',
               'chat'
             )}
             className="w-full flex items-center justify-between p-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/70 hover:border-[#7B1113]/30 transition shadow-2xs active:scale-[0.98] cursor-pointer group text-left"
@@ -358,15 +358,15 @@ export const SimuladorPermissoes: React.FC<SimuladorPermissoesProps> = ({
               </div>
               <div>
                 <h4 className="text-xs font-bold text-[#241E1C] group-hover:text-[#7B1113] transition">
-                  Testar: Moderação de Canais
+                  Testar: Moderação de Canais & Ofertas
                 </h4>
                 <p className="text-[10px] text-[#70645E]">
-                  Requer: <strong>Coordenação / Admin</strong>
+                  Requer: <strong>Coordenação / Admin</strong> ou <strong>Formador</strong>
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-1 text-[11px] font-bold">
-              {currentRole === 'admin' ? (
+              {['admin', 'formador'].includes(currentRole) ? (
                 <span className="flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                   <Unlock className="w-3 h-3" /> Liberado
                 </span>

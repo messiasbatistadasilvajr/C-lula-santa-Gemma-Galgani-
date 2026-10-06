@@ -26,6 +26,7 @@ interface EscalasProps {
   onGenerateWhatsApp: (scaleId?: string) => string;
   getWhatsAppShareUrl: (scaleId?: string) => string;
   onBack: () => void;
+  onNavigate?: (tab: string) => void;
 }
 
 export const Escalas: React.FC<EscalasProps> = ({
@@ -36,6 +37,7 @@ export const Escalas: React.FC<EscalasProps> = ({
   onGenerateWhatsApp,
   getWhatsAppShareUrl,
   onBack,
+  onNavigate,
 }) => {
   const [selectedScaleIndex, setSelectedScaleIndex] = useState(0);
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
@@ -231,6 +233,29 @@ export const Escalas: React.FC<EscalasProps> = ({
         </div>
       </div>
 
+      {/* Seletor de Escalas (quando houver mais de 1 escala cadastrada) */}
+      {scales.length > 1 && (
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+          {scales.map((sc, idx) => {
+            const isSelected = selectedScaleIndex === idx;
+            return (
+              <button
+                key={sc.id}
+                type="button"
+                onClick={() => setSelectedScaleIndex(idx)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer active:scale-95 ${
+                  isSelected
+                    ? 'bg-[#7B1113] text-white shadow-xs'
+                    : 'bg-white/90 text-[#554741] border border-[#EDE8E0] hover:bg-white'
+                }`}
+              >
+                {sc.meetingDate}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {/* Hero Header Card */}
       <div className="p-4 rounded-2xl bg-linear-to-br from-[#7B1113] to-[#4A0A0C] text-white shadow-md border border-[#E5C158]/30 relative overflow-hidden">
         <div className="relative z-10 space-y-2">
@@ -256,6 +281,17 @@ export const Escalas: React.FC<EscalasProps> = ({
             <p className="text-[11px] text-[#F3E7C4]/80 italic bg-black/20 p-2 rounded-lg">
               📌 {currentScale.notes}
             </p>
+          )}
+
+          {onNavigate && (
+            <button
+              type="button"
+              onClick={() => onNavigate('modo-encontro')}
+              className="w-full mt-2 py-2 px-3 rounded-xl bg-[#E5C158] hover:bg-yellow-400 text-[#36070D] font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition cursor-pointer"
+            >
+              <Clock className="w-3.5 h-3.5 text-[#36070D]" />
+              <span>Conduzir Este Encontro no Modo Ao Vivo ⏱️</span>
+            </button>
           )}
         </div>
       </div>
@@ -395,7 +431,7 @@ export const Escalas: React.FC<EscalasProps> = ({
                 <input
                   type="text"
                   required
-                  placeholder="Ex: Quinta-feira, 03 de Outubro • 19:30"
+                  placeholder="Ex: Segunda-feira ou Sexta-feira • 19:00 às 21:00"
                   value={newMeetingDate}
                   onChange={e => setNewMeetingDate(e.target.value)}
                   className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"

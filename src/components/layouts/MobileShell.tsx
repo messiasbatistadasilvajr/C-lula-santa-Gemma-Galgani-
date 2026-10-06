@@ -5,6 +5,7 @@ import { SecondaryMenuSheet } from './SecondaryMenuSheet';
 import { PWAInstallBanner } from '../common/PWAInstallBanner';
 import { OfflineIndicator } from '../common/OfflineIndicator';
 import { ParallaxSantaGemmaBg } from '../common/ParallaxSantaGemmaBg';
+import { CellReminderNotifier } from '../common/CellReminderNotifier';
 import { UserRole } from '../../types';
 
 interface MobileShellProps {
@@ -52,6 +53,12 @@ export const MobileShell: React.FC<MobileShellProps> = ({
       <div className="w-full max-w-md min-h-screen bg-[#FBF9F6]/80 backdrop-blur-md shadow-2xl flex flex-col relative border-x border-[#E0D8CB]/70 z-10">
         {/* Offline indicator banner */}
         <OfflineIndicator />
+
+        {/* Agendador Global de Lembretes Push e Locais (Segundas e Sextas às 19:00) */}
+        <CellReminderNotifier
+          onNavigateToAgenda={() => onTabChange('agenda')}
+          onNavigateToLiveMeeting={() => onTabChange('modo-encontro')}
+        />
 
         {/* Mobile Header */}
         <div className="relative z-30">

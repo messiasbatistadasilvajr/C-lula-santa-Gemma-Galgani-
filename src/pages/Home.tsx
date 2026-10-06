@@ -14,10 +14,20 @@ import {
   CheckCircle2,
   Send,
   Check,
-  Maximize2
+  Maximize2,
+  Radio,
+  Flame,
+  Award,
+  QrCode,
+  BellRing
 } from 'lucide-react';
-import { CommunityPost, PostType, UserRole } from '../types';
+import { CommunityPost, PostType, UserRole, DonorProfile } from '../types';
 import { Modal } from '../components/common/Modal';
+import {
+  getNextCellMeeting,
+  requestNotificationPermission,
+  sendCellPushNotification,
+} from '../services/cellReminders';
 
 interface HomeProps {
   currentUser: {
@@ -26,6 +36,7 @@ interface HomeProps {
     avatarUrl: string;
   };
   posts: CommunityPost[];
+  donors?: DonorProfile[];
   onLikePost: (postId: string) => void;
   onAddComment: (postId: string, text: string) => void;
   onAddPost: (post: Omit<CommunityPost, 'id' | 'createdAt' | 'likesCount' | 'hasLiked' | 'commentsCount' | 'comments'>) => void;
@@ -36,6 +47,7 @@ interface HomeProps {
 export const Home: React.FC<HomeProps> = ({
   currentUser,
   posts,
+  donors = [],
   onLikePost,
   onAddComment,
   onAddPost,
@@ -154,23 +166,60 @@ export const Home: React.FC<HomeProps> = ({
           <p className="text-xs text-[#FFF0BE]/90 mt-1 leading-relaxed">
             "Que a paz de Cristo reine em seus corações e a doce intercessão de Santa Gemma Galgani guarde a nossa célula."
           </p>
+
+          <div className="mt-3 pt-2.5 border-t border-white/15 flex flex-wrap items-center justify-between gap-2">
+            {onNavigate && (
+              <button
+                type="button"
+                onClick={() => onNavigate('perfil')}
+                className="text-[11px] font-bold text-[#FFF0BE] hover:text-white underline underline-offset-2 cursor-pointer"
+              >
+                ✏️ Trocar meu nome ({currentUser.name.split(' ')[0]})
+              </button>
+            )}
+            <a
+              href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                '🌹 *Shalom, irmãos da Célula Santa Gemma Galgani!* ✝️\n\nAcesse agora o nosso *Aplicativo Oficial da Célula* (Mural, Intercessão, Agenda, Terço Virtual e Caixinha PIX):\n👉 https://ais-pre-kgz6f3aqokvkmkzezbfub7-154268790842.us-east1.run.app'
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-2.5 py-1 rounded-lg bg-[#E5C158] hover:bg-[#f2cf66] text-[#36070D] text-[10px] font-extrabold flex items-center gap-1 shadow-2xs transition cursor-pointer"
+            >
+              <Share2 className="w-3 h-3" />
+              <span>Enviar no Grupo do WhatsApp</span>
+            </a>
+          </div>
         </div>
       </section>
 
       {/* 2. Intenção do Dia / Reflexão Espiritual */}
-      <section className="rounded-2xl bg-white/90 backdrop-blur-md p-4 shadow-sm border border-white/60 relative">
-        <div className="flex items-center gap-2 mb-2 text-[#7B1113]">
-          <Quote className="w-4 h-4 fill-[#7B1113]/20" />
-          <h3 className="text-xs font-bold uppercase tracking-wider font-cinzel">
-            Intenção do Dia • Santa Gemma
-          </h3>
+      <section 
+        onClick={() => onNavigate && onNavigate('santagemma')}
+        role="button"
+        tabIndex={0}
+        aria-label="Conhecer Santa Gemma Galgani em detalhe com efeito vidro fosco"
+        className="rounded-2xl bg-white/90 backdrop-blur-md p-4 shadow-sm border border-white/60 relative cursor-pointer hover:border-[#E5C158] hover:shadow-md transition active:scale-[0.99] group"
+      >
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2 text-[#7B1113]">
+            <Quote className="w-4 h-4 fill-[#7B1113]/20" />
+            <h3 className="text-xs font-bold uppercase tracking-wider font-cinzel">
+              Intenção do Dia • Santa Gemma
+            </h3>
+          </div>
+          <span className="text-[10px] font-bold text-[#7B1113] bg-[#7B1113]/10 px-2 py-0.5 rounded-full flex items-center gap-1 group-hover:bg-[#7B1113] group-hover:text-white transition">
+            <span>Ver Padroeira</span>
+            <ArrowRight className="w-3 h-3" />
+          </span>
         </div>
         <p className="text-xs text-[#3A302C] leading-relaxed italic bg-[#FBF9F5]/90 p-3 rounded-xl border border-[#EDE8E0]">
           "Se verdadeiramente desejas amar a Jesus, aprende primeiro a sofrer por Ele, porque o sofrimento ensina a amar."
         </p>
         <div className="mt-2.5 flex items-center justify-between text-[11px] text-[#70645E]">
           <span className="font-medium text-[#7B1113]">Santa Gemma Galgani</span>
-          <span>Oferecimento das 15h</span>
+          <span className="text-[10px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+            Toque para abrir tela com Vidro Fosco ✨
+          </span>
         </div>
       </section>
 
@@ -180,44 +229,70 @@ export const Home: React.FC<HomeProps> = ({
           <div className="flex items-center gap-1.5 text-[#36070D]">
             <Calendar className="w-4 h-4 text-[#7B1113]" />
             <h3 className="text-xs font-bold uppercase tracking-wider font-cinzel">
-              Próximo Compromisso
+              Encontros da Célula
             </h3>
           </div>
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
-            Nesta Quinta
+          <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+            Segundas & Sextas • 19h às 21h
           </span>
         </div>
 
         <div className="space-y-1.5">
           <h4 className="text-sm font-bold text-[#241E1C]">
-            Encontro Semanal da Célula Santa Gemma
+            Célula Santa Gemma Galgani (Segunda e Sexta-feira)
           </h4>
           <div className="flex flex-wrap items-center gap-3 text-xs text-[#554741] pt-1">
             <span className="flex items-center gap-1 font-semibold text-[#7B1113]">
-              <Clock className="w-3.5 h-3.5" /> 20:00
+              <Clock className="w-3.5 h-3.5" /> 19:00 às 21:00
             </span>
             <span className="flex items-center gap-1 text-[#70645E]">
-              <MapPin className="w-3.5 h-3.5" /> Casa do Gabriel
+              <MapPin className="w-3.5 h-3.5" /> Casa do Gabriel / Comunidade Shalom
             </span>
           </div>
           <p className="text-xs text-[#70645E] line-clamp-2 pt-1 leading-relaxed">
-            Louvor comunitário, oração de escuta, partilha fraterna e lanche comunitário.
+            Toda segunda-feira e sexta-feira das 19h00 às 21h00: Louvor comunitário, oração de escuta, formação, partilha fraterna e comunhão.
           </p>
         </div>
 
-        <div className="mt-3.5 pt-3 border-t border-[#ECE7DF] flex items-center justify-between">
-          <div className="text-[11px] text-[#70645E]">
-            <span className="font-bold text-[#241E1C]">9 membros</span> já confirmaram
-          </div>
+        <div className="mt-3.5 pt-3 border-t border-[#ECE7DF] flex flex-wrap items-center justify-between gap-2">
+          <button
+            type="button"
+            onClick={async () => {
+              const nextInfo = getNextCellMeeting();
+              await requestNotificationPermission();
+              await sendCellPushNotification({
+                title: `🔔 Lembrete Ativado • Segundas e Sextas às 19:00`,
+                body: `Próximo encontro: ${nextInfo.countdownText}. Você será avisado antes das 19:00!`,
+                playSound: true,
+              });
+              showToast(`🔔 Lembrete ativo! Próximo: ${nextInfo.countdownText}`);
+            }}
+            className="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-950 text-[11px] font-bold flex items-center gap-1 border border-amber-300 transition cursor-pointer active:scale-95"
+          >
+            <BellRing className="w-3.5 h-3.5 text-[#7B1113]" />
+            <span>Ativar Alerta 19:00</span>
+          </button>
+
           <button
             type="button"
             onClick={onNavigateToAgenda}
             className="flex items-center gap-1.5 text-xs font-bold text-[#7B1113] hover:text-[#580C14] active:scale-95 transition cursor-pointer"
           >
-            <span>Ver detalhes na agenda</span>
+            <span>Configurar lembretes na agenda</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
+
+        {onNavigate && (
+          <button
+            type="button"
+            onClick={() => onNavigate('modo-encontro')}
+            className="w-full mt-3 py-2 px-3 rounded-xl bg-gradient-to-r from-[#7B1113] to-[#99171C] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-xs hover:bg-[#580C14] active:scale-95 transition cursor-pointer border border-[#E5C158]/40"
+          >
+            <Radio className="w-3.5 h-3.5 text-red-300 animate-pulse" />
+            <span>Abrir Modo Encontro ao Vivo (Cronômetro & Cânticos)</span>
+          </button>
+        )}
       </section>
 
       {/* 3.5 Atalhos Rápidos da Vida Comunitária */}
@@ -230,7 +305,77 @@ export const Home: React.FC<HomeProps> = ({
             <span className="text-[10px] text-[#70645E]">Acesso rápido</span>
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+            <button
+              type="button"
+              onClick={() => onNavigate('membros')}
+              className="p-2.5 rounded-xl bg-gradient-to-b from-amber-50 to-white hover:bg-white border-2 border-[#7B1113]/30 shadow-2xs text-left group transition active:scale-95 flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-7 h-7 rounded-lg bg-[#7B1113] text-[#E5C158] flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform font-bold text-xs">
+                {donors.length || 48}
+              </div>
+              <h4 className="text-[11px] font-bold text-[#7B1113] group-hover:text-[#580C14] transition leading-tight">
+                Membros ({donors.length || 48})
+              </h4>
+              <p className="text-[9px] text-[#554741] font-semibold truncate">Lista & Nasc. 👥</p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate('ofertas')}
+              className="p-2.5 rounded-xl bg-gradient-to-b from-emerald-50 to-white hover:bg-white border border-emerald-300/90 shadow-2xs text-left group transition active:scale-95 flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+                <QrCode className="w-4 h-4 text-emerald-700" />
+              </div>
+              <h4 className="text-[11px] font-bold text-[#241E1C] group-hover:text-[#7B1113] transition leading-tight">
+                Ofertas & PIX
+              </h4>
+              <p className="text-[9px] text-emerald-900 font-medium truncate">Bot WhatsApp 💸</p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate('modo-encontro')}
+              className="p-2.5 rounded-xl bg-gradient-to-b from-red-50 to-white hover:bg-white border border-red-200/80 shadow-2xs text-left group transition active:scale-95 flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-7 h-7 rounded-lg bg-red-100 text-red-700 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+                <Radio className="w-4 h-4 animate-pulse" />
+              </div>
+              <h4 className="text-[11px] font-bold text-[#241E1C] group-hover:text-[#7B1113] transition leading-tight">
+                Ao Vivo
+              </h4>
+              <p className="text-[9px] text-[#70645E] truncate">Modo Encontro ⏱️</p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate('terco')}
+              className="p-2.5 rounded-xl bg-gradient-to-b from-amber-50 to-white hover:bg-white border border-amber-200/80 shadow-2xs text-left group transition active:scale-95 flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-7 h-7 rounded-lg bg-amber-100 text-amber-900 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+                <Flame className="w-4 h-4 text-amber-600" />
+              </div>
+              <h4 className="text-[11px] font-bold text-[#241E1C] group-hover:text-[#7B1113] transition leading-tight">
+                Terço Virtual
+              </h4>
+              <p className="text-[9px] text-[#70645E] truncate">Rosário & Toque 📿</p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate('novena')}
+              className="p-2.5 rounded-xl bg-gradient-to-b from-rose-50 to-white hover:bg-white border border-rose-200/80 shadow-2xs text-left group transition active:scale-95 flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-7 h-7 rounded-lg bg-rose-100 text-rose-900 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+                <Award className="w-4 h-4 text-[#7B1113]" />
+              </div>
+              <h4 className="text-[11px] font-bold text-[#241E1C] group-hover:text-[#7B1113] transition leading-tight">
+                Novena & Graças
+              </h4>
+              <p className="text-[9px] text-[#70645E] truncate">9 Dias & Mural ✨</p>
+            </button>
+
             <button
               type="button"
               onClick={() => onNavigate('escalas')}
@@ -247,20 +392,6 @@ export const Home: React.FC<HomeProps> = ({
 
             <button
               type="button"
-              onClick={() => onNavigate('liturgia')}
-              className="p-2.5 rounded-xl bg-white/90 hover:bg-white border border-[#EDE8E0] shadow-2xs text-left group transition active:scale-95 flex flex-col justify-between cursor-pointer"
-            >
-              <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
-                <Sparkles className="w-4 h-4" />
-              </div>
-              <h4 className="text-[11px] font-bold text-[#241E1C] group-hover:text-[#7B1113] transition leading-tight">
-                Liturgia
-              </h4>
-              <p className="text-[9px] text-[#70645E] truncate">Santo do Dia</p>
-            </button>
-
-            <button
-              type="button"
               onClick={() => onNavigate('cancioneiro')}
               className="p-2.5 rounded-xl bg-white/90 hover:bg-white border border-[#EDE8E0] shadow-2xs text-left group transition active:scale-95 flex flex-col justify-between cursor-pointer"
             >
@@ -271,6 +402,20 @@ export const Home: React.FC<HomeProps> = ({
                 Cânticos
               </h4>
               <p className="text-[9px] text-[#70645E] truncate">Letras & Cifras</p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate('santagemma')}
+              className="p-2.5 rounded-xl bg-gradient-to-br from-white/95 to-[#FFF7ED]/90 hover:bg-white border border-[#FDE68A] shadow-2xs text-left group transition active:scale-95 flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-7 h-7 rounded-lg bg-amber-100 text-[#7B1113] flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform font-cinzel font-bold text-xs">
+                ✝
+              </div>
+              <h4 className="text-[11px] font-bold text-[#7B1113] group-hover:text-[#580C14] transition leading-tight">
+                Sta. Gemma
+              </h4>
+              <p className="text-[9px] text-amber-900 font-medium truncate">Vidro Fosco ✨</p>
             </button>
           </div>
         </section>

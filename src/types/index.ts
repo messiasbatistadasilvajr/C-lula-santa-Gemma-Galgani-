@@ -188,7 +188,7 @@ export interface CellNotice {
 export interface SyncQueueItem {
   id: string;
   action: 'CREATE' | 'UPDATE' | 'DELETE';
-  entity: 'post' | 'prayer' | 'rsvp' | 'message' | 'profile' | 'photo' | 'notice' | 'song' | 'scale';
+  entity: 'post' | 'prayer' | 'rsvp' | 'message' | 'profile' | 'photo' | 'notice' | 'song' | 'scale' | 'event' | 'donor' | 'campaign' | 'donation';
   payload: Record<string, unknown>;
   createdAt: number;
   attempts: number;
@@ -273,4 +273,131 @@ export interface CellSong {
   suggestedMoment: string;// Ex: "Louvor inicial", "Oração de Efusão"
   hasChords?: boolean;
 }
+
+// ---- TERÇO & ROSÁRIO VIRTUAL ----
+export type RosaryType = 'mariano' | 'santa_gemma' | 'misericordia';
+
+export type RosaryMysteryGroup = 'gozosos' | 'dolorosos' | 'gloriosos' | 'luminosos';
+
+export interface RosaryMysteryItem {
+  number: number;
+  title: string;
+  scripture: string;
+  fruit: string;
+  meditation: string;
+}
+
+// ---- NOVENA DE SANTA GEMMA & GRAÇAS ALCANÇADAS ----
+export interface NovenaDayItem {
+  dayNumber: number;
+  title: string;
+  theme: string;
+  scripture: string;
+  meditation?: string;
+  meditacao: string;
+  gemmaQuote: string;
+  prayer: string;
+  intentionPrompt: string;
+}
+
+export type TestimonyCategory = 
+  | 'cura' 
+  | 'familia' 
+  | 'vocacional' 
+  | 'conversao' 
+  | 'trabalho' 
+  | 'espiritual';
+
+export interface GraceTestimony {
+  id: string;
+  authorName: string;
+  authorRole?: UserRole;
+  title: string;
+  story: string;
+  category: TestimonyCategory;
+  date: string;
+  praiseCount: number;
+  hasPraised: boolean;
+}
+
+// ---- MODO ENCONTRO AO VIVO ----
+export interface LiveMeetingStep {
+  id: string;
+  title: string;
+  defaultMinutes: number;
+  description: string;
+  scriptureFocus?: string;
+  tips: string;
+}
+
+// ---- MÓDULO DE ARRECADAÇÃO FINANCEIRA & BOT WHATSAPP (DIZIFY) ----
+export interface DonorProfile {
+  id: string;
+  name: string;
+  phone: string;
+  birthDate: string; // Ex: "14/10/1998" ou "1998-10-14"
+  maritalStatus?: string; // Ex: "Solteiro", "Casado", "Solteira"
+  leadershipBadge?: string; // Ex: "Coordenador & Formador (Admin)"
+  email?: string;
+  totalDonated: number;
+  donationsCount: number;
+  lastDonationAt?: string;
+  createdAt: string;
+}
+
+export type CampaignCategory =
+  | 'retiro'
+  | 'acao_social'
+  | 'manutencao'
+  | 'comunhao_bens'
+  | 'missao';
+
+export interface DonationCampaign {
+  id: string;
+  title: string;
+  description: string;
+  goalAmount: number;
+  currentAmount: number;
+  pixKey: string;
+  deadline: string;
+  category: CampaignCategory;
+  active: boolean;
+}
+
+export type DonationType = 'oferta' | 'comunhao_bens' | 'campanha';
+export type DonationStatus = 'pending' | 'paid' | 'expired';
+export type PaymentGatewayType = 'mercadopago' | 'asaas' | 'pix_direto';
+
+export interface DonationRecord {
+  id: string;
+  donorId: string;
+  donorName: string;
+  donorPhone: string;
+  amount: number;
+  type: DonationType;
+  campaignId?: string;
+  campaignTitle?: string;
+  status: DonationStatus;
+  gateway: PaymentGatewayType;
+  pixCopyPaste: string;
+  externalReference?: string;
+  createdAt: string;
+  paidAt?: string;
+  thankYouSent?: boolean;
+}
+
+export interface WhatsAppBotChatMessage {
+  id: string;
+  sender: 'member' | 'bot';
+  text: string;
+  timestamp: string;
+  pixData?: {
+    donationId: string;
+    amount: number;
+    pixCopyPaste: string;
+    campaignTitle: string;
+    status: DonationStatus;
+  };
+}
+
 

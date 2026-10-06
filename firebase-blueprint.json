@@ -153,6 +153,62 @@
         "notes": { "type": "string", "maxLength": 1000 }
       },
       "required": ["id", "meetingDate", "theme"]
+    },
+    "donorProfile": {
+      "title": "Cadastro de Membro Contribuinte (Dizify)",
+      "description": "Dados do membro para ofertas via WhatsApp e automação de aniversário",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 120, "minLength": 2 },
+        "phone": { "type": "string", "maxLength": 30, "minLength": 8 },
+        "birthDate": { "type": "string", "maxLength": 20 },
+        "email": { "type": "string", "maxLength": 120 },
+        "totalDonated": { "type": "number" },
+        "donationsCount": { "type": "number" },
+        "lastDonationAt": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "name", "phone", "birthDate"]
+    },
+    "donationCampaign": {
+      "title": "Campanha de Arrecadação da Célula",
+      "description": "Campanha específica da célula para ofertas e projetos via WhatsApp",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 150, "minLength": 2 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "goalAmount": { "type": "number" },
+        "currentAmount": { "type": "number" },
+        "pixKey": { "type": "string", "maxLength": 150 },
+        "deadline": { "type": "string", "maxLength": 30 },
+        "category": { "type": "string", "enum": ["retiro", "acao_social", "manutencao", "comunhao_bens", "missao"] },
+        "active": { "type": "boolean" }
+      },
+      "required": ["id", "title", "goalAmount", "currentAmount", "category"]
+    },
+    "donationRecord": {
+      "title": "Registro de Oferta / Doação PIX",
+      "description": "Transação de oferta ou doação gerada via Bot de WhatsApp com status de webhook",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "donorId": { "type": "string", "maxLength": 128 },
+        "donorName": { "type": "string", "maxLength": 120 },
+        "donorPhone": { "type": "string", "maxLength": 30 },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["oferta", "comunhao_bens", "campanha"] },
+        "campaignId": { "type": "string", "maxLength": 128 },
+        "campaignTitle": { "type": "string", "maxLength": 150 },
+        "status": { "type": "string", "enum": ["pending", "paid", "expired"] },
+        "gateway": { "type": "string", "enum": ["mercadopago", "asaas", "pix_direto"] },
+        "pixCopyPaste": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "paidAt": { "type": "string", "maxLength": 50 },
+        "thankYouSent": { "type": "boolean" }
+      },
+      "required": ["id", "donorName", "donorPhone", "amount", "type", "status", "pixCopyPaste"]
     }
   },
   "firestore": {
@@ -191,6 +247,18 @@
     "/scales/{scaleId}": {
       "schema": "meetingScale",
       "description": "Escalas de serviço e roteiro dos encontros"
+    },
+    "/donors/{donorId}": {
+      "schema": "donorProfile",
+      "description": "Membros cadastrados no módulo de arrecadação e aniversariantes"
+    },
+    "/campaigns/{campaignId}": {
+      "schema": "donationCampaign",
+      "description": "Campanhas ativas de arrecadação da célula"
+    },
+    "/donations/{donationId}": {
+      "schema": "donationRecord",
+      "description": "Histórico de ofertas e doações PIX via WhatsApp"
     }
   }
 }

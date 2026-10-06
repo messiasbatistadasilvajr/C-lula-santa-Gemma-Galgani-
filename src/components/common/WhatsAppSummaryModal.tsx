@@ -31,15 +31,12 @@ export const WhatsAppSummaryModal: React.FC<WhatsAppSummaryModalProps> = ({
     }
   };
 
-  const handleOpenWhatsApp = () => {
-    window.open(shareUrl, '_blank', 'noopener,noreferrer');
-  };
-
   return (
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
+      onClick={onClose}
     >
       <div 
         className="w-full max-w-lg bg-[#FAF8F5] rounded-2xl shadow-2xl border border-[#EDE8E0] flex flex-col max-h-[90vh] overflow-hidden"
@@ -63,7 +60,7 @@ export const WhatsAppSummaryModal: React.FC<WhatsAppSummaryModalProps> = ({
           <button
             onClick={onClose}
             type="button"
-            className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/10 active:scale-95 transition"
+            className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/10 active:scale-95 transition cursor-pointer"
             aria-label="Fechar"
           >
             <X className="w-5 h-5" />
@@ -112,14 +109,15 @@ export const WhatsAppSummaryModal: React.FC<WhatsAppSummaryModalProps> = ({
             )}
           </button>
 
-          <button
-            type="button"
-            onClick={handleOpenWhatsApp}
+          <a
+            href={shareUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex-1 py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition shadow-xs cursor-pointer"
           >
             <Share2 className="w-4 h-4" />
             <span>Enviar no WhatsApp</span>
-          </button>
+          </a>
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ import {
   Edit3,
   Image as ImageIcon
 } from 'lucide-react';
-import { UserProfile, UserRole, CommunityPost, PrayerIntention, CalendarEvent } from '../types';
+import { UserProfile, UserRole, CommunityPost, PrayerIntention, CalendarEvent, DonorProfile } from '../types';
 import { getSupabaseStatus } from '../services/supabaseClient';
 import { offlineSyncQueue } from '../storage/syncQueue';
 import { usePWAInstall } from '../hooks/usePWAInstall';
@@ -27,6 +27,7 @@ interface PerfilProps {
   posts: CommunityPost[];
   prayers: PrayerIntention[];
   events: CalendarEvent[];
+  donors?: DonorProfile[];
   onSwitchRole: (role: UserRole) => void;
   onUpdateProfile?: (data: Partial<UserProfile>) => void;
   onResetToMock: () => void;
@@ -44,6 +45,7 @@ export const Perfil: React.FC<PerfilProps> = ({
   posts,
   prayers,
   events,
+  donors = [],
   onSwitchRole,
   onUpdateProfile,
   onResetToMock,
@@ -71,6 +73,7 @@ export const Perfil: React.FC<PerfilProps> = ({
   const [editPhone, setEditPhone] = useState(currentUser.phone || '');
   const [editBirthday, setEditBirthday] = useState(currentUser.birthday || '');
   const [editMinistry, setEditMinistry] = useState(currentUser.ministry || '');
+  const [memberSearch, setMemberSearch] = useState('');
 
   const supabaseStatus = getSupabaseStatus();
   const { isInstallable, isInstalled, install } = usePWAInstall();
@@ -238,6 +241,168 @@ export const Perfil: React.FC<PerfilProps> = ({
           <p className="text-[10px] text-[#70645E]">
             {roleDetails[currentUser.role].desc}
           </p>
+
+          {/* Atalho Rápido da Coordenação & Formadores Oficiais (Acesso Total) */}
+          <div className="pt-2.5 mt-2 border-t border-[#ECE7DF] space-y-2">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7B1113] block">
+              👑 Coordenação, Administração & Formadores (Acesso Total):
+            </span>
+            <div className="grid grid-cols-1 gap-1.5">
+              {[
+                {
+                  name: 'Cristiane Alves Nunes de Oliveira',
+                  birthday: '26/01/1983',
+                  phone: '(85) 98225-0655',
+                  ministry: 'Coordenadora, Administradora & Formadora',
+                  bio: 'Coordenadora, Administradora e Formadora da Célula Santa Gemma Galgani (Acesso Total).',
+                },
+                {
+                  name: 'Francisco José de Oliveira',
+                  birthday: '25/10/1976',
+                  phone: '(85) 99843-3531',
+                  ministry: 'Coordenador, Administrador & Formador',
+                  bio: 'Coordenador, Administrador e Formador da Célula Santa Gemma Galgani (Acesso Total).',
+                },
+              ].map((leader) => {
+                const isActiveLeader = currentUser.name === leader.name;
+                return (
+                  <button
+                    key={leader.phone}
+                    type="button"
+                    onClick={() => {
+                      onSwitchRole('admin');
+                      if (onUpdateProfile) {
+                        onUpdateProfile({
+                          name: leader.name,
+                          birthday: leader.birthday,
+                          phone: leader.phone,
+                          ministry: leader.ministry,
+                          bio: leader.bio,
+                          role: 'admin',
+                        });
+                      }
+                      showToast(`Acesso Total ativado: ${leader.name}`);
+                    }}
+                    className={`w-full text-left px-3 py-2 rounded-xl border text-xs transition flex items-center justify-between cursor-pointer active:scale-[0.99] ${
+                      isActiveLeader
+                        ? 'bg-[#7B1113] text-white border-[#E5C158] shadow-xs'
+                        : 'bg-[#FAF8F5] hover:bg-amber-50/70 text-[#241E1C] border-[#E0D8CB]'
+                    }`}
+                  >
+                    <div className="min-w-0 pr-2">
+                      <p className="font-bold truncate">{leader.name}</p>
+                      <p className={`text-[10px] truncate ${isActiveLeader ? 'text-[#FFF0BE]' : 'text-[#70645E]'}`}>
+                        {leader.ministry} • {leader.phone} • Nasc: {leader.birthday}
+                      </p>
+                    </div>
+                    <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full shrink-0 ${
+                      isActiveLeader
+                        ? 'bg-[#E5C158] text-[#36070D]'
+                        : 'bg-amber-100 text-amber-900'
+                    }`}>
+                      {isActiveLeader ? '✓ Ativo' : 'Ativar'}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Lista Completa dos 48 Irmãos Salvos no Banco de Dados */}
+          <div className="pt-3 mt-2 border-t border-[#ECE7DF] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#36070D]">
+                👥 Todos os {donors.length} Nomes Salvos no Banco:
+              </span>
+              {onNavigate && (
+                <button
+                  type="button"
+                  onClick={() => onNavigate('membros')}
+                  className="text-[10px] font-bold text-[#7B1113] underline cursor-pointer"
+                >
+                  Abrir Painel Completo ({donors.length}) &rarr;
+                </button>
+              )}
+            </div>
+
+            <input
+              type="text"
+              placeholder="🔍 Buscar seu nome na lista dos 48 irmãos..."
+              value={memberSearch}
+              onChange={e => setMemberSearch(e.target.value)}
+              className="w-full rounded-xl border border-[#D9D0C5] bg-[#FAF8F5] px-3 py-1.5 text-xs text-[#241E1C] focus:outline-[#7B1113]"
+            />
+
+            <div className="max-h-52 overflow-y-auto space-y-1.5 pr-1">
+              {donors
+                .filter(d => {
+                  if (!memberSearch.trim()) return true;
+                  const q = memberSearch.toLowerCase();
+                  return (
+                    d.name.toLowerCase().includes(q) ||
+                    d.phone.toLowerCase().includes(q) ||
+                    d.birthDate.toLowerCase().includes(q)
+                  );
+                })
+                .map(member => {
+                  const isMe = currentUser.name === member.name;
+                  const isLeader =
+                    member.name === 'Cristiane Alves Nunes de Oliveira' ||
+                    member.name === 'Francisco José de Oliveira';
+                  return (
+                    <button
+                      key={member.id}
+                      type="button"
+                      onClick={() => {
+                        const targetRole: UserRole = isLeader ? 'admin' : 'membro';
+                        onSwitchRole(targetRole);
+                        if (onUpdateProfile) {
+                          onUpdateProfile({
+                            name: member.name,
+                            birthday: member.birthDate,
+                            phone: member.phone,
+                            ministry: isLeader
+                              ? 'Coordenação, Administração & Formação'
+                              : 'Membro da Célula Santa Gemma Galgani',
+                            bio: isLeader
+                              ? 'Coordenador(a), Administrador(a) e Formador(a) da Célula Santa Gemma Galgani.'
+                              : 'Membro da Célula Santa Gemma Galgani na Comunidade Católica Shalom.',
+                            role: targetRole,
+                          });
+                        }
+                        showToast(
+                          `Perfil selecionado: ${member.name} (${isLeader ? 'Admin & Formador' : 'Membro'})`
+                        );
+                      }}
+                      className={`w-full text-left px-2.5 py-2 rounded-xl border text-xs transition flex items-center justify-between cursor-pointer ${
+                        isMe
+                          ? 'bg-[#7B1113] text-white border-[#E5C158]'
+                          : 'bg-white hover:bg-[#FAF8F5] text-[#241E1C] border-[#ECE7DF]'
+                      }`}
+                    >
+                      <div className="min-w-0 pr-2">
+                        <p className="font-bold truncate">{member.name}</p>
+                        <p className={`text-[10px] truncate ${isMe ? 'text-[#FFF0BE]' : 'text-[#70645E]'}`}>
+                          {member.phone} • Nasc: {member.birthDate}
+                          {member.maritalStatus ? ` • ${member.maritalStatus}` : ''}
+                        </p>
+                      </div>
+                      <span
+                        className={`text-[9px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
+                          isMe
+                            ? 'bg-[#E5C158] text-[#36070D]'
+                            : isLeader
+                            ? 'bg-amber-100 text-amber-900'
+                            : 'bg-rose-50 text-rose-900'
+                        }`}
+                      >
+                        {isMe ? '✓ Em uso' : isLeader ? '👑 Admin/Formador' : 'Membro'}
+                      </span>
+                    </button>
+                  );
+                })}
+            </div>
+          </div>
         </div>
       </section>
 

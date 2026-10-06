@@ -10,7 +10,8 @@ import {
   Volume2, 
   FileText,
   Flame,
-  ChevronRight
+  ChevronRight,
+  Radio
 } from 'lucide-react';
 import { CellSong, SongCategory, UserRole } from '../types';
 
@@ -19,6 +20,7 @@ interface CancioneiroProps {
   currentRole: UserRole;
   onAddSong: (song: Omit<CellSong, 'id'>) => void;
   onBack: () => void;
+  onNavigate?: (tab: string) => void;
 }
 
 const CATEGORY_LABELS: Record<SongCategory, { label: string; color: string }> = {
@@ -64,6 +66,7 @@ export const Cancioneiro: React.FC<CancioneiroProps> = ({
   currentRole,
   onAddSong,
   onBack,
+  onNavigate,
 }) => {
   const [selectedSong, setSelectedSong] = useState<CellSong | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -246,6 +249,17 @@ export const Cancioneiro: React.FC<CancioneiroProps> = ({
             {displayedLyrics}
           </pre>
         </div>
+
+        {onNavigate && (
+          <button
+            type="button"
+            onClick={() => onNavigate('modo-encontro')}
+            className="w-full py-2.5 px-3 rounded-xl bg-[#7B1113] hover:bg-[#580C14] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition cursor-pointer"
+          >
+            <Radio className="w-3.5 h-3.5 text-[#FFF0BE] animate-pulse" />
+            <span>Projetar Cânticos no Modo Encontro ao Vivo ⏱️</span>
+          </button>
+        )}
       </div>
     );
   }

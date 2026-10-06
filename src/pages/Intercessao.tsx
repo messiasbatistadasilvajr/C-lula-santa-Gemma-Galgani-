@@ -8,16 +8,21 @@ import {
   Check, 
   User,
   Sparkles,
-  Trophy
+  Trophy,
+  WifiOff,
+  HardDrive,
+  Trash2
 } from 'lucide-react';
 import { PrayerIntention, PrayerCategory } from '../types';
 import { Modal } from '../components/common/Modal';
+import { useOnlineStatus } from '../hooks/useOnlineStatus';
 
 interface IntercessaoProps {
   prayers: PrayerIntention[];
   onTogglePray: (prayerId: string) => void;
   onAddPrayer: (content: string, category: PrayerCategory, urgent?: boolean) => void;
   onMarkAnswered?: (prayerId: string) => void;
+  onDeletePrayer?: (prayerId: string) => void;
 }
 
 export const Intercessao: React.FC<IntercessaoProps> = ({
@@ -25,7 +30,9 @@ export const Intercessao: React.FC<IntercessaoProps> = ({
   onTogglePray,
   onAddPrayer,
   onMarkAnswered,
+  onDeletePrayer,
 }) => {
+  const isOnline = useOnlineStatus();
   const [selectedCategory, setSelectedCategory] = useState<string>('todas');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newContent, setNewContent] = useState('');
@@ -62,7 +69,7 @@ export const Intercessao: React.FC<IntercessaoProps> = ({
     setNewContent('');
     setIsUrgent(false);
     setIsModalOpen(false);
-    showToast('Intenção enviada! A célula está em oração.');
+    showToast(isOnline ? 'Intenção enviada! A célula está em oração.' : 'Intenção salva no aparelho e pronta para acesso offline!');
   };
 
   const handleSharePrayer = (prayer: PrayerIntention) => {
@@ -102,6 +109,36 @@ export const Intercessao: React.FC<IntercessaoProps> = ({
         <p className="text-xs text-[#FFF0BE]/90 leading-relaxed italic">
           "Orai uns pelos outros para serdes curados. A oração fervorosa do justo tem grande poder." (Tg 5, 16)
         </p>
+      </div>
+
+      {/* Indicador Amigável de Acesso Sem Internet */}
+      <div className={`p-3 rounded-2xl border transition-all flex items-center justify-between text-xs shadow-2xs ${
+        !isOnline 
+          ? 'bg-amber-50/90 border-amber-300 text-amber-950' 
+          : 'bg-white/85 border-[#ECE7DF] text-[#70645E]'
+      }`}>
+        <div className="flex items-center gap-2.5">
+          {!isOnline ? (
+            <div className="w-8 h-8 rounded-xl bg-amber-200/80 text-amber-900 flex items-center justify-center shrink-0">
+              <WifiOff className="w-4 h-4 text-amber-800 animate-pulse" />
+            </div>
+          ) : (
+            <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+              <CheckCircle className="w-4 h-4 text-emerald-700" />
+            </div>
+          )}
+          <div>
+            <div className="flex items-center gap-1.5 font-bold text-[#241E1C]">
+              <span>{!isOnline ? 'Pedidos Salvos no Celular (Sem Internet)' : 'Pedidos Salvos no seu Celular'}</span>
+            </div>
+            <p className="text-[11px] leading-tight mt-0.5">
+              {!isOnline 
+                ? 'Você pode continuar rezando pelos irmãos e anotando seus pedidos mesmo sem internet.'
+                : 'Todos os pedidos de oração ficam guardados no seu celular para você rezar a qualquer hora.'
+              }
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Action button & category filter */}
@@ -194,6 +231,20 @@ export const Intercessao: React.FC<IntercessaoProps> = ({
                     >
                       <Share2 className="w-3.5 h-3.5" />
                     </button>
+                    {onDeletePrayer && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onDeletePrayer(prayer.id);
+                          showToast('Pedido de oração removido.');
+                        }}
+                        title="Remover intenção"
+                        aria-label="Remover intenção"
+                        className="p-1 text-[#8A7C75] hover:text-red-600 active:scale-90 transition cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                     <span className="text-[10px] text-[#8A7C75]">
                       {prayer.createdAt}
                     </span>
@@ -238,7 +289,9 @@ export const Intercessao: React.FC<IntercessaoProps> = ({
                     type="button"
                     onClick={() => {
                       onTogglePray(prayer.id);
-                      if (!prayer.userPrayed) showToast('Amém! Sua oração foi unida a esta intenção.');
+                      if (!prayer.userPrayed) {
+                        showToast(isOnline ? 'Amém! Sua oração foi unida a esta intenção.' : 'Amém! Oração salva no seu aparelho (offline)!');
+                      }
                     }}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-xs cursor-pointer active:scale-95 ${
                       prayer.userPrayed

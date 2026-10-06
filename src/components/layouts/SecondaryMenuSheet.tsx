@@ -12,7 +12,11 @@ import {
   Clock,
   Sun,
   Music,
-  Cloud
+  Cloud,
+  Radio,
+  Flame,
+  Award,
+  QrCode
 } from 'lucide-react';
 import { UserRole } from '../../types';
 import { getSupabaseStatus } from '../../services/supabaseClient';
@@ -38,6 +42,41 @@ export const SecondaryMenuSheet: React.FC<SecondaryMenuSheetProps> = ({
   const supabaseStatus = getSupabaseStatus();
 
   const menuItems = [
+    {
+      id: 'membros',
+      title: 'Membros da Célula & Aniversários (48) 👥',
+      subtitle: 'Lista completa dos 48 nomes salvos, telefones, datas e SQL',
+      icon: ShieldCheck,
+      color: 'bg-[#7B1113] text-[#FFF0BE] border border-[#E5C158]',
+    },
+    {
+      id: 'ofertas',
+      title: 'Ofertas & Bot WhatsApp (Dizify) 💸',
+      subtitle: 'PIX Copia e Cola, QR Code no chat, Webhook e Caixinha',
+      icon: QrCode,
+      color: 'bg-emerald-100 text-emerald-900 border border-emerald-300',
+    },
+    {
+      id: 'modo-encontro',
+      title: 'Ao Vivo: Modo Encontro ⏱️',
+      subtitle: 'Cronômetro das etapas, partilha e cânticos para a reunião',
+      icon: Radio,
+      color: 'bg-red-100 text-red-700 border border-red-300',
+    },
+    {
+      id: 'terco',
+      title: 'Terço & Rosário Virtual 📿',
+      subtitle: 'Mistérios do dia, Terço de Sta. Gemma e Misericórdia com toque',
+      icon: Flame,
+      color: 'bg-amber-100 text-amber-900 border border-amber-300',
+    },
+    {
+      id: 'novena',
+      title: 'Novena & Graças de Sta. Gemma ✨',
+      subtitle: '9 dias de oração e mural de testemunhos da célula',
+      icon: Award,
+      color: 'bg-rose-100 text-rose-900 border border-rose-300',
+    },
     {
       id: 'escalas',
       title: 'Escalas & Roteiro do Encontro',

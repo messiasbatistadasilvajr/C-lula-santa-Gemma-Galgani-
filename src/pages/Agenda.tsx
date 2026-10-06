@@ -13,16 +13,35 @@ import {
   Share2,
   CheckCircle2,
   PlusCircle,
-  AlertTriangle
+  AlertTriangle,
+  WifiOff,
+  HardDrive,
+  Trash2,
+  Bell,
+  BellRing,
+  Volume2,
+  Download,
+  MessageCircle
 } from 'lucide-react';
 import { CalendarEvent, EventType, RSVPStatus, UserRole } from '../types';
 import { Modal } from '../components/common/Modal';
+import { useOnlineStatus } from '../hooks/useOnlineStatus';
+import {
+  CellReminderSettings,
+  getNextCellMeeting,
+  loadReminderSettings,
+  saveReminderSettings,
+  requestNotificationPermission,
+  sendCellPushNotification,
+  downloadRecurringCellCalendarIcs,
+} from '../services/cellReminders';
 
 interface AgendaProps {
   events: CalendarEvent[];
   onSetRSVP: (eventId: string, status: RSVPStatus) => void;
   currentRole?: UserRole;
   onAddEvent?: (event: Omit<CalendarEvent, 'id' | 'attendingCount' | 'maybeCount' | 'declinedCount'>) => void;
+  onDeleteEvent?: (eventId: string) => void;
   onNavigate?: (tab: string) => void;
 }
 
@@ -31,8 +50,10 @@ export const Agenda: React.FC<AgendaProps> = ({
   onSetRSVP,
   currentRole = 'membro',
   onAddEvent,
+  onDeleteEvent,
   onNavigate
 }) => {
+  const isOnline = useOnlineStatus();
   const [selectedType, setSelectedType] = useState<string>('todos');
   const [selectedDayNum, setSelectedDayNum] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -41,22 +62,91 @@ export const Agenda: React.FC<AgendaProps> = ({
 
   // Form states for new event
   const [newTitle, setNewTitle] = useState('');
-  const [newDate, setNewDate] = useState('2026-09-30');
-  const [newTime, setNewTime] = useState('20:00');
+  const [newDate, setNewDate] = useState('2026-10-09');
+  const [newTime, setNewTime] = useState('19:00');
   const [newLocation, setNewLocation] = useState('Casa do Gabriel');
   const [newLeader, setNewLeader] = useState('Coordenação');
   const [newType, setNewType] = useState<EventType>('encontro');
   const [newDescription, setNewDescription] = useState('');
 
-  // Days for the visual mini-calendar header strip
+  // Estados do Agendador de Lembretes Locais e Notificações Push (Segundas e Sextas às 19:00)
+  const [reminderSettings, setReminderSettings] = useState<CellReminderSettings>(() =>
+    loadReminderSettings()
+  );
+  const [notifPermission, setNotifPermission] = useState<NotificationPermission | 'unsupported'>(() => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      return Notification.permission;
+    }
+    return 'unsupported';
+  });
+  const [nextMeeting, setNextMeeting] = useState(() => getNextCellMeeting());
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setNextMeeting(getNextCellMeeting());
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleUpdateReminderSetting = (patch: Partial<CellReminderSettings>) => {
+    const updated = { ...reminderSettings, ...patch };
+    setReminderSettings(updated);
+    saveReminderSettings(updated);
+  };
+
+  const handleEnablePushNotifications = async () => {
+    const perm = await requestNotificationPermission();
+    setNotifPermission(perm);
+    handleUpdateReminderSetting({ enabled: true });
+
+    if (perm === 'granted') {
+      await sendCellPushNotification({
+        title: '🌹 Lembretes da Célula Ativados!',
+        body: 'Você será avisado toda Segunda-feira e Sexta-feira sobre o encontro das 19:00 às 21:00.',
+        playSound: reminderSettings.soundEnabled,
+      });
+      showToast('Notificações Push e lembretes agendados ativados!');
+    } else {
+      showToast('Lembretes locais com som ativados no aplicativo!');
+    }
+  };
+
+  const handleTestReminderNow = async () => {
+    const title = `🔔 Lembrete: Célula ${nextMeeting.dayName} às 19:00!`;
+    const message = `Shalom! Não esqueça do nosso encontro da Célula Santa Gemma Galgani (${nextMeeting.dayName}, das 19:00 às 21:00). Esperamos por você!`;
+
+    if (notifPermission !== 'granted') {
+      const perm = await requestNotificationPermission();
+      setNotifPermission(perm);
+    }
+
+    await sendCellPushNotification({
+      title,
+      body: message,
+      playSound: reminderSettings.soundEnabled,
+    });
+
+    window.dispatchEvent(
+      new CustomEvent('sg-trigger-reminder-banner', {
+        detail: {
+          title,
+          message,
+          dayName: nextMeeting.dayName,
+        },
+      })
+    );
+  };
+
+  // Days for the visual mini-calendar header strip (Destaque Segunda e Sexta: dias de Célula 19h às 21h)
   const calendarDays = [
-    { day: 'QUA', num: '23', isToday: false, dateStr: '2026-09-23' },
-    { day: 'QUI', num: '24', isToday: true, hasEvent: true, dateStr: '2026-09-24' }, // Encontro da Célula
-    { day: 'SEX', num: '25', isToday: false, dateStr: '2026-09-25' },
-    { day: 'SÁB', num: '26', isToday: false, hasEvent: true, dateStr: '2026-09-26' }, // Missa Shalom
-    { day: 'DOM', num: '27', isToday: false, dateStr: '2026-09-27' },
-    { day: 'SEG', num: '28', isToday: false, dateStr: '2026-09-28' },
-    { day: 'TER', num: '29', isToday: false, hasEvent: true, dateStr: '2026-09-29' }, // Formação
+    { day: 'SEG', num: '05', isToday: false, hasEvent: true, dateStr: '2026-10-05' }, // Encontro de Segunda
+    { day: 'TER', num: '06', isToday: true, hasEvent: false, dateStr: '2026-10-06' },
+    { day: 'QUA', num: '07', isToday: false, hasEvent: false, dateStr: '2026-10-07' },
+    { day: 'QUI', num: '08', isToday: false, hasEvent: false, dateStr: '2026-10-08' },
+    { day: 'SEX', num: '09', isToday: false, hasEvent: true, dateStr: '2026-10-09' }, // Encontro de Sexta
+    { day: 'SÁB', num: '10', isToday: false, hasEvent: true, dateStr: '2026-10-10' }, // Retiro / Missa
+    { day: 'SEG', num: '12', isToday: false, hasEvent: true, dateStr: '2026-10-12' }, // Encontro de Segunda
+    { day: 'SEX', num: '16', isToday: false, hasEvent: true, dateStr: '2026-10-16' }, // Encontro de Sexta
   ];
 
   const typeConfig: Record<EventType, { label: string; badge: string }> = {
@@ -91,9 +181,9 @@ export const Agenda: React.FC<AgendaProps> = ({
   const handleRSVPClick = (eventId: string, status: RSVPStatus) => {
     onSetRSVP(eventId, status);
     const msgs: Record<RSVPStatus, string> = {
-      attending: 'Presença confirmada! Que alegria contar com você.',
-      maybe: 'Status alterado para "Talvez". Esperamos você!',
-      declined: 'Ausência informada à coordenação.',
+      attending: isOnline ? 'Presença confirmada! Que alegria contar com você.' : 'Presença confirmada e salva localmente (offline)!',
+      maybe: isOnline ? 'Status alterado para "Talvez". Esperamos você!' : 'Status salvo localmente no aparelho (offline)!',
+      declined: isOnline ? 'Ausência informada à coordenação.' : 'Ausência registrada no aparelho (offline)!',
     };
     showToast(msgs[status]);
   };
@@ -111,17 +201,18 @@ export const Agenda: React.FC<AgendaProps> = ({
     if (!newTitle.trim()) return;
 
     if (onAddEvent) {
+      const formattedTime = newTime.includes('às') ? newTime : `${newTime} às 21:00`;
       onAddEvent({
         title: newTitle.trim(),
         date: newDate,
-        time: newTime,
+        time: formattedTime,
         location: newLocation.trim() || 'Comunidade Shalom',
         leader: newLeader.trim() || 'Coordenação',
         type: newType,
         description: newDescription.trim() || 'Encontro fraterno com louvor e oração.',
         rsvpStatus: null,
       });
-      showToast('Novo evento agendado com sucesso!');
+      showToast(isOnline ? 'Novo evento agendado com sucesso!' : 'Novo evento salvo no aparelho e pronto offline!');
     }
 
     setNewTitle('');
@@ -170,6 +261,36 @@ export const Agenda: React.FC<AgendaProps> = ({
         </div>
       </div>
 
+      {/* Indicador Amigável de Acesso Sem Internet */}
+      <div className={`p-3 rounded-2xl border transition-all flex items-center justify-between text-xs shadow-2xs ${
+        !isOnline 
+          ? 'bg-amber-50/90 border-amber-300 text-amber-950' 
+          : 'bg-white/85 border-[#ECE7DF] text-[#70645E]'
+      }`}>
+        <div className="flex items-center gap-2.5">
+          {!isOnline ? (
+            <div className="w-8 h-8 rounded-xl bg-amber-200/80 text-amber-900 flex items-center justify-center shrink-0">
+              <WifiOff className="w-4 h-4 text-amber-800 animate-pulse" />
+            </div>
+          ) : (
+            <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+              <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+            </div>
+          )}
+          <div>
+            <div className="flex items-center gap-1.5 font-bold text-[#241E1C]">
+              <span>{!isOnline ? 'Funcionando sem Internet' : 'Agenda Salva no seu Celular'}</span>
+            </div>
+            <p className="text-[11px] leading-tight mt-0.5">
+              {!isOnline 
+                ? 'Você está sem internet, mas todos os dias e horários da célula continuam disponíveis aqui.'
+                : 'Mesmo se você ficar sem internet depois, os dias e horários da célula continuarão abertos no seu celular.'
+              }
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Escala Quick Banner */}
       {onNavigate && (
         <div 
@@ -194,6 +315,156 @@ export const Agenda: React.FC<AgendaProps> = ({
           </span>
         </div>
       )}
+
+      {/* Banner Oficial dos Dias e Horários Fixos da Célula + Sistema de Lembretes Push e Locais */}
+      <div className="p-4 rounded-2xl bg-gradient-to-br from-[#7B1113] via-[#5A0D12] to-[#3B070B] text-white shadow-md border border-[#E5C158]/50 space-y-3.5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="space-y-0.5">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#E5C158] flex items-center gap-1">
+              <BellRing className="w-3.5 h-3.5 text-[#E5C158]" />
+              <span>Lembretes Automáticos • Segundas & Sextas</span>
+            </span>
+            <h3 className="text-sm font-bold text-white">
+              Toda Segunda-feira e Sexta-feira às 19:00
+            </h3>
+            <p className="text-xs text-[#FFF0BE]/95 flex items-center gap-1.5 pt-0.5">
+              <Clock className="w-3.5 h-3.5 text-[#E5C158]" />
+              <span>
+                Próximo encontro: <strong>{nextMeeting.countdownText}</strong>
+              </span>
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              const nextState = !reminderSettings.enabled;
+              handleUpdateReminderSetting({ enabled: nextState });
+              showToast(
+                nextState
+                  ? 'Lembretes de Segunda e Sexta às 19:00 ativados!'
+                  : 'Lembretes automáticos pausados.'
+              );
+            }}
+            className={`px-2.5 py-1.5 rounded-xl text-[11px] font-extrabold border transition cursor-pointer shrink-0 flex items-center gap-1 ${
+              reminderSettings.enabled
+                ? 'bg-emerald-500 text-white border-emerald-300 shadow-xs'
+                : 'bg-white/10 text-[#FFF0BE] border-white/25'
+            }`}
+          >
+            <Bell className="w-3.5 h-3.5" />
+            <span>{reminderSettings.enabled ? 'Ativo ✓' : 'Ativar'}</span>
+          </button>
+        </div>
+
+        {/* Seleção de antecedência do aviso antes das 19:00 */}
+        <div className="bg-black/25 p-3 rounded-xl border border-white/15 space-y-2.5">
+          <div className="flex items-center justify-between text-[11px]">
+            <span className="font-bold text-[#FFF0BE]">
+              ⏰ Avisar antes das 19:00 (Seg e Sex):
+            </span>
+            <button
+              type="button"
+              onClick={() => handleUpdateReminderSetting({ soundEnabled: !reminderSettings.soundEnabled })}
+              className={`px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer border ${
+                reminderSettings.soundEnabled
+                  ? 'bg-[#E5C158]/25 text-[#FFF0BE] border-[#E5C158]/50'
+                  : 'bg-white/5 text-white/60 border-white/15'
+              }`}
+            >
+              <Volume2 className="w-3 h-3" />
+              <span>{reminderSettings.soundEnabled ? 'Som Ligado' : 'Sem Som'}</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-3 gap-1.5">
+            {[
+              { mins: 15, label: '15 min antes (18:45)' },
+              { mins: 30, label: '30 min antes (18:30)' },
+              { mins: 60, label: '1 hora antes (18:00)' },
+            ].map(opt => {
+              const isSelected = reminderSettings.remindMinutesBefore === opt.mins;
+              return (
+                <button
+                  key={opt.mins}
+                  type="button"
+                  onClick={() => {
+                    handleUpdateReminderSetting({ remindMinutesBefore: opt.mins, enabled: true });
+                    showToast(`Aviso agendado para ${opt.label} nas Segundas e Sextas!`);
+                  }}
+                  className={`py-1.5 px-2 rounded-lg text-[10px] font-bold transition cursor-pointer border ${
+                    isSelected
+                      ? 'bg-[#E5C158] text-[#36070D] border-[#E5C158] shadow-2xs'
+                      : 'bg-white/10 text-[#FFF0BE] border-white/15 hover:bg-white/20'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Botões de Ação: Ativar Push no Celular, Testar Alerta, Salvar no Despertador/Agenda e Avisar no WhatsApp */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {notifPermission !== 'granted' ? (
+            <button
+              type="button"
+              onClick={handleEnablePushNotifications}
+              className="py-2 px-3 rounded-xl bg-[#E5C158] hover:bg-[#f3cf65] text-[#36070D] text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95"
+            >
+              <BellRing className="w-4 h-4" />
+              <span>Permitir Notificações Push</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleTestReminderNow}
+              className="py-2 px-3 rounded-xl bg-[#E5C158] hover:bg-[#f3cf65] text-[#36070D] text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95"
+            >
+              <BellRing className="w-4 h-4" />
+              <span>Testar Alerta de 19:00 Agora</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => {
+              downloadRecurringCellCalendarIcs(reminderSettings.remindMinutesBefore);
+              showToast('Alarme de Segunda e Sexta (19h) baixado para a agenda do celular!');
+            }}
+            className="py-2 px-3 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/25 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer active:scale-95"
+          >
+            <Download className="w-4 h-4 text-[#E5C158]" />
+            <span>Salvar no Despertador/Agenda</span>
+          </button>
+        </div>
+
+        <div className="pt-1 flex items-center justify-between gap-2 border-t border-white/15">
+          <button
+            type="button"
+            onClick={handleTestReminderNow}
+            className="text-[11px] font-bold text-[#FFF0BE] underline underline-offset-2 hover:text-white cursor-pointer"
+          >
+            🔔 Ouvir e testar lembrete na tela
+          </button>
+
+          <a
+            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+              `🌹 *Lembrete Oficial • Célula Santa Gemma Galgani* ✝️\n\n` +
+                `Shalom, irmãos! Lembramos que nosso encontro de célula acontece *toda Segunda-feira e Sexta-feira, das 19:00 às 21:00*.\n\n` +
+                `📅 *Próximo encontro:* ${nextMeeting.dayName} (${nextMeeting.formattedDate}) às *19:00*\n` +
+                `📍 Confirme sua presença e ative o lembrete na Agenda do nosso App!`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-2.5 py-1 rounded-lg bg-[#075E54] hover:bg-[#064E46] text-white text-[10px] font-bold flex items-center gap-1 shadow-2xs transition cursor-pointer"
+          >
+            <MessageCircle className="w-3.5 h-3.5" />
+            <span>Lembrar Grupo no WhatsApp</span>
+          </a>
+        </div>
+      </div>
 
       {/* Interactive Visual Mini-Calendar Mobile Strip */}
       <div className="rounded-2xl bg-white/90 backdrop-blur-md p-3 shadow-sm border border-white/60">
@@ -286,12 +557,27 @@ export const Agenda: React.FC<AgendaProps> = ({
 
                   <div className="flex items-center gap-2">
                     <button
+                      type="button"
                       onClick={() => handleShareEvent(event)}
                       title="Copiar dados do evento"
                       className="p-1 text-[#8A7C75] hover:text-[#7B1113] transition cursor-pointer"
                     >
                       <Share2 className="w-3.5 h-3.5" />
                     </button>
+                    {(currentRole === 'admin' || currentRole === 'formador') && onDeleteEvent && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onDeleteEvent(event.id);
+                          showToast('Evento removido da agenda.');
+                        }}
+                        title="Excluir evento"
+                        aria-label="Excluir evento"
+                        className="p-1 text-[#8A7C75] hover:text-red-600 transition cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                     <div className="flex items-center gap-1.5 text-xs font-bold text-[#7B1113] bg-[#FBF9F5] px-2.5 py-0.5 rounded-full border border-[#ECE7DF]">
                       <Clock className="w-3.5 h-3.5" />
                       <span>{event.time}</span>

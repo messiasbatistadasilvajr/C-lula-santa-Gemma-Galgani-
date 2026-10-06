@@ -14,6 +14,7 @@ service cloud.firestore {
     function isAdmin() {
       return isSignedIn() && (
         request.auth.token.email == 'messiasbjunior76@gmail.com' ||
+        request.auth.token.email == 'shcelsantagemmagalganipql@gmail.com' ||
         (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
       );
@@ -35,90 +36,75 @@ service cloud.firestore {
 
     // USERS COLLECTION
     match /users/{userId} {
-      allow read: if isSignedIn();
-      allow create: if isCurrentUser(userId) &&
-        request.resource.data.id == userId &&
-        request.resource.data.name is string && request.resource.data.name.size() <= 100 &&
-        request.resource.data.role in ['membro', 'formador', 'admin'];
-      allow update: if isCurrentUser(userId) && (
-        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']) || isAdmin())
-      );
+      allow read: if true;
+      allow create, update: if isSignedIn();
       allow delete: if isAdmin();
     }
 
-    // POSTS COLLECTION & COMMENTS
+    // POSTS COLLECTION & COMMENTS (Mural comunitário acessível a todos os membros da célula)
     match /posts/{postId} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn() &&
-        request.resource.data.authorId == request.auth.uid &&
-        request.resource.data.content is string && request.resource.data.content.size() <= 5000;
-      allow update: if isSignedIn() && (
-        request.auth.uid == resource.data.authorId ||
-        isAdmin() ||
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likesCount', 'hasLiked'])
-      );
-      allow delete: if isSignedIn() && (request.auth.uid == resource.data.authorId || isAdmin());
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if true;
 
       match /comments/{commentId} {
-        allow read: if isSignedIn();
-        allow create: if isSignedIn() &&
-          request.resource.data.authorId == request.auth.uid &&
-          request.resource.data.content is string && request.resource.data.content.size() <= 1000;
-        allow delete: if isSignedIn() && (request.auth.uid == resource.data.authorId || isAdmin());
+        allow read: if true;
+        allow create, update, delete: if true;
       }
     }
 
-    // PRAYERS COLLECTION
+    // PRAYERS COLLECTION (Intercessão da célula acessível mesmo sem login Google)
     match /prayers/{prayerId} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn() &&
-        request.resource.data.authorId == request.auth.uid &&
-        request.resource.data.content is string && request.resource.data.content.size() <= 2000;
-      allow update: if isSignedIn() && (
-        request.auth.uid == resource.data.authorId ||
-        isAdmin() ||
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['prayerCount', 'userPrayed']) ||
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['answered'])
-      );
-      allow delete: if isSignedIn() && (request.auth.uid == resource.data.authorId || isAdmin());
+      allow read: if true;
+      allow create, update, delete: if true;
     }
 
-    // EVENTS & SCALES
+    // EVENTS & AGENDA
     match /events/{eventId} {
-      allow read: if isSignedIn();
-      allow create, delete: if isFormadorOrAdmin();
-      allow update: if isSignedIn() && (
-        isFormadorOrAdmin() ||
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rsvpStatus', 'attendingCount', 'maybeCount', 'declinedCount'])
-      );
+      allow read: if true;
+      allow create, update, delete: if true;
     }
 
     // CHAT MESSAGES
     match /chats/{channelId}/messages/{messageId} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn() &&
-        request.resource.data.senderId == request.auth.uid &&
-        request.resource.data.text is string && request.resource.data.text.size() <= 2000;
-      allow delete: if isSignedIn() && (request.auth.uid == resource.data.senderId || isAdmin());
+      allow read: if true;
+      allow create, update, delete: if true;
     }
 
-    // NOTICES
+    // NOTICES (Mural de Avisos)
     match /notices/{noticeId} {
-      allow read: if isSignedIn();
-      allow create, update, delete: if isFormadorOrAdmin();
+      allow read: if true;
+      allow create, update, delete: if true;
     }
 
     // CANCIONEIRO (SONGS)
     match /songs/{songId} {
-      allow read: if isSignedIn();
-      allow create, update: if isSignedIn();
-      allow delete: if isFormadorOrAdmin();
+      allow read: if true;
+      allow create, update, delete: if true;
     }
 
     // SCALES & ROTEIRO
     match /scales/{scaleId} {
-      allow read: if isSignedIn();
-      allow create, update, delete: if isFormadorOrAdmin();
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+
+    // DIZIFY - DONORS (MEMBROS CONTRIBUINTES & ANIVERSÁRIOS)
+    match /donors/{donorId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+
+    // DIZIFY - CAMPAIGNS (CAMPANHAS DA CÉLULA)
+    match /campaigns/{campaignId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+
+    // DIZIFY - DONATIONS (HISTÓRICO DE OFERTAS E DOAÇÕES PIX)
+    match /donations/{donationId} {
+      allow read: if true;
+      allow create, update, delete: if true;
     }
 
     // Global Catch-all fallback

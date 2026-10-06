@@ -18,3 +18,34 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ==========================================================================
+   MODO LETRA GRANDE (ACESSIBILIDADE / LEITURA FÁCIL PARA TODAS AS IDADES)
+   Aumenta proporcionalmente todos os textos pequenos e botões de toque
+   ========================================================================== */
+html.accessible-large-text {
+  font-size: 118%;
+}
+
+html.accessible-large-text .text-\[9px\],
+html.accessible-large-text .text-\[10px\],
+html.accessible-large-text .text-\[11px\] {
+  font-size: 0.85rem !important;
+  line-height: 1.35rem !important;
+}
+
+html.accessible-large-text .text-xs {
+  font-size: 0.95rem !important;
+  line-height: 1.45rem !important;
+}
+
+html.accessible-large-text .text-sm {
+  font-size: 1.08rem !important;
+  line-height: 1.55rem !important;
+}
+
+html.accessible-large-text button,
+html.accessible-large-text select,
+html.accessible-large-text input {
+  min-height: 42px;
+}

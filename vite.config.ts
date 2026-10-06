@@ -44,15 +44,21 @@ export default defineConfig(() => {
             },
           ],
         },
+        workbox: {
+          cleanupOutdatedCaches: true,
+          clientsClaim: true,
+          skipWaiting: true,
+          navigateFallback: '/index.html',
+        },
         devOptions: {
-          enabled: true,
+          enabled: false,
           type: 'module',
         },
       }),
     ],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(import.meta.dirname, '.'),
       },
     },
     server: {

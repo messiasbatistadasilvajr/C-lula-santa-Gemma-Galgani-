@@ -14,6 +14,10 @@ import { SimuladorPermissoes } from './pages/SimuladorPermissoes';
 import { Escalas } from './pages/Escalas';
 import { Liturgia } from './pages/Liturgia';
 import { Cancioneiro } from './pages/Cancioneiro';
+import { TercoVirtual } from './pages/TercoVirtual';
+import { NovenaTestemunhos } from './pages/NovenaTestemunhos';
+import { ModoEncontro } from './pages/ModoEncontro';
+import { OfertasDizify } from './pages/OfertasDizify';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<string>('home');
@@ -32,6 +36,7 @@ export default function App() {
         <Home
           currentUser={data.currentUser}
           posts={data.posts}
+          donors={data.donors}
           onLikePost={data.togglePostLike}
           onAddComment={data.addComment}
           onAddPost={data.addPost}
@@ -49,6 +54,7 @@ export default function App() {
           onGenerateWhatsApp={data.generateWhatsAppSummary}
           getWhatsAppShareUrl={data.getWhatsAppShareLink}
           onBack={() => setCurrentTab('home')}
+          onNavigate={(tab) => setCurrentTab(tab)}
         />
       )}
 
@@ -66,6 +72,7 @@ export default function App() {
           currentRole={data.currentUser.role}
           onAddSong={data.addSong}
           onBack={() => setCurrentTab('home')}
+          onNavigate={(tab) => setCurrentTab(tab)}
         />
       )}
 
@@ -75,6 +82,7 @@ export default function App() {
           onSetRSVP={data.setEventRSVP}
           currentRole={data.currentUser.role}
           onAddEvent={data.addEvent}
+          onDeleteEvent={data.deleteEvent}
           onNavigate={(tab) => setCurrentTab(tab)}
         />
       )}
@@ -85,6 +93,7 @@ export default function App() {
           onTogglePray={data.togglePrayForIntention}
           onAddPrayer={data.addPrayer}
           onMarkAnswered={data.markPrayerAnswered}
+          onDeletePrayer={data.deletePrayer}
         />
       )}
 
@@ -102,6 +111,7 @@ export default function App() {
           posts={data.posts}
           prayers={data.prayers}
           events={data.events}
+          donors={data.donors}
           onSwitchRole={data.switchRole}
           onUpdateProfile={data.updateProfile}
           onResetToMock={data.resetToMock}
@@ -137,7 +147,54 @@ export default function App() {
       )}
 
       {currentTab === 'santagemma' && (
-        <SantaGemma onBack={() => setCurrentTab('home')} />
+        <SantaGemma 
+          onBack={() => setCurrentTab('home')} 
+          onNavigate={(tab) => setCurrentTab(tab)}
+        />
+      )}
+
+      {currentTab === 'terco' && (
+        <TercoVirtual
+          onBack={() => setCurrentTab('home')}
+          cellIntention="Pela fidelidade dos irmãos da Célula Santa Gemma Galgani, frutos vocacionais e paz nas famílias."
+        />
+      )}
+
+      {currentTab === 'novena' && (
+        <NovenaTestemunhos
+          onBack={() => setCurrentTab('home')}
+          currentRole={data.currentUser.role}
+          userName={data.currentUser.name}
+          onNavigateToTerco={() => setCurrentTab('terco')}
+        />
+      )}
+
+      {currentTab === 'modo-encontro' && (
+        <ModoEncontro
+          onBack={() => setCurrentTab('home')}
+          songs={data.songs}
+          currentScale={data.scales[0]}
+          currentRole={data.currentUser.role}
+          onNavigateToCancioneiro={() => setCurrentTab('cancioneiro')}
+        />
+      )}
+
+      {(currentTab === 'ofertas' || currentTab === 'membros') && (
+        <OfertasDizify
+          donors={data.donors}
+          campaigns={data.campaigns}
+          donations={data.donations}
+          currentRole={data.currentUser.role}
+          userName={data.currentUser.name}
+          initialTab={currentTab === 'membros' ? 'membros-db' : 'whatsapp-bot'}
+          onUpsertDonor={data.upsertDonor}
+          onDeleteDonor={data.deleteDonor}
+          onAddCampaign={data.addCampaign}
+          onDeleteCampaign={data.deleteCampaign}
+          onCreatePixDonation={data.createPixDonation}
+          onConfirmWebhook={data.confirmPixPaymentWebhook}
+          onBack={() => setCurrentTab('home')}
+        />
       )}
 
       {currentTab === 'permissoes' && (
