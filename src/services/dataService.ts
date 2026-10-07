@@ -189,17 +189,57 @@ class DataService {
     }
   }
 
+  private isFictionalNameOrPhone(text?: string, phone?: string): boolean {
+    const cleanPhone = (phone || '').replace(/\D/g, '');
+    if (cleanPhone.startsWith('119')) return true;
+    const t = (text || '').toLowerCase();
+    const fictionalPatterns = [
+      'lucas silveira',
+      'ir. maria clara',
+      'maria clara',
+      'gabriel santos',
+      'sara albuquerque',
+      'beatriz lima',
+      'renata albuquerque',
+      'thiago medeiros',
+      'família mendonça',
+      'juliana costa',
+      'casa do gabriel',
+    ];
+    return fictionalPatterns.some((pattern) => t.includes(pattern));
+  }
+
   private setupFirestoreListeners(): void {
     this.teardownFirestoreListeners();
 
+    const officialNamesSet = new Set(
+      INITIAL_DONORS.map((d) => d.name.trim().toLowerCase())
+    );
+    const officialPhonesSet = new Set(
+      INITIAL_DONORS.map((d) => d.phone.replace(/\D/g, ''))
+    );
+
     try {
-      // 1. Posts listener
+      // 1. Posts listener (remove posts ou comentários com nomes fictícios do banco)
       const postsCol = 'posts';
       const unsubPosts = onSnapshot(collection(db, postsCol), (snapshot) => {
         if (!snapshot.empty) {
           const remotePosts: CommunityPost[] = [];
           snapshot.forEach((docSnap) => {
             const data = docSnap.data() as CommunityPost;
+            const hasFictionalComment = (data.comments || []).some((c) =>
+              this.isFictionalNameOrPhone(c.authorName)
+            );
+            if (this.isFictionalNameOrPhone(data.authorName) || hasFictionalComment) {
+              const replacement = INITIAL_POSTS.find((p) => p.id === docSnap.id);
+              if (replacement) {
+                setDoc(doc(db, postsCol, docSnap.id), replacement).catch(() => {});
+                remotePosts.push(replacement);
+              } else {
+                deleteDoc(doc(db, postsCol, docSnap.id)).catch(() => {});
+              }
+              return;
+            }
             remotePosts.push({ ...data, id: docSnap.id });
           });
           if (remotePosts.length > 0) {
@@ -212,13 +252,23 @@ class DataService {
       });
       this.unsubscribers.push(unsubPosts);
 
-      // 2. Prayers listener
+      // 2. Prayers listener (remove intenções com nomes fictícios do banco)
       const prayersCol = 'prayers';
       const unsubPrayers = onSnapshot(collection(db, prayersCol), (snapshot) => {
         if (!snapshot.empty) {
           const remotePrayers: PrayerIntention[] = [];
           snapshot.forEach((docSnap) => {
             const data = docSnap.data() as PrayerIntention;
+            if (this.isFictionalNameOrPhone(data.authorName)) {
+              const replacement = INITIAL_PRAYERS.find((p) => p.id === docSnap.id);
+              if (replacement) {
+                setDoc(doc(db, prayersCol, docSnap.id), replacement).catch(() => {});
+                remotePrayers.push(replacement);
+              } else {
+                deleteDoc(doc(db, prayersCol, docSnap.id)).catch(() => {});
+              }
+              return;
+            }
             remotePrayers.push({ ...data, id: docSnap.id });
           });
           if (remotePrayers.length > 0) {
@@ -231,13 +281,23 @@ class DataService {
       });
       this.unsubscribers.push(unsubPrayers);
 
-      // 3. Notices listener
+      // 3. Notices listener (remove avisos com nomes fictícios do banco)
       const noticesCol = 'notices';
       const unsubNotices = onSnapshot(collection(db, noticesCol), (snapshot) => {
         if (!snapshot.empty) {
           const remoteNotices: CellNotice[] = [];
           snapshot.forEach((docSnap) => {
             const data = docSnap.data() as CellNotice;
+            if (this.isFictionalNameOrPhone(data.author) || this.isFictionalNameOrPhone(data.content)) {
+              const replacement = INITIAL_NOTICES.find((n) => n.id === docSnap.id);
+              if (replacement) {
+                setDoc(doc(db, noticesCol, docSnap.id), replacement).catch(() => {});
+                remoteNotices.push(replacement);
+              } else {
+                deleteDoc(doc(db, noticesCol, docSnap.id)).catch(() => {});
+              }
+              return;
+            }
             remoteNotices.push({ ...data, id: docSnap.id });
           });
           if (remoteNotices.length > 0) {
@@ -250,13 +310,29 @@ class DataService {
       });
       this.unsubscribers.push(unsubNotices);
 
-      // 4. Scales listener
+      // 4. Scales listener (remove escalas com nomes fictícios do banco)
       const scalesCol = 'scales';
       const unsubScales = onSnapshot(collection(db, scalesCol), (snapshot) => {
         if (!snapshot.empty) {
           const remoteScales: MeetingScale[] = [];
           snapshot.forEach((docSnap) => {
             const data = docSnap.data() as MeetingScale;
+            if (
+              this.isFictionalNameOrPhone(data.formador) ||
+              this.isFictionalNameOrPhone(data.animator) ||
+              this.isFictionalNameOrPhone(data.musicLeader) ||
+              this.isFictionalNameOrPhone(data.welcomeLeader) ||
+              this.isFictionalNameOrPhone(data.intercessionLeader)
+            ) {
+              const replacement = INITIAL_SCALES.find((s) => s.id === docSnap.id);
+              if (replacement) {
+                setDoc(doc(db, scalesCol, docSnap.id), replacement).catch(() => {});
+                remoteScales.push(replacement);
+              } else {
+                deleteDoc(doc(db, scalesCol, docSnap.id)).catch(() => {});
+              }
+              return;
+            }
             remoteScales.push({ ...data, id: docSnap.id });
           });
           if (remoteScales.length > 0) {
@@ -288,13 +364,26 @@ class DataService {
       });
       this.unsubscribers.push(unsubSongs);
 
-      // 6. Events listener (Agenda)
+      // 6. Events listener (Agenda - substitui eventos com nomes ou locais fictícios)
       const eventsCol = 'events';
       const unsubEvents = onSnapshot(collection(db, eventsCol), (snapshot) => {
         if (!snapshot.empty) {
           const remoteEvents: CalendarEvent[] = [];
           snapshot.forEach((docSnap) => {
             const data = docSnap.data() as CalendarEvent;
+            if (
+              this.isFictionalNameOrPhone(data.leader) ||
+              this.isFictionalNameOrPhone(data.location)
+            ) {
+              const replacement = INITIAL_EVENTS.find((ev) => ev.id === docSnap.id);
+              if (replacement) {
+                setDoc(doc(db, eventsCol, docSnap.id), replacement).catch(() => {});
+                remoteEvents.push(replacement);
+              } else {
+                deleteDoc(doc(db, eventsCol, docSnap.id)).catch(() => {});
+              }
+              return;
+            }
             remoteEvents.push({ ...data, id: docSnap.id });
           });
           if (remoteEvents.length > 0) {
@@ -307,18 +396,29 @@ class DataService {
       });
       this.unsubscribers.push(unsubEvents);
 
-      // 7. Donors listener (Dizify Membros & Aniversários - Garante que todos os 48 irmãos oficiais estejam sempre presentes)
+      // 7. Donors listener (Membros da Célula - Apaga do Firestore qualquer registro que não esteja na lista oficial de 48 irmãos)
       const unsubDonors = onSnapshot(collection(db, 'donors'), (snapshot) => {
         const remoteMap = new Map<string, DonorProfile>();
         snapshot.forEach((docSnap) => {
           const data = docSnap.data() as DonorProfile;
           const cleanPhone = (data.phone || '').replace(/\D/g, '');
-          // Ignora os 4 mocks antigos de DDD 11 (Lucas Silveira, Ir. Maria Clara, Gabriel Santos, Sara Albuquerque)
-          if (cleanPhone.startsWith('119')) return;
+          const cleanName = (data.name || '').trim().toLowerCase();
+
+          // Se não estiver na tabela oficial de 48 irmãos enviada pelo usuário, apaga do banco Firestore
+          const isOfficialMember =
+            officialNamesSet.has(cleanName) ||
+            officialPhonesSet.has(cleanPhone) ||
+            INITIAL_DONORS.some((d) => d.id === docSnap.id);
+
+          if (!isOfficialMember || this.isFictionalNameOrPhone(data.name, data.phone)) {
+            deleteDoc(doc(db, 'donors', docSnap.id)).catch(() => {});
+            return;
+          }
+
           remoteMap.set(docSnap.id, { ...data, id: docSnap.id });
         });
 
-        // Garante que todos os 48 membros oficiais (INITIAL_DONORS) existam na lista e no Firestore
+        // Garante exatamente os 48 irmãos oficiais da célula
         const mergedDonors: DonorProfile[] = INITIAL_DONORS.map((official) => {
           const existingRemote =
             remoteMap.get(official.id) ||
@@ -327,15 +427,20 @@ class DataService {
             );
 
           if (existingRemote) {
-            remoteMap.delete(existingRemote.id);
-            return {
+            // Se estava salvo com ID antigo/duplicado diferente do ID oficial, apaga o duplicado
+            if (existingRemote.id !== official.id) {
+              deleteDoc(doc(db, 'donors', existingRemote.id)).catch(() => {});
+            }
+            const synced: DonorProfile = {
               ...existingRemote,
+              id: official.id,
               name: official.name,
               phone: official.phone,
               birthDate: official.birthDate,
               maritalStatus: official.maritalStatus,
               leadershipBadge: official.leadershipBadge,
             };
+            return synced;
           } else {
             // Sincroniza membro oficial faltante para o Firestore
             const cleanDoc = Object.fromEntries(
@@ -344,11 +449,6 @@ class DataService {
             setDoc(doc(db, 'donors', official.id), cleanDoc).catch(() => {});
             return official;
           }
-        });
-
-        // Adiciona eventuais novos membros cadastrados manualmente que não estão nos 48 iniciais
-        remoteMap.forEach((extraDonor) => {
-          mergedDonors.push(extraDonor);
         });
 
         this.donors = mergedDonors;
@@ -376,12 +476,22 @@ class DataService {
       });
       this.unsubscribers.push(unsubCampaigns);
 
-      // 9. Donations listener (Dizify Histórico de Ofertas PIX)
+      // 9. Donations listener (Dizify Histórico de Ofertas PIX - Remove doações de nomes fictícios)
       const unsubDonations = onSnapshot(collection(db, 'donations'), (snapshot) => {
         if (!snapshot.empty) {
           const remoteDonations: DonationRecord[] = [];
           snapshot.forEach((docSnap) => {
             const data = docSnap.data() as DonationRecord;
+            if (this.isFictionalNameOrPhone(data.donorName, data.donorPhone)) {
+              const replacement = INITIAL_DONATIONS.find((d) => d.id === docSnap.id);
+              if (replacement) {
+                setDoc(doc(db, 'donations', docSnap.id), replacement).catch(() => {});
+                remoteDonations.push(replacement);
+              } else {
+                deleteDoc(doc(db, 'donations', docSnap.id)).catch(() => {});
+              }
+              return;
+            }
             remoteDonations.push({ ...data, id: docSnap.id });
           });
           if (remoteDonations.length > 0) {

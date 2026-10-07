@@ -64,8 +64,8 @@ export const Agenda: React.FC<AgendaProps> = ({
   const [newTitle, setNewTitle] = useState('');
   const [newDate, setNewDate] = useState('2026-10-09');
   const [newTime, setNewTime] = useState('19:00');
-  const [newLocation, setNewLocation] = useState('Casa do Gabriel');
-  const [newLeader, setNewLeader] = useState('Coordenação');
+  const [newLocation, setNewLocation] = useState('Célula Santa Gemma Galgani • Shalom');
+  const [newLeader, setNewLeader] = useState('Cristiane Alves & Francisco José');
   const [newType, setNewType] = useState<EventType>('encontro');
   const [newDescription, setNewDescription] = useState('');
 

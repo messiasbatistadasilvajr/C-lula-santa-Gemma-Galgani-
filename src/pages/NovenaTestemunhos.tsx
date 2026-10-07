@@ -124,7 +124,7 @@ const NOVENA_DAYS: NovenaDayItem[] = [
 const INITIAL_TESTIMONIES: GraceTestimony[] = [
   {
     id: 'test_1',
-    authorName: 'Renata Albuquerque',
+    authorName: 'Ana Regina Vieira de Brito',
     authorRole: 'membro',
     title: 'Cura física da minha mãe e paz no lar',
     story: 'Minha mãe estava internada com um quadro respiratório grave e muitas dores. Pedi intercessão na novena de Santa Gemma e a célula toda rezou comigo. Três dias depois os exames apresentaram melhora inacreditável e ela pôde voltar para casa curada! Louvado seja Deus!',
@@ -135,10 +135,10 @@ const INITIAL_TESTIMONIES: GraceTestimony[] = [
   },
   {
     id: 'test_2',
-    authorName: 'Thiago Medeiros',
+    authorName: 'Aliomar Gabriel Oliveira',
     authorRole: 'membro',
     title: 'Abertura para o discernimento vocacional',
-    story: 'Vivia muito angustiado sem saber a vontade de Deus para a minha juventude. Lendo os escritos de Santa Gemma sobre o amor apaixonado pela Eucaristia e a Cruz, meu coração se inflamou de paz. Iniciei o caminho vocacional com clareza e alegria interior.',
+    story: 'Lendo os escritos de Santa Gemma sobre o amor apaixonado pela Eucaristia e a Cruz, meu coração se inflamou de paz. A caminhada na célula fortaleceu minha oração diária com clareza e alegria interior.',
     category: 'vocacional',
     date: '10 de Setembro de 2026',
     praiseCount: 22,
@@ -146,10 +146,10 @@ const INITIAL_TESTIMONIES: GraceTestimony[] = [
   },
   {
     id: 'test_3',
-    authorName: 'Família Mendonça',
+    authorName: 'Cristiane Alves Nunes de Oliveira',
     authorRole: 'formador',
-    title: 'Reconciliação e volta de meu irmão à Igreja',
-    story: 'Meu irmão estava afastado dos sacramentos havia mais de 6 anos e revoltado com a fé. Colocamos a foto dele na estampa de Santa Gemma durante o terço da célula. No último domingo, para nossa grande surpresa, ele pediu para se confessar e participou da Missa em lágrimas.',
+    title: 'Reconciliação familiar pela intercessão de Santa Gemma',
+    story: 'Apresentamos na oração comunitária da nossa célula a intenção de reconciliação e retorno aos sacramentos. Pela intercessão de Santa Gemma Galgani, alcançamos a graça da confissão e retorno à Santa Missa.',
     category: 'conversao',
     date: '02 de Setembro de 2026',
     praiseCount: 31,
@@ -157,10 +157,10 @@ const INITIAL_TESTIMONIES: GraceTestimony[] = [
   },
   {
     id: 'test_4',
-    authorName: 'Juliana Costa',
+    authorName: 'Juliana Martins Lima',
     authorRole: 'membro',
-    title: 'Provisão financeira e aprovação em concurso',
-    story: 'Estávamos passando por um momento de aperto extremo. Rezei a novena pedindo a provisão de Santa Gemma para pagar as despesas e terminar os estudos. Deus abriu portas inesperadas com uma contratação na área!',
+    title: 'Provisão financeira e portas abertas no trabalho',
+    story: 'Estávamos passando por um momento de aperto. Rezei a novena pedindo a intercessão de Santa Gemma para pagar as despesas e concluir os estudos. Deus abriu portas inesperadas no trabalho!',
     category: 'trabalho',
     date: '25 de Agosto de 2026',
     praiseCount: 19,
@@ -199,7 +199,7 @@ export const NovenaTestemunhos: React.FC<NovenaTestemunhosProps> = ({
   // Estado dos Testemunhos
   const [testimonies, setTestimonies] = useState<GraceTestimony[]>(() => {
     try {
-      const saved = localStorage.getItem('sg_testimonies_list');
+      const saved = localStorage.getItem('sg_testimonies_list_v3');
       return saved ? JSON.parse(saved) : INITIAL_TESTIMONIES;
     } catch {
       return INITIAL_TESTIMONIES;
@@ -223,7 +223,7 @@ export const NovenaTestemunhos: React.FC<NovenaTestemunhosProps> = ({
 
   useEffect(() => {
     try {
-      localStorage.setItem('sg_testimonies_list', JSON.stringify(testimonies));
+      localStorage.setItem('sg_testimonies_list_v3', JSON.stringify(testimonies));
     } catch {
       // Ignora erro
     }
