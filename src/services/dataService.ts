@@ -504,6 +504,24 @@ class DataService {
       });
       this.unsubscribers.push(unsubDonations);
 
+      // 10. Albums listener (Galeria de Fotos da Célula)
+      const unsubAlbums = onSnapshot(collection(db, 'albums'), (snapshot) => {
+        if (!snapshot.empty) {
+          const remoteAlbums: GalleryAlbum[] = [];
+          snapshot.forEach((docSnap) => {
+            const data = docSnap.data() as GalleryAlbum;
+            remoteAlbums.push({ ...data, id: docSnap.id });
+          });
+          if (remoteAlbums.length > 0) {
+            this.albums = remoteAlbums;
+            this.saveToStorage(STORAGE_KEYS.ALBUMS, this.albums);
+          }
+        }
+      }, (error) => {
+        console.warn('Firestore onSnapshot albums fallback:', error.message);
+      });
+      this.unsubscribers.push(unsubAlbums);
+
     } catch (err) {
       console.warn('Erro ao configurar listeners do Firestore:', err);
     }
@@ -622,6 +640,17 @@ class DataService {
       .catch(err => {
         console.warn('Erro ao salvar post no Firestore:', err);
       });
+
+    // Se a publicação tiver uma foto anexada, salva automaticamente na Galeria da Célula
+    if (newPost.imageUrl && this.albums.length > 0) {
+      const targetAlbumId = this.albums[0].id;
+      this.addPhotoToAlbum(targetAlbumId, {
+        url: newPost.imageUrl,
+        caption: newPost.title || newPost.content.slice(0, 80),
+        author: newPost.authorName,
+        date: new Date().toLocaleDateString('pt-BR'),
+      });
+    }
 
     return newPost;
   }
@@ -1077,18 +1106,28 @@ class DataService {
       id: `photo_${Date.now()}`,
     };
 
+    let updatedAlbum: GalleryAlbum | null = null;
     this.albums = this.albums.map(alb => {
       if (alb.id === albumId) {
-        return {
+        updatedAlbum = {
           ...alb,
-          photoCount: alb.photoCount + 1,
+          coverImage: newPhoto.url || alb.coverImage,
+          photoCount: alb.photos.length + 1,
           photos: [newPhoto, ...alb.photos],
         };
+        return updatedAlbum;
       }
       return alb;
     });
 
     this.saveToStorage(STORAGE_KEYS.ALBUMS, this.albums);
+
+    if (updatedAlbum) {
+      setDoc(doc(db, 'albums', albumId), updatedAlbum).catch(err =>
+        console.warn('Erro ao salvar foto do álbum no Firestore:', err)
+      );
+    }
+
     return newPhoto;
   }
 

@@ -42,15 +42,18 @@ export const MobileShell: React.FC<MobileShellProps> = ({
   const bottomNavActive: MainTab = isMainTab ? (activeTab as MainTab) : 'home';
 
   return (
-    <div className="min-h-screen relative flex justify-center text-[#241E1C] overflow-x-hidden selection:bg-[#7B1113] selection:text-white">
+    <div className="min-h-screen w-full relative flex justify-center text-[#241E1C] overflow-x-hidden selection:bg-[#7B1113] selection:text-white">
       {/* 
         PARALLAX SANTA GEMMA BACKGROUND:
         Covers the ENTIRE page/viewport behind everything, with smooth parallax motion on scroll.
       */}
       <ParallaxSantaGemmaBg opacity={bgOpacity} />
 
-      {/* Mobile container - Responsive smartphone frame centered on desktop with elegant translucent backdrop */}
-      <div className="w-full max-w-md min-h-screen bg-[#FBF9F6]/80 backdrop-blur-md shadow-2xl flex flex-col relative border-x border-[#E0D8CB]/70 z-10">
+      {/* Mobile container - Centered on all screens without a parent backdrop-filter trapping fixed children */}
+      <div className="w-full max-w-md mx-auto min-h-screen shadow-2xl flex flex-col relative border-x border-[#E0D8CB]/70 z-10">
+        {/* Dedicated background layer so backdrop-blur never creates a containing block for fixed modals */}
+        <div className="absolute inset-0 bg-[#FBF9F6]/80 backdrop-blur-md pointer-events-none -z-10" />
+
         {/* Offline indicator banner */}
         <OfflineIndicator />
 
@@ -61,7 +64,7 @@ export const MobileShell: React.FC<MobileShellProps> = ({
         />
 
         {/* Mobile Header */}
-        <div className="relative z-30">
+        <div className="relative z-30 w-full">
           <Header
             onOpenMenu={() => setIsMenuOpen(true)}
             onOpenNotices={() => onTabChange('avisos')}
@@ -73,17 +76,17 @@ export const MobileShell: React.FC<MobileShellProps> = ({
         </div>
 
         {/* PWA Install Banner */}
-        <div className="relative z-20">
+        <div className="relative z-20 w-full">
           <PWAInstallBanner />
         </div>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-x-hidden relative z-10 pb-4">
+        <main className="flex-1 w-full overflow-x-hidden relative z-10 pb-4">
           {children}
         </main>
 
         {/* Fixed Bottom Navigation */}
-        <div className="relative z-40">
+        <div className="relative z-40 w-full">
           <BottomNav
             activeTab={bottomNavActive}
             onTabChange={(tab) => onTabChange(tab)}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Menu, Bell, Image as ImageIcon, Share2, Copy, Check, MessageCircle, X, QrCode, UserCheck } from 'lucide-react';
 import { UserRole } from '../../types';
 import { generateQrMatrixFromString } from '../../utils/pixGenerator';
@@ -173,102 +174,105 @@ export const Header: React.FC<HeaderProps> = ({
       </header>
 
       {/* Modal de Compartilhamento para o Grupo de Oração */}
-      {isShareOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4"
-          onClick={() => setIsShareOpen(false)}
-        >
+      {isShareOpen &&
+        typeof document !== 'undefined' &&
+        createPortal(
           <div
-            className="w-full max-w-sm bg-[#FAF8F5] rounded-2xl p-4 shadow-2xl border-2 border-[#E5C158] space-y-3.5 text-[#241E1C] animate-in zoom-in-95 duration-150"
-            onClick={e => e.stopPropagation()}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto"
+            onClick={() => setIsShareOpen(false)}
           >
-            <div className="flex items-start justify-between">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#7B1113]">
-                  Acesso Liberado para Todos os Irmãos
-                </span>
-                <h3 className="text-sm font-bold font-cinzel text-[#36070D]">
-                  Enviar App para o Grupo de Oração
-                </h3>
+            <div
+              className="w-full max-w-sm mx-auto my-auto bg-[#FAF8F5] rounded-2xl p-4 shadow-2xl border-2 border-[#E5C158] space-y-3.5 text-[#241E1C] animate-in zoom-in-95 duration-150 max-h-[90dvh] overflow-y-auto"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#7B1113]">
+                    Acesso Liberado para Todos os Irmãos
+                  </span>
+                  <h3 className="text-sm font-bold font-cinzel text-[#36070D]">
+                    Enviar App para o Grupo de Oração
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsShareOpen(false)}
+                  className="p-1 rounded-full text-[#70645E] hover:bg-[#EAE4DB] cursor-pointer shrink-0"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => setIsShareOpen(false)}
-                className="p-1 rounded-full text-[#70645E] hover:bg-[#EAE4DB] cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
 
-            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-[11px] text-emerald-950 leading-relaxed">
-              ✅ <strong>Sincronização Automática Ativa:</strong> Qualquer irmão do grupo que abrir o link abaixo já consegue ver e interagir no Mural, Intercessão, Agenda e Caixinha PIX sem bloqueio de login!
-            </div>
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-[11px] text-emerald-950 leading-relaxed">
+                ✅ <strong>Sincronização Automática Ativa:</strong> Qualquer irmão do grupo que abrir o link abaixo já consegue ver e interagir no Mural, Intercessão, Agenda e Caixinha PIX sem bloqueio de login!
+              </div>
 
-            {/* QR Code para escanear presencialmente no encontro */}
-            <div className="flex flex-col items-center justify-center bg-white p-3 rounded-xl border border-[#ECE7DF]">
-              <svg
-                viewBox={`0 0 ${qrMatrix.length} ${qrMatrix.length}`}
-                width={132}
-                height={132}
-                shapeRendering="crispEdges"
-              >
-                <rect width={qrMatrix.length} height={qrMatrix.length} fill="#FFFFFF" />
-                {qrMatrix.map((row, rIdx) =>
-                  row.map((cell, cIdx) =>
-                    cell ? (
-                      <rect key={`${rIdx}-${cIdx}`} x={cIdx} y={rIdx} width={1} height={1} fill="#241E1C" />
-                    ) : null
-                  )
-                )}
-              </svg>
-              <span className="text-[10px] text-[#70645E] mt-1.5 font-medium">
-                Escaneie na reunião da célula ou envie no WhatsApp
-              </span>
-            </div>
+              {/* QR Code para escanear presencialmente no encontro */}
+              <div className="flex flex-col items-center justify-center bg-white p-3 rounded-xl border border-[#ECE7DF]">
+                <svg
+                  viewBox={`0 0 ${qrMatrix.length} ${qrMatrix.length}`}
+                  width={132}
+                  height={132}
+                  shapeRendering="crispEdges"
+                >
+                  <rect width={qrMatrix.length} height={qrMatrix.length} fill="#FFFFFF" />
+                  {qrMatrix.map((row, rIdx) =>
+                    row.map((cell, cIdx) =>
+                      cell ? (
+                        <rect key={`${rIdx}-${cIdx}`} x={cIdx} y={rIdx} width={1} height={1} fill="#241E1C" />
+                      ) : null
+                    )
+                  )}
+                </svg>
+                <span className="text-[10px] text-[#70645E] mt-1.5 font-medium text-center">
+                  Escaneie na reunião da célula ou envie no WhatsApp
+                </span>
+              </div>
 
-            {/* Caixa com o Link Oficial */}
-            <div className="bg-white p-2.5 rounded-xl border border-[#DFD8CE]">
-              <span className="text-[9px] font-bold uppercase text-[#70645E] block mb-0.5">
-                Link Oficial do Aplicativo:
-              </span>
-              <p className="text-[11px] font-mono text-[#7B1113] font-bold break-all select-all">
-                {shareUrl}
-              </p>
-            </div>
+              {/* Caixa com o Link Oficial */}
+              <div className="bg-white p-2.5 rounded-xl border border-[#DFD8CE]">
+                <span className="text-[9px] font-bold uppercase text-[#70645E] block mb-0.5">
+                  Link Oficial do Aplicativo:
+                </span>
+                <p className="text-[11px] font-mono text-[#7B1113] font-bold break-all select-all">
+                  {shareUrl}
+                </p>
+              </div>
 
-            {/* Botões de Ação */}
-            <div className="space-y-2">
-              <a
-                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappInviteText)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2.5 px-3 rounded-xl bg-[#075E54] hover:bg-[#064E46] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition cursor-pointer"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Enviar Convite no Grupo do WhatsApp</span>
-              </a>
+              {/* Botões de Ação */}
+              <div className="space-y-2">
+                <a
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappInviteText)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 px-3 rounded-xl bg-[#075E54] hover:bg-[#064E46] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition cursor-pointer"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Enviar Convite no Grupo do WhatsApp</span>
+                </a>
 
-              <button
-                type="button"
-                onClick={handleCopyInvite}
-                className="w-full py-2.5 px-3 rounded-xl bg-[#7B1113] hover:bg-[#580C14] text-white text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer"
-              >
-                {copiedLink ? (
-                  <>
-                    <Check className="w-4 h-4 text-[#E5C158]" />
-                    <span>Link Copiado! Cole no WhatsApp</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" />
-                    <span>Copiar Link do App</span>
-                  </>
-                )}
-              </button>
+                <button
+                  type="button"
+                  onClick={handleCopyInvite}
+                  className="w-full py-2.5 px-3 rounded-xl bg-[#7B1113] hover:bg-[#580C14] text-white text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer"
+                >
+                  {copiedLink ? (
+                    <>
+                      <Check className="w-4 h-4 text-[#E5C158]" />
+                      <span>Link Copiado! Cole no WhatsApp</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      <span>Copiar Link do App</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </>
   );
 };

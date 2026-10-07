@@ -19,10 +19,15 @@ import {
   Flame,
   Award,
   QrCode,
-  BellRing
+  BellRing,
+  Camera,
+  Upload,
+  Image as ImageIcon,
+  Trash2
 } from 'lucide-react';
 import { CommunityPost, PostType, UserRole, DonorProfile } from '../types';
 import { Modal } from '../components/common/Modal';
+import { compressAndReadImageFile } from '../utils/imageUpload';
 import {
   getNextCellMeeting,
   requestNotificationPermission,
@@ -72,6 +77,25 @@ export const Home: React.FC<HomeProps> = ({
   const [postType, setPostType] = useState<PostType>('reflexao');
   const [postTag, setPostTag] = useState('Reflexão');
   const [postImageUrl, setPostImageUrl] = useState('');
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+
+  const handlePhotoFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingPhoto(true);
+    try {
+      const dataUrl = await compressAndReadImageFile(file);
+      setPostImageUrl(dataUrl);
+      setPostType('foto');
+      setPostTag('Foto');
+      showToast('📷 Foto carregada e pronta para salvar!');
+    } catch {
+      showToast('Não foi possível carregar a foto selecionada.');
+    } finally {
+      setIsUploadingPhoto(false);
+      e.target.value = '';
+    }
+  };
 
   // Dynamic greeting based on current local hour
   const getGreeting = () => {
@@ -87,7 +111,7 @@ export const Home: React.FC<HomeProps> = ({
 
   const handleSubmitNewPost = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!postContent.trim()) return;
+    if (!postContent.trim() && !postImageUrl.trim()) return;
 
     onAddPost({
       authorId: 'me',
@@ -95,8 +119,8 @@ export const Home: React.FC<HomeProps> = ({
       authorRole: currentUser.role,
       authorAvatar: currentUser.avatarUrl,
       type: postType,
-      title: postTitle.trim() || undefined,
-      content: postContent.trim(),
+      title: postTitle.trim() || (postType === 'foto' ? 'Momento da Célula Santa Gemma' : undefined),
+      content: postContent.trim() || 'Registro fotográfico da nossa Célula Santa Gemma Galgani 🌹',
       imageUrl: postImageUrl.trim() || undefined,
       tag: postTag || 'Comunidade',
     });
@@ -105,7 +129,7 @@ export const Home: React.FC<HomeProps> = ({
     setPostContent('');
     setPostImageUrl('');
     setIsNewPostModalOpen(false);
-    showToast('Publicação enviada para o mural!');
+    showToast(postImageUrl ? '📷 Foto publicada no Mural e salva na Galeria!' : 'Publicação enviada para o mural!');
   };
 
   const handleSendComment = (e: React.FormEvent) => {
@@ -305,7 +329,7 @@ export const Home: React.FC<HomeProps> = ({
             <span className="text-[10px] text-[#70645E]">Acesso rápido</span>
           </div>
 
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             <button
               type="button"
               onClick={() => onNavigate('membros')}
@@ -406,6 +430,20 @@ export const Home: React.FC<HomeProps> = ({
 
             <button
               type="button"
+              onClick={() => onNavigate('galeria')}
+              className="p-2.5 rounded-xl bg-gradient-to-b from-rose-50 to-white hover:bg-white border border-rose-300/90 shadow-2xs text-left group transition active:scale-95 flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-7 h-7 rounded-lg bg-rose-100 text-[#7B1113] flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform">
+                <Camera className="w-4 h-4 text-[#7B1113]" />
+              </div>
+              <h4 className="text-[11px] font-bold text-[#241E1C] group-hover:text-[#7B1113] transition leading-tight">
+                Fotos & Galeria
+              </h4>
+              <p className="text-[9px] text-rose-900 font-medium truncate">Salvar Fotos 📷</p>
+            </button>
+
+            <button
+              type="button"
               onClick={() => onNavigate('santagemma')}
               className="p-2.5 rounded-xl bg-gradient-to-br from-white/95 to-[#FFF7ED]/90 hover:bg-white border border-[#FDE68A] shadow-2xs text-left group transition active:scale-95 flex flex-col justify-between cursor-pointer"
             >
@@ -423,19 +461,33 @@ export const Home: React.FC<HomeProps> = ({
 
       {/* 4. Mural da Comunidade */}
       <section className="space-y-3 pt-1">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-bold text-[#241E1C]">Mural da Comunidade</h3>
             <p className="text-[11px] text-[#70645E]">Partilhas, avisos e momentos da célula</p>
           </div>
-          <button
-            type="button"
-            onClick={() => setIsNewPostModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#7B1113] text-white text-xs font-bold shadow-sm hover:bg-[#580C14] active:scale-95 transition cursor-pointer"
-          >
-            <PlusCircle className="w-3.5 h-3.5" />
-            <span>Publicar</span>
-          </button>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setPostType('foto');
+                setPostTag('Foto');
+                setIsNewPostModalOpen(true);
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-100 text-[#7B1113] border border-amber-300 text-xs font-bold shadow-2xs hover:bg-amber-200 active:scale-95 transition cursor-pointer"
+            >
+              <Camera className="w-3.5 h-3.5" />
+              <span>Salvar Foto</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsNewPostModalOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#7B1113] text-white text-xs font-bold shadow-sm hover:bg-[#580C14] active:scale-95 transition cursor-pointer"
+            >
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>Publicar</span>
+            </button>
+          </div>
         </div>
 
         {/* Filter tags horizontal bar */}
@@ -446,7 +498,7 @@ export const Home: React.FC<HomeProps> = ({
             { id: 'aviso', label: 'Avisos' },
             { id: 'testemunho', label: 'Testemunhos' },
             { id: 'momento', label: 'Momentos' },
-            { id: 'foto', label: 'Fotos' },
+            { id: 'foto', label: '📷 Fotos' },
           ].map(tag => (
             <button
               key={tag.id}
@@ -463,11 +515,64 @@ export const Home: React.FC<HomeProps> = ({
           ))}
         </div>
 
+        {/* Banner dedicado quando a aba Fotos está selecionada */}
+        {selectedTag === 'foto' && (
+          <div className="rounded-2xl bg-gradient-to-r from-[#7B1113]/10 to-amber-50 p-3.5 border border-[#7B1113]/25 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
+            <div className="space-y-0.5">
+              <h4 className="text-xs font-bold text-[#36070D] flex items-center gap-1.5">
+                <Camera className="w-4 h-4 text-[#7B1113]" />
+                <span>Fotos & Memórias da Célula</span>
+              </h4>
+              <p className="text-[11px] text-[#554741]">
+                Envie fotos do celular ou computador ou acesse os álbuns completos da Galeria.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={() => {
+                  setPostType('foto');
+                  setPostTag('Foto');
+                  setIsNewPostModalOpen(true);
+                }}
+                className="flex-1 sm:flex-initial px-3 py-2 rounded-xl bg-[#7B1113] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs hover:bg-[#580C14] active:scale-95 transition cursor-pointer"
+              >
+                <Upload className="w-3.5 h-3.5" />
+                <span>Enviar Foto</span>
+              </button>
+              {onNavigate && (
+                <button
+                  type="button"
+                  onClick={() => onNavigate('galeria')}
+                  className="flex-1 sm:flex-initial px-3 py-2 rounded-xl bg-white text-[#7B1113] border border-[#7B1113]/30 text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-amber-50 active:scale-95 transition cursor-pointer"
+                >
+                  <ImageIcon className="w-3.5 h-3.5" />
+                  <span>Abrir Galeria</span>
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Feed Posts List */}
         <div className="space-y-3">
           {filteredPosts.length === 0 ? (
-            <div className="rounded-2xl bg-white/85 backdrop-blur-sm p-6 text-center text-xs text-[#8A7C75] border border-white/60">
-              Nenhuma publicação nesta categoria ainda. Seja o primeiro a partilhar!
+            <div className="rounded-2xl bg-white/85 backdrop-blur-sm p-6 text-center text-xs text-[#8A7C75] border border-white/60 space-y-3">
+              <p>Nenhuma publicação nesta categoria ainda. Seja o primeiro a partilhar!</p>
+              {selectedTag === 'foto' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPostType('foto');
+                    setPostTag('Foto');
+                    setIsNewPostModalOpen(true);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#7B1113] text-white text-xs font-bold shadow-xs hover:bg-[#580C14] active:scale-95 transition cursor-pointer"
+                >
+                  <Camera className="w-4 h-4" />
+                  <span>Adicionar Primeira Foto</span>
+                </button>
+              )}
             </div>
           ) : (
             filteredPosts.map(post => {
@@ -478,19 +583,19 @@ export const Home: React.FC<HomeProps> = ({
                   className="rounded-2xl bg-white/90 backdrop-blur-md p-4 shadow-sm border border-white/70 space-y-3"
                 >
                   {/* Author row */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
                       <img 
                         src={post.authorAvatar} 
                         alt={post.authorName} 
-                        className="w-9 h-9 rounded-full object-cover border border-[#ECE7DF]" 
+                        className="w-9 h-9 rounded-full object-cover border border-[#ECE7DF] shrink-0" 
                       />
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <h4 className="text-xs font-bold text-[#241E1C]">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <h4 className="text-xs font-bold text-[#241E1C] truncate">
                             {post.authorName}
                           </h4>
-                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#F4EFEB] text-[#7B1113]">
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#F4EFEB] text-[#7B1113] shrink-0">
                             {post.authorRole === 'admin' ? 'Coordenação' : post.authorRole === 'formador' ? 'Formadora' : 'Membro'}
                           </span>
                         </div>
@@ -498,7 +603,7 @@ export const Home: React.FC<HomeProps> = ({
                       </div>
                     </div>
 
-                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${typeInfo.badge}`}>
+                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border shrink-0 ${typeInfo.badge}`}>
                       {typeInfo.label}
                     </span>
                   </div>
@@ -510,7 +615,7 @@ export const Home: React.FC<HomeProps> = ({
                     </h5>
                   )}
 
-                  <p className="text-xs text-[#423834] leading-relaxed whitespace-pre-line">
+                  <p className="text-xs text-[#423834] leading-relaxed whitespace-pre-line break-words">
                     {post.content}
                   </p>
 
@@ -533,7 +638,7 @@ export const Home: React.FC<HomeProps> = ({
                   )}
 
                   {/* Post Actions */}
-                  <div className="pt-2 border-t border-[#F2ECE3] flex items-center justify-between text-xs text-[#70645E]">
+                  <div className="pt-2 border-t border-[#F2ECE3] flex items-center justify-between gap-2 text-xs text-[#70645E] flex-wrap">
                     <div className="flex items-center gap-3">
                       <button
                         type="button"
@@ -576,89 +681,202 @@ export const Home: React.FC<HomeProps> = ({
         </div>
       </section>
 
-      {/* Modal: Nova Publicação */}
+      {/* Modal: Nova Publicação no Mural (Responsivo e Centralizado) */}
       <Modal
         isOpen={isNewPostModalOpen}
         onClose={() => setIsNewPostModalOpen(false)}
-        title="Nova Publicação no Mural"
+        title={postType === 'foto' ? 'Salvar & Publicar Foto' : 'Nova Publicação no Mural'}
         subtitle="Partilhe reflexões, avisos, orações ou fotos com a célula"
       >
-        <form onSubmit={handleSubmitNewPost} className="space-y-3.5">
+        <form onSubmit={handleSubmitNewPost} className="space-y-4">
+          {/* Autor Identificado */}
+          <div className="flex items-center justify-between gap-2.5 p-2.5 rounded-xl bg-white border border-[#ECE7DF]">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <img
+                src={currentUser.avatarUrl}
+                alt={currentUser.name}
+                className="w-9 h-9 rounded-full object-cover border border-[#D9D0C5] shrink-0"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-bold text-[#241E1C] truncate">
+                  {currentUser.name}
+                </p>
+                <p className="text-[10px] text-[#7B1113] font-semibold">
+                  Publicando como {currentUser.role === 'admin' ? 'Coordenação' : currentUser.role === 'formador' ? 'Formador(a)' : 'Membro da Célula'}
+                </p>
+              </div>
+            </div>
+            {onNavigate && (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsNewPostModalOpen(false);
+                  onNavigate('galeria');
+                }}
+                className="px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-[#7B1113] border border-amber-300 text-[10px] font-bold flex items-center gap-1 shrink-0 transition cursor-pointer active:scale-95"
+              >
+                <ImageIcon className="w-3.5 h-3.5" />
+                <span>Ver Galeria</span>
+              </button>
+            )}
+          </div>
+
+          {/* Seletor Visual de Tipo de Publicação */}
           <div>
-            <label className="block text-xs font-bold text-[#36070D] mb-1">
-              Tipo de Publicação
+            <label className="block text-xs font-bold text-[#36070D] mb-1.5">
+              Escolha a Categoria da Publicação:
             </label>
-            <select
-              value={postType}
-              onChange={e => {
-                const val = e.target.value as PostType;
-                setPostType(val);
-                setPostTag(typeLabels[val].label);
-              }}
-              className="w-full rounded-xl border border-[#D9D0C5] p-2 text-xs bg-white focus:outline-[#7B1113]"
-            >
-              <option value="reflexao">Reflexão Espiritual</option>
-              <option value="aviso">Aviso da Célula</option>
-              <option value="testemunho">Testemunho de Fé</option>
-              <option value="oracao">Pedido de Oração</option>
-              <option value="momento">Momento da Célula</option>
-              <option value="foto">Foto / Memória</option>
-            </select>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+              {(
+                [
+                  { id: 'reflexao', label: '📖 Reflexão' },
+                  { id: 'aviso', label: '📢 Aviso' },
+                  { id: 'testemunho', label: '✨ Testemunho' },
+                  { id: 'oracao', label: '🙏 Oração' },
+                  { id: 'momento', label: '🌹 Momento' },
+                  { id: 'foto', label: '📷 Foto' },
+                ] as { id: PostType; label: string }[]
+              ).map(item => {
+                const isSelected = postType === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => {
+                      setPostType(item.id);
+                      setPostTag(typeLabels[item.id].label);
+                    }}
+                    className={`py-2 px-2.5 rounded-xl text-xs font-bold border transition text-center cursor-pointer active:scale-95 ${
+                      isSelected
+                        ? 'bg-[#7B1113] text-white border-[#7B1113] shadow-xs'
+                        : 'bg-white text-[#554741] border-[#D9D0C5] hover:bg-[#F4EFEB]'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Painel Responsivo de Upload e Captura de Fotos (Destaque quando 'foto' é selecionado ou sempre disponível) */}
+          <div className={`rounded-2xl p-3.5 border transition space-y-3 ${
+            postType === 'foto'
+              ? 'bg-gradient-to-br from-rose-50/90 to-amber-50/70 border-[#7B1113]/40 shadow-2xs'
+              : 'bg-white border-[#ECE7DF]'
+          }`}>
+            <div className="flex items-center justify-between gap-2">
+              <label className="block text-xs font-bold text-[#36070D] flex items-center gap-1.5">
+                <Camera className="w-4 h-4 text-[#7B1113]" />
+                <span>Selecionar ou Tirar Foto do Aparelho</span>
+              </label>
+              {isUploadingPhoto && (
+                <span className="text-[10px] font-bold text-[#7B1113] animate-pulse">
+                  Processando foto...
+                </span>
+              )}
+            </div>
+
+            {/* Botões Responsivos para escolher da Galeria do Celular/PC ou Câmera */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <label className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#7B1113] hover:bg-[#580C14] text-white text-xs font-bold shadow-xs cursor-pointer active:scale-95 transition text-center">
+                <Upload className="w-4 h-4 shrink-0" />
+                <span>Escolher Foto do Aparelho</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoFileChange}
+                  className="hidden"
+                />
+              </label>
+
+              <label className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-[#36070D] border border-amber-300 text-xs font-bold cursor-pointer active:scale-95 transition text-center">
+                <Camera className="w-4 h-4 text-[#7B1113] shrink-0" />
+                <span>Tirar Foto com a Câmera</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={handlePhotoFileChange}
+                  className="hidden"
+                />
+              </label>
+            </div>
+
+            {/* Pré-visualização da Foto Carregada */}
+            {postImageUrl && (
+              <div className="relative rounded-xl overflow-hidden bg-black/90 border border-[#D9D0C5] max-h-52 flex items-center justify-center">
+                <img
+                  src={postImageUrl}
+                  alt="Prévia da foto selecionada"
+                  className="w-full h-auto max-h-52 object-contain"
+                />
+                <button
+                  type="button"
+                  onClick={() => setPostImageUrl('')}
+                  className="absolute top-2 right-2 px-2.5 py-1 rounded-lg bg-red-700/90 hover:bg-red-800 text-white text-[10px] font-bold flex items-center gap-1 shadow-md cursor-pointer active:scale-95"
+                >
+                  <Trash2 className="w-3 h-3" />
+                  <span>Remover</span>
+                </button>
+              </div>
+            )}
+
+            {/* Opção secundária de colar link caso deseje */}
+            <div>
+              <label className="block text-[10px] font-semibold text-[#70645E] mb-1">
+                Ou cole o link (URL) de uma imagem da internet (Opcional):
+              </label>
+              <input
+                type="url"
+                placeholder="https://exemplo.com/foto.jpg"
+                value={postImageUrl.startsWith('data:') ? '' : postImageUrl}
+                onChange={e => setPostImageUrl(e.target.value)}
+                className="w-full rounded-xl border border-[#D9D0C5] px-3 py-2 text-xs bg-white text-[#241E1C] focus:outline-[#7B1113]"
+              />
+            </div>
           </div>
 
           <div>
             <label className="block text-xs font-bold text-[#36070D] mb-1">
-              Título (Opcional)
+              Título ou Legenda da Foto (Opcional)
             </label>
             <input
               type="text"
-              placeholder="Ex: A presença de Deus nas pequenas coisas..."
+              placeholder="Ex: Encontro de célula abençoado na segunda-feira..."
               value={postTitle}
               onChange={e => setPostTitle(e.target.value)}
-              className="w-full rounded-xl border border-[#D9D0C5] p-2 text-xs bg-white focus:outline-[#7B1113]"
+              className="w-full rounded-xl border border-[#D9D0C5] px-3 py-2.5 text-xs bg-white text-[#241E1C] focus:outline-[#7B1113]"
             />
           </div>
 
           <div>
             <label className="block text-xs font-bold text-[#36070D] mb-1">
-              Mensagem / Conteúdo *
+              {postType === 'foto' ? 'Descrição ou Partilha da Foto (Opcional)' : 'Mensagem / Conteúdo *'}
             </label>
             <textarea
-              required
-              rows={4}
-              placeholder="Escreva sua reflexão ou recado para a célula..."
+              required={postType !== 'foto' && !postImageUrl}
+              rows={3}
+              placeholder="Escreva sua reflexão, legenda da foto ou recado para os irmãos da célula..."
               value={postContent}
               onChange={e => setPostContent(e.target.value)}
-              className="w-full rounded-xl border border-[#D9D0C5] p-2 text-xs bg-white focus:outline-[#7B1113]"
+              className="w-full rounded-xl border border-[#D9D0C5] px-3 py-2.5 text-xs bg-white text-[#241E1C] focus:outline-[#7B1113] leading-relaxed"
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-[#36070D] mb-1">
-              URL da Imagem (Opcional)
-            </label>
-            <input
-              type="url"
-              placeholder="https://exemplo.com/foto.jpg"
-              value={postImageUrl}
-              onChange={e => setPostImageUrl(e.target.value)}
-              className="w-full rounded-xl border border-[#D9D0C5] p-2 text-xs bg-white focus:outline-[#7B1113]"
-            />
-          </div>
-
-          <div className="pt-2 flex justify-end gap-2">
+          <div className="pt-2 border-t border-[#ECE7DF] grid grid-cols-2 gap-2.5">
             <button
               type="button"
               onClick={() => setIsNewPostModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-[#70645E] hover:bg-[#EFEAE2] cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl border border-[#D9D0C5] bg-white text-xs font-bold text-[#70645E] hover:bg-[#EFEAE2] transition cursor-pointer active:scale-95"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-[#7B1113] text-white text-xs font-bold hover:bg-[#580C14] transition cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl bg-[#7B1113] text-white text-xs font-bold hover:bg-[#580C14] shadow-sm transition cursor-pointer active:scale-95"
             >
-              Publicar Agora
+              {postType === 'foto' || postImageUrl ? 'Salvar Foto no Mural' : 'Publicar no Mural'}
             </button>
           </div>
         </form>

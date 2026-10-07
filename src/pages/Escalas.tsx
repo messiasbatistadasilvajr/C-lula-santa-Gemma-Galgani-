@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { MeetingScale, UserRole } from '../types';
 import { WhatsAppSummaryModal } from '../components/common/WhatsAppSummaryModal';
+import { Modal } from '../components/common/Modal';
 
 interface EscalasProps {
   scales: MeetingScale[];
@@ -411,144 +412,134 @@ export const Escalas: React.FC<EscalasProps> = ({
       </div>
 
       {/* Modal Criar Nova Escala */}
-      {showCreateModal && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div 
-            className="w-full max-w-md bg-[#FAF8F5] rounded-2xl shadow-2xl border border-[#EDE8E0] p-4 max-h-[90vh] overflow-y-auto"
-            onClick={e => e.stopPropagation()}
-          >
-            <h3 className="text-sm font-bold font-cinzel text-[#36070D] mb-3">
-              Cadastrar Nova Escala & Roteiro
-            </h3>
-
-            <form onSubmit={handleCreateScale} className="space-y-3 text-xs">
-              <div>
-                <label className="block font-bold text-[#36070D] mb-1">Data e Horário:</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Ex: Segunda-feira ou Sexta-feira • 19:00 às 21:00"
-                  value={newMeetingDate}
-                  onChange={e => setNewMeetingDate(e.target.value)}
-                  className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-[#36070D] mb-1">Tema da Formação:</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Ex: A Vida no Espírito e a Vocação Cristã"
-                  value={newTheme}
-                  onChange={e => setNewTheme(e.target.value)}
-                  className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block font-bold text-[#36070D] mb-1">Formador(a):</label>
-                  <input
-                    type="text"
-                    placeholder="Nome do formador"
-                    value={newFormador}
-                    onChange={e => setNewFormador(e.target.value)}
-                    className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-[#36070D] mb-1">Animação/Oração:</label>
-                  <input
-                    type="text"
-                    placeholder="Nome do condutor"
-                    value={newAnimator}
-                    onChange={e => setNewAnimator(e.target.value)}
-                    className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block font-bold text-[#36070D] mb-1">Música / Louvor:</label>
-                  <input
-                    type="text"
-                    placeholder="Quem toca violão/canta"
-                    value={newMusic}
-                    onChange={e => setNewMusic(e.target.value)}
-                    className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-[#36070D] mb-1">Acolhida & Porta:</label>
-                  <input
-                    type="text"
-                    placeholder="Quem recebe os irmãos"
-                    value={newWelcome}
-                    onChange={e => setNewWelcome(e.target.value)}
-                    className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block font-bold text-[#36070D] mb-1">Lanche / Comes:</label>
-                  <input
-                    type="text"
-                    placeholder="Quem organiza o ágape"
-                    value={newSnack}
-                    onChange={e => setNewSnack(e.target.value)}
-                    className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-[#36070D] mb-1">Intercessão Prévia:</label>
-                  <input
-                    type="text"
-                    placeholder="Quem reza antes"
-                    value={newIntercession}
-                    onChange={e => setNewIntercession(e.target.value)}
-                    className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-bold text-[#36070D] mb-1">Observações adicionais:</label>
-                <textarea
-                  rows={2}
-                  placeholder="Instruções para o encontro..."
-                  value={newNotes}
-                  onChange={e => setNewNotes(e.target.value)}
-                  className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#DDD5C7]">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="px-3 py-1.5 rounded-lg text-[#70645E] hover:bg-[#EAE4DB]"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-1.5 rounded-lg bg-[#7B1113] text-white font-bold"
-                >
-                  Salvar Escala
-                </button>
-              </div>
-            </form>
+      <Modal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        title="Cadastrar Nova Escala & Roteiro"
+        subtitle="Defina os responsáveis de segunda ou sexta-feira (19h às 21h)"
+      >
+        <form onSubmit={handleCreateScale} className="space-y-3 text-xs">
+          <div>
+            <label className="block font-bold text-[#36070D] mb-1">Data e Horário:</label>
+            <input
+              type="text"
+              required
+              placeholder="Ex: Segunda-feira ou Sexta-feira • 19:00 às 21:00"
+              value={newMeetingDate}
+              onChange={e => setNewMeetingDate(e.target.value)}
+              className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+            />
           </div>
-        </div>
-      )}
+
+          <div>
+            <label className="block font-bold text-[#36070D] mb-1">Tema da Formação:</label>
+            <input
+              type="text"
+              required
+              placeholder="Ex: A Vida no Espírito e a Vocação Cristã"
+              value={newTheme}
+              onChange={e => setNewTheme(e.target.value)}
+              className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label className="block font-bold text-[#36070D] mb-1">Formador(a):</label>
+              <input
+                type="text"
+                placeholder="Nome do formador"
+                value={newFormador}
+                onChange={e => setNewFormador(e.target.value)}
+                className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+              />
+            </div>
+            <div>
+              <label className="block font-bold text-[#36070D] mb-1">Animação/Oração:</label>
+              <input
+                type="text"
+                placeholder="Nome do condutor"
+                value={newAnimator}
+                onChange={e => setNewAnimator(e.target.value)}
+                className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label className="block font-bold text-[#36070D] mb-1">Música / Louvor:</label>
+              <input
+                type="text"
+                placeholder="Quem toca violão/canta"
+                value={newMusic}
+                onChange={e => setNewMusic(e.target.value)}
+                className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+              />
+            </div>
+            <div>
+              <label className="block font-bold text-[#36070D] mb-1">Acolhida & Porta:</label>
+              <input
+                type="text"
+                placeholder="Quem recebe os irmãos"
+                value={newWelcome}
+                onChange={e => setNewWelcome(e.target.value)}
+                className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label className="block font-bold text-[#36070D] mb-1">Lanche / Comes:</label>
+              <input
+                type="text"
+                placeholder="Quem organiza o ágape"
+                value={newSnack}
+                onChange={e => setNewSnack(e.target.value)}
+                className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+              />
+            </div>
+            <div>
+              <label className="block font-bold text-[#36070D] mb-1">Intercessão Prévia:</label>
+              <input
+                type="text"
+                placeholder="Quem reza antes"
+                value={newIntercession}
+                onChange={e => setNewIntercession(e.target.value)}
+                className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-bold text-[#36070D] mb-1">Observações adicionais:</label>
+            <textarea
+              rows={2}
+              placeholder="Instruções para o encontro..."
+              value={newNotes}
+              onChange={e => setNewNotes(e.target.value)}
+              className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-2.5 pt-2 border-t border-[#DDD5C7]">
+            <button
+              type="button"
+              onClick={() => setShowCreateModal(false)}
+              className="w-full py-2.5 px-3 rounded-xl border border-[#DDD5C7] bg-white font-bold text-[#70645E] hover:bg-[#EAE4DB] cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="w-full py-2.5 px-4 rounded-xl bg-[#7B1113] text-white font-bold hover:bg-[#580C14] cursor-pointer"
+            >
+              Salvar Escala
+            </button>
+          </div>
+        </form>
+      </Modal>
 
       {/* WhatsApp Modal */}
       <WhatsAppSummaryModal

@@ -107,6 +107,12 @@ service cloud.firestore {
       allow create, update, delete: if true;
     }
 
+    // GALERIA DE FOTOS E ÁLBUNS DA CÉLULA
+    match /albums/{albumId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+
     // Global Catch-all fallback
     match /{document=**} {
       allow read, write: if false;

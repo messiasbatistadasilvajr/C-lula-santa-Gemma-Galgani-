@@ -784,7 +784,7 @@ export const NovenaTestemunhos: React.FC<NovenaTestemunhosProps> = ({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
               <label className="block text-xs font-bold text-[#36070D] mb-1">
                 Categoria
@@ -811,7 +811,7 @@ export const NovenaTestemunhos: React.FC<NovenaTestemunhosProps> = ({
                 type="text"
                 value={newAuthorName}
                 onChange={e => setNewAuthorName(e.target.value)}
-                placeholder="Ex: Lucas / Uma irmã da célula"
+                placeholder="Ex: Cristiane / Um irmão da célula"
                 className="w-full text-xs p-2.5 rounded-xl border border-[#EDE8E0] focus:ring-2 focus:ring-[#7B1113] focus:outline-none"
               />
             </div>

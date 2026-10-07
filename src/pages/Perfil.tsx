@@ -733,17 +733,17 @@ export const Perfil: React.FC<PerfilProps> = ({
             />
           </div>
 
-          <div className="pt-2 flex justify-end gap-2">
+          <div className="pt-2 border-t border-[#ECE7DF] grid grid-cols-2 gap-2.5">
             <button
               type="button"
               onClick={() => setIsEditModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-[#70645E] hover:bg-[#EFEAE2] cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl border border-[#D9D0C5] bg-white text-xs font-bold text-[#70645E] hover:bg-[#EFEAE2] transition cursor-pointer active:scale-95"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-[#7B1113] text-white text-xs font-bold hover:bg-[#580C14] transition cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl bg-[#7B1113] text-white text-xs font-bold hover:bg-[#580C14] shadow-sm transition cursor-pointer active:scale-95"
             >
               Salvar Perfil
             </button>

@@ -725,7 +725,7 @@ export const Agenda: React.FC<AgendaProps> = ({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
               <label className="block text-xs font-bold text-[#36070D] mb-1">
                 Data *
@@ -735,7 +735,7 @@ export const Agenda: React.FC<AgendaProps> = ({
                 required
                 value={newDate}
                 onChange={e => setNewDate(e.target.value)}
-                className="w-full rounded-xl border border-[#D9D0C5] p-2 text-xs bg-white focus:outline-[#7B1113]"
+                className="w-full rounded-xl border border-[#D9D0C5] p-2.5 text-xs bg-white focus:outline-[#7B1113]"
               />
             </div>
             <div>
@@ -747,12 +747,12 @@ export const Agenda: React.FC<AgendaProps> = ({
                 required
                 value={newTime}
                 onChange={e => setNewTime(e.target.value)}
-                className="w-full rounded-xl border border-[#D9D0C5] p-2 text-xs bg-white focus:outline-[#7B1113]"
+                className="w-full rounded-xl border border-[#D9D0C5] p-2.5 text-xs bg-white focus:outline-[#7B1113]"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
               <label className="block text-xs font-bold text-[#36070D] mb-1">
                 Tipo
@@ -760,7 +760,7 @@ export const Agenda: React.FC<AgendaProps> = ({
               <select
                 value={newType}
                 onChange={e => setNewType(e.target.value as EventType)}
-                className="w-full rounded-xl border border-[#D9D0C5] p-2 text-xs bg-white focus:outline-[#7B1113]"
+                className="w-full rounded-xl border border-[#D9D0C5] p-2.5 text-xs bg-white focus:outline-[#7B1113]"
               >
                 <option value="encontro">Encontro de Célula</option>
                 <option value="formacao">Noite de Formação</option>
@@ -778,7 +778,7 @@ export const Agenda: React.FC<AgendaProps> = ({
                 value={newLeader}
                 onChange={e => setNewLeader(e.target.value)}
                 placeholder="Ex: Coordenação"
-                className="w-full rounded-xl border border-[#D9D0C5] p-2 text-xs bg-white focus:outline-[#7B1113]"
+                className="w-full rounded-xl border border-[#D9D0C5] p-2.5 text-xs bg-white focus:outline-[#7B1113]"
               />
             </div>
           </div>
@@ -791,8 +791,8 @@ export const Agenda: React.FC<AgendaProps> = ({
               type="text"
               value={newLocation}
               onChange={e => setNewLocation(e.target.value)}
-              placeholder="Ex: Casa do Gabriel ou Shalom da Paz"
-              className="w-full rounded-xl border border-[#D9D0C5] p-2 text-xs bg-white focus:outline-[#7B1113]"
+              placeholder="Ex: Célula Santa Gemma Galgani • Shalom"
+              className="w-full rounded-xl border border-[#D9D0C5] p-2.5 text-xs bg-white focus:outline-[#7B1113]"
             />
           </div>
 
@@ -805,21 +805,21 @@ export const Agenda: React.FC<AgendaProps> = ({
               value={newDescription}
               onChange={e => setNewDescription(e.target.value)}
               placeholder="Louvor comunitário, lanche e partilha..."
-              className="w-full rounded-xl border border-[#D9D0C5] p-2 text-xs bg-white focus:outline-[#7B1113]"
+              className="w-full rounded-xl border border-[#D9D0C5] p-2.5 text-xs bg-white focus:outline-[#7B1113]"
             />
           </div>
 
-          <div className="pt-2 flex justify-end gap-2">
+          <div className="pt-2 border-t border-[#ECE7DF] grid grid-cols-2 gap-2.5">
             <button
               type="button"
               onClick={() => setIsAddModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-[#70645E] hover:bg-[#EFEAE2] active:scale-95 transition cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl border border-[#D9D0C5] bg-white text-xs font-bold text-[#70645E] hover:bg-[#EFEAE2] active:scale-95 transition cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-[#7B1113] text-white text-xs font-bold hover:bg-[#580C14] active:scale-95 transition cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl bg-[#7B1113] text-white text-xs font-bold hover:bg-[#580C14] shadow-sm active:scale-95 transition cursor-pointer"
             >
               Agendar Evento
             </button>

@@ -348,11 +348,11 @@ export const Intercessao: React.FC<IntercessaoProps> = ({
               placeholder="Descreva sua necessidade com fé e humildade..."
               value={newContent}
               onChange={e => setNewContent(e.target.value)}
-              className="w-full rounded-xl border border-[#D9D0C5] p-2 text-xs bg-white focus:outline-[#7B1113]"
+              className="w-full rounded-xl border border-[#D9D0C5] p-2.5 text-xs bg-white focus:outline-[#7B1113] leading-relaxed"
             />
           </div>
 
-          <div className="flex items-center gap-2 pt-1">
+          <div className="flex items-center gap-2 pt-1 p-2.5 rounded-xl bg-amber-50/80 border border-amber-200">
             <input
               type="checkbox"
               id="urgent"
@@ -365,17 +365,17 @@ export const Intercessao: React.FC<IntercessaoProps> = ({
             </label>
           </div>
 
-          <div className="pt-2 flex justify-end gap-2">
+          <div className="pt-2 border-t border-[#ECE7DF] grid grid-cols-2 gap-2.5">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-[#70645E] hover:bg-[#EFEAE2] active:scale-95 transition cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl border border-[#D9D0C5] bg-white text-xs font-bold text-[#70645E] hover:bg-[#EFEAE2] active:scale-95 transition cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-[#7B1113] text-white text-xs font-bold hover:bg-[#580C14] active:scale-95 transition cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl bg-[#7B1113] text-white text-xs font-bold hover:bg-[#580C14] shadow-sm active:scale-95 transition cursor-pointer"
             >
               Pedir Oração
             </button>

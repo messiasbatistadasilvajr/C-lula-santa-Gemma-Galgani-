@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Copy, Check, Share2, MessageCircle, Sparkles } from 'lucide-react';
 import { MeetingScale } from '../../types';
 
@@ -19,7 +20,7 @@ export const WhatsAppSummaryModal: React.FC<WhatsAppSummaryModalProps> = ({
 }) => {
   const [copied, setCopied] = useState(false);
 
-  if (!isOpen) return null;
+  if (!isOpen || typeof document === 'undefined') return null;
 
   const handleCopy = async () => {
     try {
@@ -31,21 +32,21 @@ export const WhatsAppSummaryModal: React.FC<WhatsAppSummaryModalProps> = ({
     }
   };
 
-  return (
+  return createPortal(
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/65 backdrop-blur-xs animate-in fade-in duration-200 overflow-y-auto"
       role="dialog"
       aria-modal="true"
       onClick={onClose}
     >
       <div 
-        className="w-full max-w-lg bg-[#FAF8F5] rounded-2xl shadow-2xl border border-[#EDE8E0] flex flex-col max-h-[90vh] overflow-hidden"
+        className="w-full max-w-md mx-auto my-auto bg-[#FAF8F5] rounded-2xl shadow-2xl border border-[#EDE8E0] flex flex-col max-h-[88dvh] overflow-hidden text-[#241E1C]"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 bg-[#7B1113] text-white flex items-center justify-between">
+        <div className="p-4 bg-[#7B1113] text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#25D366] text-white flex items-center justify-center shadow-xs">
+            <div className="w-8 h-8 rounded-lg bg-[#25D366] text-white flex items-center justify-center shadow-xs shrink-0">
               <MessageCircle className="w-5 h-5 fill-current" />
             </div>
             <div>
@@ -69,7 +70,7 @@ export const WhatsAppSummaryModal: React.FC<WhatsAppSummaryModalProps> = ({
 
         {/* Content Preview */}
         <div className="p-4 overflow-y-auto flex-1 space-y-3">
-          <div className="flex items-center justify-between text-xs text-[#70645E]">
+          <div className="flex items-center justify-between gap-2 text-xs text-[#70645E] flex-wrap">
             <span className="font-semibold text-[#36070D]">
               {scale.meetingDate}
             </span>
@@ -79,7 +80,7 @@ export const WhatsAppSummaryModal: React.FC<WhatsAppSummaryModalProps> = ({
           </div>
 
           <div className="relative">
-            <pre className="w-full p-3.5 bg-white rounded-xl border border-[#DDD5C7] text-xs text-[#241E1C] font-mono whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto shadow-inner select-all">
+            <pre className="w-full p-3.5 bg-white rounded-xl border border-[#DDD5C7] text-xs text-[#241E1C] font-mono whitespace-pre-wrap leading-relaxed max-h-64 overflow-y-auto shadow-inner select-all">
               {summaryText}
             </pre>
           </div>
@@ -90,16 +91,16 @@ export const WhatsAppSummaryModal: React.FC<WhatsAppSummaryModalProps> = ({
         </div>
 
         {/* Actions Footer */}
-        <div className="p-4 border-t border-[#ECE7DF] bg-[#F4EFEB] flex items-center gap-2.5">
+        <div className="p-4 border-t border-[#ECE7DF] bg-[#F4EFEB] grid grid-cols-1 sm:grid-cols-2 gap-2.5 shrink-0">
           <button
             type="button"
             onClick={handleCopy}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-white border border-[#DDD5C7] text-[#36070D] font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#FAF8F5] active:scale-95 transition shadow-2xs cursor-pointer"
+            className="w-full py-2.5 px-4 rounded-xl bg-white border border-[#DDD5C7] text-[#36070D] font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#FAF8F5] active:scale-95 transition shadow-2xs cursor-pointer"
           >
             {copied ? (
               <>
                 <Check className="w-4 h-4 text-emerald-600" />
-                <span className="text-emerald-700">Copiado para Área de Transferência!</span>
+                <span className="text-emerald-700">Copiado!</span>
               </>
             ) : (
               <>
@@ -113,13 +114,15 @@ export const WhatsAppSummaryModal: React.FC<WhatsAppSummaryModalProps> = ({
             href={shareUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition shadow-xs cursor-pointer"
+            className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition shadow-xs cursor-pointer"
           >
             <Share2 className="w-4 h-4" />
             <span>Enviar no WhatsApp</span>
           </a>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
+

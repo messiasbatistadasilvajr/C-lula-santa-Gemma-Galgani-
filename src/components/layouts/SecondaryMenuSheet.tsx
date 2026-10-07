@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { 
   X, 
   Image as ImageIcon, 
@@ -135,7 +136,9 @@ export const SecondaryMenuSheet: React.FC<SecondaryMenuSheetProps> = ({
     },
   ];
 
-  return (
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <div 
       className="fixed inset-0 z-50 flex items-start justify-end bg-black/60 backdrop-blur-xs transition-opacity"
       role="dialog"
@@ -143,7 +146,7 @@ export const SecondaryMenuSheet: React.FC<SecondaryMenuSheetProps> = ({
       onClick={onClose}
     >
       <div 
-        className="w-full max-w-xs h-full bg-[#FAF8F5] shadow-2xl flex flex-col overflow-y-auto animate-in slide-in-from-right duration-200 border-l border-[#ECE7DF]"
+        className="w-full max-w-xs h-full bg-[#FAF8F5] shadow-2xl flex flex-col overflow-y-auto animate-in slide-in-from-right duration-200 border-l border-[#ECE7DF] text-[#241E1C]"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -286,6 +289,7 @@ export const SecondaryMenuSheet: React.FC<SecondaryMenuSheetProps> = ({
           </p>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

@@ -14,6 +14,7 @@ import {
   Radio
 } from 'lucide-react';
 import { CellSong, SongCategory, UserRole } from '../types';
+import { Modal } from '../components/common/Modal';
 
 interface CancioneiroProps {
   songs: CellSong[];
@@ -400,116 +401,106 @@ export const Cancioneiro: React.FC<CancioneiroProps> = ({
       </div>
 
       {/* Modal Adicionar Cântico */}
-      {showAddModal && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div 
-            className="w-full max-w-md bg-[#FAF8F5] rounded-2xl shadow-2xl border border-[#EDE8E0] p-4 max-h-[90vh] overflow-y-auto"
-            onClick={e => e.stopPropagation()}
-          >
-            <h3 className="text-sm font-bold font-cinzel text-[#36070D] mb-3">
-              Adicionar Cântico ao Cancioneiro
-            </h3>
-
-            <form onSubmit={handleSaveSong} className="space-y-3 text-xs">
-              <div>
-                <label className="block font-bold text-[#36070D] mb-1">Título do Cântico:</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Ex: Belíssimo Esposo"
-                  value={newTitle}
-                  onChange={e => setNewTitle(e.target.value)}
-                  className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block font-bold text-[#36070D] mb-1">Ministério / Autor:</label>
-                  <input
-                    type="text"
-                    placeholder="Ex: Comunidade Shalom"
-                    value={newArtist}
-                    onChange={e => setNewArtist(e.target.value)}
-                    className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-[#36070D] mb-1">Tom Principal:</label>
-                  <input
-                    type="text"
-                    placeholder="Ex: Em, G, D"
-                    value={newKey}
-                    onChange={e => setNewKey(e.target.value)}
-                    className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block font-bold text-[#36070D] mb-1">Categoria:</label>
-                  <select
-                    value={newCategory}
-                    onChange={e => setNewCategory(e.target.value as SongCategory)}
-                    className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                  >
-                    <option value="louvor">Louvor</option>
-                    <option value="adoracao">Adoração</option>
-                    <option value="espirito_santo">Espírito Santo</option>
-                    <option value="mariano">Mariano</option>
-                    <option value="santa_gemma">Santa Gemma</option>
-                    <option value="comunhao">Comunhão</option>
-                    <option value="perdao">Perdão</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-bold text-[#36070D] mb-1">Momento Sugerido:</label>
-                  <input
-                    type="text"
-                    placeholder="Ex: Louvor Inicial"
-                    value={newMoment}
-                    onChange={e => setNewMoment(e.target.value)}
-                    className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-bold text-[#36070D] mb-1">Letra com Cifras:</label>
-                <textarea
-                  rows={6}
-                  required
-                  placeholder="Cole aqui a letra e cifras do cântico..."
-                  value={newLyrics}
-                  onChange={e => setNewLyrics(e.target.value)}
-                  className="w-full p-2 bg-white rounded-lg border border-[#DDD5C7] font-mono"
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#DDD5C7]">
-                <button
-                  type="button"
-                  onClick={() => setShowAddModal(false)}
-                  className="px-3 py-1.5 rounded-lg text-[#70645E] hover:bg-[#EAE4DB]"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-1.5 rounded-lg bg-[#7B1113] text-white font-bold"
-                >
-                  Salvar no Cancioneiro
-                </button>
-              </div>
-            </form>
+      <Modal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        title="Adicionar Cântico ao Cancioneiro"
+        subtitle="Partilhe letras e cifras para o louvor da célula"
+      >
+        <form onSubmit={handleSaveSong} className="space-y-3 text-xs">
+          <div>
+            <label className="block font-bold text-[#36070D] mb-1">Título do Cântico *</label>
+            <input
+              type="text"
+              required
+              placeholder="Ex: Belíssimo Esposo"
+              value={newTitle}
+              onChange={e => setNewTitle(e.target.value)}
+              className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+            />
           </div>
-        </div>
-      )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label className="block font-bold text-[#36070D] mb-1">Ministério / Autor:</label>
+              <input
+                type="text"
+                placeholder="Ex: Comunidade Shalom"
+                value={newArtist}
+                onChange={e => setNewArtist(e.target.value)}
+                className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+              />
+            </div>
+            <div>
+              <label className="block font-bold text-[#36070D] mb-1">Tom Principal:</label>
+              <input
+                type="text"
+                placeholder="Ex: Em, G, D"
+                value={newKey}
+                onChange={e => setNewKey(e.target.value)}
+                className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label className="block font-bold text-[#36070D] mb-1">Categoria:</label>
+              <select
+                value={newCategory}
+                onChange={e => setNewCategory(e.target.value as SongCategory)}
+                className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+              >
+                <option value="louvor">Louvor</option>
+                <option value="adoracao">Adoração</option>
+                <option value="espirito_santo">Espírito Santo</option>
+                <option value="mariano">Mariano</option>
+                <option value="santa_gemma">Santa Gemma</option>
+                <option value="comunhao">Comunhão</option>
+                <option value="perdao">Perdão</option>
+              </select>
+            </div>
+            <div>
+              <label className="block font-bold text-[#36070D] mb-1">Momento Sugerido:</label>
+              <input
+                type="text"
+                placeholder="Ex: Louvor Inicial"
+                value={newMoment}
+                onChange={e => setNewMoment(e.target.value)}
+                className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7]"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-bold text-[#36070D] mb-1">Letra com Cifras *</label>
+            <textarea
+              rows={6}
+              required
+              placeholder="Cole aqui a letra e cifras do cântico..."
+              value={newLyrics}
+              onChange={e => setNewLyrics(e.target.value)}
+              className="w-full p-2.5 bg-white rounded-xl border border-[#DDD5C7] font-mono"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-2.5 pt-2 border-t border-[#DDD5C7]">
+            <button
+              type="button"
+              onClick={() => setShowAddModal(false)}
+              className="w-full py-2.5 px-3 rounded-xl border border-[#DDD5C7] bg-white font-bold text-[#70645E] hover:bg-[#EAE4DB] cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="w-full py-2.5 px-4 rounded-xl bg-[#7B1113] text-white font-bold hover:bg-[#580C14] cursor-pointer"
+            >
+              Salvar no Cancioneiro
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };
