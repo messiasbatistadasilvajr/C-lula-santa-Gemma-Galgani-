@@ -22,10 +22,12 @@ import {
   DonationCampaign,
   DonationRecord,
   DonationType,
-  PaymentGatewayType
+  PaymentGatewayType,
+  PersistentCacheMetadata
 } from '../types';
 import { STORAGE_KEYS } from '../storage/localStorageKeys';
 import { offlineSyncQueue } from '../storage/syncQueue';
+import { persistentCacheService } from './persistentCacheService';
 import { generatePixCopyPaste } from '../utils/pixGenerator';
 import { 
   MOCK_USERS, 
@@ -43,6 +45,7 @@ import {
   INITIAL_CAMPAIGNS,
   INITIAL_DONATIONS
 } from './mockData';
+import { getLiturgyAndSaintForDate } from './liturgyCalendar';
 import { 
   db, 
   auth, 
@@ -88,8 +91,9 @@ class DataService {
 
   constructor() {
     this.currentUser = this.loadFromStorage(STORAGE_KEYS.CURRENT_USER, MOCK_USERS[0]);
-    this.posts = this.loadFromStorage(STORAGE_KEYS.POSTS, INITIAL_POSTS);
-    this.prayers = this.loadFromStorage(STORAGE_KEYS.PRAYERS, INITIAL_PRAYERS);
+    // Hidratação imediata da camada de cache persistente para visualização offline instantânea
+    this.posts = persistentCacheService.getPostsSync(this.loadFromStorage(STORAGE_KEYS.POSTS, INITIAL_POSTS));
+    this.prayers = persistentCacheService.getPrayersSync(this.loadFromStorage(STORAGE_KEYS.PRAYERS, INITIAL_PRAYERS));
     this.events = this.loadFromStorage(STORAGE_KEYS.EVENTS, INITIAL_EVENTS);
     this.chatMessages = this.loadFromStorage(STORAGE_KEYS.CHAT_MESSAGES, INITIAL_MESSAGES);
     this.albums = this.loadFromStorage(STORAGE_KEYS.ALBUMS, INITIAL_ALBUMS);
@@ -99,9 +103,27 @@ class DataService {
     this.donors = this.loadFromStorage(STORAGE_KEYS.DONORS, INITIAL_DONORS);
     this.campaigns = this.loadFromStorage(STORAGE_KEYS.CAMPAIGNS, INITIAL_CAMPAIGNS);
     this.donations = this.loadFromStorage(STORAGE_KEYS.DONATIONS, INITIAL_DONATIONS);
-    this.dailyLiturgy = SAMPLE_LITURGY;
-    this.saintOfDay = SAMPLE_SAINT;
+    const todayLiturgyData = getLiturgyAndSaintForDate();
+    this.dailyLiturgy = todayLiturgyData.liturgy;
+    this.saintOfDay = todayLiturgyData.saints[0] || SAMPLE_SAINT;
     this.bgOpacity = this.loadFromStorage(STORAGE_KEYS.BG_OPACITY, 0.45);
+
+    // Hidratação assíncrona do IndexedDB (suporte a fotos e histórico expandido)
+    if (typeof window !== 'undefined') {
+      persistentCacheService.getPostsFromIndexedDB().then((cachedPosts) => {
+        if (cachedPosts && cachedPosts.length > 0) {
+          this.posts = cachedPosts;
+          this.notify();
+        }
+      }).catch(() => {});
+
+      persistentCacheService.getPrayersFromIndexedDB().then((cachedPrayers) => {
+        if (cachedPrayers && cachedPrayers.length > 0) {
+          this.prayers = cachedPrayers;
+          this.notify();
+        }
+      }).catch(() => {});
+    }
 
     this.initFirebaseAuth();
     this.setupFirestoreListeners();
@@ -245,6 +267,7 @@ class DataService {
           if (remotePosts.length > 0) {
             this.posts = remotePosts;
             this.saveToStorage(STORAGE_KEYS.POSTS, this.posts);
+            persistentCacheService.savePosts(this.posts);
           }
         }
       }, (error) => {
@@ -274,6 +297,7 @@ class DataService {
           if (remotePrayers.length > 0) {
             this.prayers = remotePrayers;
             this.saveToStorage(STORAGE_KEYS.PRAYERS, this.prayers);
+            persistentCacheService.savePrayers(this.prayers);
           }
         }
       }, (error) => {
@@ -622,6 +646,7 @@ class DataService {
   }
 
   public addPost(data: Omit<CommunityPost, 'id' | 'createdAt' | 'likesCount' | 'hasLiked' | 'commentsCount' | 'comments'>): CommunityPost {
+    const isOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;
     const newPost: CommunityPost = {
       ...data,
       id: `post_${Date.now()}`,
@@ -630,15 +655,28 @@ class DataService {
       hasLiked: false,
       commentsCount: 0,
       comments: [],
+      isOfflinePending: !isOnline,
     };
 
     this.posts = [newPost, ...this.posts];
     this.saveToStorage(STORAGE_KEYS.POSTS, this.posts);
+    persistentCacheService.savePosts(this.posts);
+
+    if (!isOnline) {
+      persistentCacheService.recordOfflinePost(newPost);
+    }
     offlineSyncQueue.enqueue('CREATE', 'post', newPost as unknown as Record<string, unknown>);
 
     setDoc(doc(db, 'posts', newPost.id), newPost)
+      .then(() => {
+        persistentCacheService.removePendingPost(newPost.id);
+        this.posts = this.posts.map(p => p.id === newPost.id ? { ...p, isOfflinePending: false } : p);
+        this.saveToStorage(STORAGE_KEYS.POSTS, this.posts);
+        persistentCacheService.savePosts(this.posts);
+      })
       .catch(err => {
-        console.warn('Erro ao salvar post no Firestore:', err);
+        console.warn('Erro ao salvar post no Firestore, mantido no cache persistente:', err);
+        persistentCacheService.recordOfflinePost(newPost);
       });
 
     // Se a publicação tiver uma foto anexada, salva automaticamente na Galeria da Célula
@@ -673,6 +711,7 @@ class DataService {
       return p;
     });
     this.saveToStorage(STORAGE_KEYS.POSTS, this.posts);
+    persistentCacheService.savePosts(this.posts);
   }
 
   public addComment(postId: string, content: string): void {
@@ -701,6 +740,7 @@ class DataService {
       return p;
     });
     this.saveToStorage(STORAGE_KEYS.POSTS, this.posts);
+    persistentCacheService.savePosts(this.posts);
   }
 
   // ---- INTERCESSÃO & PEDIDOS DE ORAÇÃO ----
@@ -709,6 +749,7 @@ class DataService {
   }
 
   public addPrayer(content: string, category: PrayerIntention['category'], urgent: boolean = false): PrayerIntention {
+    const isOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;
     const newPrayer: PrayerIntention = {
       id: `prayer_${Date.now()}`,
       authorId: this.currentUser.id,
@@ -721,14 +762,29 @@ class DataService {
       createdAt: 'Agora mesmo',
       urgent,
       answered: false,
+      isOfflinePending: !isOnline,
     };
 
     this.prayers = [newPrayer, ...this.prayers];
     this.saveToStorage(STORAGE_KEYS.PRAYERS, this.prayers);
+    persistentCacheService.savePrayers(this.prayers);
+
+    if (!isOnline) {
+      persistentCacheService.recordOfflinePrayer(newPrayer);
+    }
     offlineSyncQueue.enqueue('CREATE', 'prayer', newPrayer as unknown as Record<string, unknown>);
 
     setDoc(doc(db, 'prayers', newPrayer.id), newPrayer)
-      .catch(err => console.warn('Erro ao salvar oração no Firestore:', err));
+      .then(() => {
+        persistentCacheService.removePendingPrayer(newPrayer.id);
+        this.prayers = this.prayers.map(p => p.id === newPrayer.id ? { ...p, isOfflinePending: false } : p);
+        this.saveToStorage(STORAGE_KEYS.PRAYERS, this.prayers);
+        persistentCacheService.savePrayers(this.prayers);
+      })
+      .catch(err => {
+        console.warn('Erro ao salvar oração no Firestore, mantida no cache persistente:', err);
+        persistentCacheService.recordOfflinePrayer(newPrayer);
+      });
 
     return newPrayer;
   }
@@ -759,6 +815,7 @@ class DataService {
       return prayer;
     });
     this.saveToStorage(STORAGE_KEYS.PRAYERS, this.prayers);
+    persistentCacheService.savePrayers(this.prayers);
   }
 
   public markPrayerAnswered(prayerId: string): void {
@@ -783,11 +840,13 @@ class DataService {
       return prayer;
     });
     this.saveToStorage(STORAGE_KEYS.PRAYERS, this.prayers);
+    persistentCacheService.savePrayers(this.prayers);
   }
 
   public deletePrayer(prayerId: string): void {
     this.prayers = this.prayers.filter(p => p.id !== prayerId);
     this.saveToStorage(STORAGE_KEYS.PRAYERS, this.prayers);
+    persistentCacheService.savePrayers(this.prayers);
     offlineSyncQueue.enqueue('DELETE', 'prayer', { prayerId });
 
     deleteDoc(doc(db, 'prayers', prayerId))
@@ -878,15 +937,60 @@ class DataService {
   }
 
   /**
+  /**
    * Sincroniza todas as mutações acumuladas offline quando a conectividade for restabelecida
    */
   public async syncPendingOfflineQueue(): Promise<void> {
-    const items = offlineSyncQueue.getItems();
-    if (items.length === 0 || !this.firebaseUser) return;
+    const queueItems = offlineSyncQueue.getItems();
+    const pendingPosts = persistentCacheService.getPendingPosts();
+    const pendingPrayers = persistentCacheService.getPendingPrayers();
 
-    for (const item of items) {
+    if (queueItems.length === 0 && pendingPosts.length === 0 && pendingPrayers.length === 0) {
+      return;
+    }
+
+    console.log(`[Cache Persistente] Sincronizando com Firestore: ${pendingPosts.length} posts, ${pendingPrayers.length} orações, ${queueItems.length} ações em fila.`);
+
+    // 1. Sincroniza posts criados offline
+    for (const post of pendingPosts) {
       try {
-        if (item.entity === 'event' && item.action === 'CREATE') {
+        const cleanPost: CommunityPost = { ...post, isOfflinePending: false };
+        await setDoc(doc(db, 'posts', post.id), cleanPost);
+        persistentCacheService.removePendingPost(post.id);
+        this.posts = this.posts.map(p => p.id === post.id ? { ...p, isOfflinePending: false } : p);
+      } catch (err) {
+        console.warn(`Erro ao sincronizar post pendente ${post.id}:`, err);
+      }
+    }
+
+    // 2. Sincroniza orações criadas offline
+    for (const prayer of pendingPrayers) {
+      try {
+        const cleanPrayer: PrayerIntention = { ...prayer, isOfflinePending: false };
+        await setDoc(doc(db, 'prayers', prayer.id), cleanPrayer);
+        persistentCacheService.removePendingPrayer(prayer.id);
+        this.prayers = this.prayers.map(p => p.id === prayer.id ? { ...p, isOfflinePending: false } : p);
+      } catch (err) {
+        console.warn(`Erro ao sincronizar oração pendente ${prayer.id}:`, err);
+      }
+    }
+
+    // 3. Processa fila geral de sincronização
+    for (const item of queueItems) {
+      try {
+        if (item.entity === 'post' && item.action === 'CREATE') {
+          const po = item.payload as unknown as CommunityPost;
+          await setDoc(doc(db, 'posts', po.id), { ...po, isOfflinePending: false });
+        } else if (item.entity === 'prayer' && item.action === 'CREATE') {
+          const p = item.payload as unknown as PrayerIntention;
+          await setDoc(doc(db, 'prayers', p.id), { ...p, isOfflinePending: false });
+        } else if (item.entity === 'prayer' && item.action === 'UPDATE') {
+          const { prayerId, ...rest } = item.payload as { prayerId: string; [k: string]: unknown };
+          await updateDoc(doc(db, 'prayers', prayerId), rest);
+        } else if (item.entity === 'prayer' && item.action === 'DELETE') {
+          const { prayerId } = item.payload as { prayerId: string };
+          await deleteDoc(doc(db, 'prayers', prayerId));
+        } else if (item.entity === 'event' && item.action === 'CREATE') {
           const ev = item.payload as unknown as CalendarEvent;
           await setDoc(doc(db, 'events', ev.id), ev);
         } else if (item.entity === 'event' && item.action === 'DELETE') {
@@ -906,15 +1010,6 @@ class DataService {
             maybeCount,
             declinedCount
           });
-        } else if (item.entity === 'prayer' && item.action === 'CREATE') {
-          const p = item.payload as unknown as PrayerIntention;
-          await setDoc(doc(db, 'prayers', p.id), p);
-        } else if (item.entity === 'prayer' && item.action === 'UPDATE') {
-          const { prayerId, ...rest } = item.payload as { prayerId: string; [k: string]: unknown };
-          await updateDoc(doc(db, 'prayers', prayerId), rest);
-        } else if (item.entity === 'prayer' && item.action === 'DELETE') {
-          const { prayerId } = item.payload as { prayerId: string };
-          await deleteDoc(doc(db, 'prayers', prayerId));
         }
       } catch (err) {
         console.warn(`Erro ao sincronizar item offline ${item.id}:`, err);
@@ -922,7 +1017,20 @@ class DataService {
     }
 
     offlineSyncQueue.clearQueue();
+    this.saveToStorage(STORAGE_KEYS.POSTS, this.posts);
+    this.saveToStorage(STORAGE_KEYS.PRAYERS, this.prayers);
+    await persistentCacheService.savePosts(this.posts);
+    await persistentCacheService.savePrayers(this.prayers);
     this.notify();
+  }
+
+  // ---- MÉTODOS DE CACHE PERSISTENTE EXPOSTOS ----
+  public getCacheMetadata(): PersistentCacheMetadata {
+    return persistentCacheService.getCacheMetadata();
+  }
+
+  public async estimateStorageUsage() {
+    return persistentCacheService.estimateStorageUsage();
   }
 
   // ---- ESCALAS DE SERVIÇO & ROTEIRO DO ENCONTRO ----

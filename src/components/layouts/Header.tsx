@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Menu, Bell, Image as ImageIcon, Share2, Copy, Check, MessageCircle, X, QrCode, UserCheck } from 'lucide-react';
+import { Menu, Bell, Image as ImageIcon, Share2, Copy, Check, MessageCircle, X, QrCode, UserCheck, Smartphone } from 'lucide-react';
 import { UserRole } from '../../types';
 import { generateQrMatrixFromString } from '../../utils/pixGenerator';
 
@@ -51,9 +51,9 @@ export const Header: React.FC<HeaderProps> = ({
   }, [isLargeText]);
 
   const shareUrl =
-    typeof window !== 'undefined' && !window.location.hostname.includes('ais-dev')
+    typeof window !== 'undefined' && window.location.origin
       ? window.location.origin
-      : PUBLIC_APP_URL;
+      : 'https://ais-dev-kgz6f3aqokvkmkzezbfub7-154268790842.us-east1.run.app';
 
   const whatsappInviteText =
     `🌹 *Shalom, irmãos da Célula Santa Gemma Galgani!* ✝️\n\n` +
@@ -237,6 +237,11 @@ export const Header: React.FC<HeaderProps> = ({
                 <p className="text-[11px] font-mono text-[#7B1113] font-bold break-all select-all">
                   {shareUrl}
                 </p>
+              </div>
+
+              <div className="bg-[#FAF8F5] p-2 rounded-xl border border-[#ECE7DF] text-[10px] text-[#554741] flex items-center gap-2">
+                <Smartphone className="w-3.5 h-3.5 text-[#7B1113] shrink-0" />
+                <span>Os irmãos podem instalar na tela inicial (PWA) direto pelo Chrome ou Safari!</span>
               </div>
 
               {/* Botões de Ação */}

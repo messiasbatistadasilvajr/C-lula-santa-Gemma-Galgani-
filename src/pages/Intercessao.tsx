@@ -11,7 +11,8 @@ import {
   Trophy,
   WifiOff,
   HardDrive,
-  Trash2
+  Trash2,
+  Clock
 } from 'lucide-react';
 import { PrayerIntention, PrayerCategory } from '../types';
 import { Modal } from '../components/common/Modal';
@@ -111,30 +112,33 @@ export const Intercessao: React.FC<IntercessaoProps> = ({
         </p>
       </div>
 
-      {/* Indicador Amigável de Acesso Sem Internet */}
+      {/* Indicador Amigável de Cache Persistente & Acesso Sem Internet */}
       <div className={`p-3 rounded-2xl border transition-all flex items-center justify-between text-xs shadow-2xs ${
         !isOnline 
-          ? 'bg-amber-50/90 border-amber-300 text-amber-950' 
+          ? 'bg-amber-50/95 border-amber-300 text-amber-950' 
           : 'bg-white/85 border-[#ECE7DF] text-[#70645E]'
       }`}>
         <div className="flex items-center gap-2.5">
           {!isOnline ? (
-            <div className="w-8 h-8 rounded-xl bg-amber-200/80 text-amber-900 flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 rounded-xl bg-amber-200/90 text-amber-900 flex items-center justify-center shrink-0">
               <WifiOff className="w-4 h-4 text-amber-800 animate-pulse" />
             </div>
           ) : (
             <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
-              <CheckCircle className="w-4 h-4 text-emerald-700" />
+              <HardDrive className="w-4 h-4 text-emerald-700" />
             </div>
           )}
           <div>
             <div className="flex items-center gap-1.5 font-bold text-[#241E1C]">
-              <span>{!isOnline ? 'Pedidos Salvos no Celular (Sem Internet)' : 'Pedidos Salvos no seu Celular'}</span>
+              <span>{!isOnline ? 'Orações em Cache Local (Sem Internet)' : 'Orações Salvas no Aparelho (Cache Ativo)'}</span>
+              <span className="text-[10px] px-2 py-0.2 bg-[#7B1113]/10 text-[#7B1113] font-bold rounded-full">
+                {prayers.length} {prayers.length === 1 ? 'intenção' : 'intenções'}
+              </span>
             </div>
             <p className="text-[11px] leading-tight mt-0.5">
               {!isOnline 
-                ? 'Você pode continuar rezando pelos irmãos e anotando seus pedidos mesmo sem internet.'
-                : 'Todos os pedidos de oração ficam guardados no seu celular para você rezar a qualquer hora.'
+                ? 'Você pode rezar pelas intenções dos irmãos e enviar novos pedidos mesmo sem conexão. Tudo sincronizará ao reconectar.'
+                : 'Todas as intenções da célula ficam guardadas no seu celular para oração offline a qualquer hora.'
               }
             </p>
           </div>
@@ -208,6 +212,12 @@ export const Intercessao: React.FC<IntercessaoProps> = ({
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${category.badge}`}>
                       {category.label}
                     </span>
+                    {prayer.isOfflinePending && (
+                      <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300">
+                        <Clock className="w-3 h-3 text-amber-700" />
+                        Salvo no aparelho
+                      </span>
+                    )}
                     {prayer.urgent && (
                       <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300 animate-pulse">
                         <Flame className="w-3 h-3 text-amber-700" />

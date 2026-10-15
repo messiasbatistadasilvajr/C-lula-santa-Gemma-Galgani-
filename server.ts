@@ -1,10 +1,11 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { generatePixCopyPaste } from './src/utils/pixGenerator';
+import { generatePixCopyPaste } from './src/utils/pixGenerator.ts';
 
 dotenv.config();
 
@@ -65,7 +66,8 @@ async function dispatchWhatsAppMessage(phone: string, text: string): Promise<{ s
 
 async function startServer() {
   const app = express();
-  const PORT = Number(process.env.PORT) || 3000;
+  // Must always be 3000 as per AI Studio architecture (Nginx on 8080 proxies to 3000)
+  const PORT = 3000;
 
   app.use(express.json());
 

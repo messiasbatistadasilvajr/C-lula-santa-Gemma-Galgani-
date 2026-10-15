@@ -23,7 +23,9 @@ import {
   Camera,
   Upload,
   Image as ImageIcon,
-  Trash2
+  Trash2,
+  WifiOff,
+  HardDrive
 } from 'lucide-react';
 import { CommunityPost, PostType, UserRole, DonorProfile } from '../types';
 import { Modal } from '../components/common/Modal';
@@ -33,6 +35,8 @@ import {
   requestNotificationPermission,
   sendCellPushNotification,
 } from '../services/cellReminders';
+import { parseDonorBirthday } from './Aniversarios';
+import { useOnlineStatus } from '../hooks/useOnlineStatus';
 
 interface HomeProps {
   currentUser: {
@@ -59,6 +63,7 @@ export const Home: React.FC<HomeProps> = ({
   onNavigateToAgenda,
   onNavigate,
 }) => {
+  const isOnline = useOnlineStatus();
   const [selectedTag, setSelectedTag] = useState<string>('todos');
   const [isNewPostModalOpen, setIsNewPostModalOpen] = useState(false);
   
@@ -129,7 +134,12 @@ export const Home: React.FC<HomeProps> = ({
     setPostContent('');
     setPostImageUrl('');
     setIsNewPostModalOpen(false);
-    showToast(postImageUrl ? '📷 Foto publicada no Mural e salva na Galeria!' : 'Publicação enviada para o mural!');
+    
+    if (isOnline) {
+      showToast(postImageUrl ? '📷 Foto publicada no Mural e salva na Galeria!' : 'Publicação enviada para o mural!');
+    } else {
+      showToast('Publicação salva no cache do aparelho! Será sincronizada na nuvem assim que reconectar.');
+    }
   };
 
   const handleSendComment = (e: React.FormEvent) => {
@@ -137,6 +147,9 @@ export const Home: React.FC<HomeProps> = ({
     if (!newCommentText.trim() || !activeCommentPostId) return;
     onAddComment(activeCommentPostId, newCommentText.trim());
     setNewCommentText('');
+    if (!isOnline) {
+      showToast('Comentário salvo no cache do aparelho!');
+    }
   };
 
   const showToast = (msg: string) => {
@@ -203,7 +216,7 @@ export const Home: React.FC<HomeProps> = ({
             )}
             <a
               href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                '🌹 *Shalom, irmãos da Célula Santa Gemma Galgani!* ✝️\n\nAcesse agora o nosso *Aplicativo Oficial da Célula* (Mural, Intercessão, Agenda, Terço Virtual e Caixinha PIX):\n👉 https://ais-pre-kgz6f3aqokvkmkzezbfub7-154268790842.us-east1.run.app'
+                `🌹 *Shalom, irmãos da Célula Santa Gemma Galgani!* ✝️\n\nAcesse agora o nosso *Aplicativo Oficial da Célula* (Mural, Intercessão, Agenda, Terço Virtual e Caixinha PIX):\n👉 ${typeof window !== 'undefined' ? window.location.origin : 'https://ais-dev-kgz6f3aqokvkmkzezbfub7-154268790842.us-east1.run.app'}`
               )}`}
               target="_blank"
               rel="noopener noreferrer"
@@ -319,6 +332,42 @@ export const Home: React.FC<HomeProps> = ({
         )}
       </section>
 
+      {/* 3.2 Lembrete de Aniversário do Dia / Próximos Aniversariantes */}
+      {onNavigate && donors.length > 0 && (() => {
+        const sortedBdays = [...donors]
+          .map(d => parseDonorBirthday(d))
+          .sort((a, b) => a.daysUntil - b.daysUntil);
+        const nextBday = sortedBdays[0];
+        if (!nextBday) return null;
+
+        return (
+          <section
+            onClick={() => onNavigate('aniversarios')}
+            role="button"
+            tabIndex={0}
+            className="rounded-2xl bg-gradient-to-r from-amber-50/95 via-white/95 to-rose-50/95 backdrop-blur-md p-3.5 shadow-sm border border-amber-300/80 hover:border-[#7B1113] transition cursor-pointer active:scale-[0.99] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5"
+          >
+            <div className="space-y-0.5 min-w-0">
+              <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#7B1113] font-cinzel">
+                <span>🎂 {nextBday.isToday ? 'Aniversário do Dia Hoje!' : 'Lembrete de Aniversário da Célula'}</span>
+              </div>
+              <h4 className="text-xs font-bold text-[#241E1C] truncate">
+                {nextBday.donor.name} • {nextBday.donor.birthDate}
+              </h4>
+              <p className="text-[11px] text-[#554741]">
+                {nextBday.isToday
+                  ? 'Envie agora a mensagem de parabéns do dia no WhatsApp ou Mural!'
+                  : `Próximo aniversário em ${nextBday.daysUntil} dias (${nextBday.nextBirthdayDateStr}) — Ver mensagens prontas`}
+              </p>
+            </div>
+            <span className="px-3 py-1.5 rounded-xl bg-[#7B1113] text-white text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-2xs">
+              <span>Ver Mensagens</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </span>
+          </section>
+        );
+      })()}
+
       {/* 3.5 Atalhos Rápidos da Vida Comunitária */}
       {onNavigate && (
         <section className="space-y-2">
@@ -342,6 +391,20 @@ export const Home: React.FC<HomeProps> = ({
                 Membros ({donors.length || 48})
               </h4>
               <p className="text-[9px] text-[#554741] font-semibold truncate">Lista & Nasc. 👥</p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate('aniversarios')}
+              className="p-2.5 rounded-xl bg-gradient-to-b from-amber-100/90 to-white hover:bg-white border-2 border-amber-400/80 shadow-2xs text-left group transition active:scale-95 flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform font-bold text-xs">
+                🎂
+              </div>
+              <h4 className="text-[11px] font-bold text-[#7B1113] group-hover:text-[#580C14] transition leading-tight">
+                Aniversários
+              </h4>
+              <p className="text-[9px] text-amber-950 font-semibold truncate">Mensagens do Dia 🎉</p>
             </button>
 
             <button
@@ -490,6 +553,39 @@ export const Home: React.FC<HomeProps> = ({
           </div>
         </div>
 
+        {/* Indicador de Cache Persistente & Modo Offline do Mural */}
+        <div className={`p-3 rounded-2xl border transition-all flex items-center justify-between text-xs shadow-2xs ${
+          !isOnline 
+            ? 'bg-amber-50/95 border-amber-300 text-amber-950' 
+            : 'bg-white/85 border-[#ECE7DF] text-[#70645E]'
+        }`}>
+          <div className="flex items-center gap-2.5">
+            {!isOnline ? (
+              <div className="w-8 h-8 rounded-xl bg-amber-200/90 text-amber-900 flex items-center justify-center shrink-0">
+                <WifiOff className="w-4 h-4 text-amber-800 animate-pulse" />
+              </div>
+            ) : (
+              <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                <HardDrive className="w-4 h-4 text-emerald-700" />
+              </div>
+            )}
+            <div>
+              <div className="flex items-center gap-1.5 font-bold text-[#241E1C]">
+                <span>{!isOnline ? 'Mural em Cache Local (Sem Internet)' : 'Mural Salvo no seu Aparelho (Cache Ativo)'}</span>
+                <span className="text-[10px] px-2 py-0.2 bg-[#7B1113]/10 text-[#7B1113] font-bold rounded-full">
+                  {posts.length} {posts.length === 1 ? 'publicação' : 'publicações'}
+                </span>
+              </div>
+              <p className="text-[11px] leading-tight mt-0.5">
+                {!isOnline 
+                  ? 'Você pode ler todas as publicações e fotos salvas. Novas publicações e curtidas serão sincronizadas automaticamente ao reconectar.'
+                  : 'Todas as publicações e fotos ficam gravadas no seu celular para acesso instantâneo e offline.'
+                }
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Filter tags horizontal bar */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
           {[
@@ -603,9 +699,17 @@ export const Home: React.FC<HomeProps> = ({
                       </div>
                     </div>
 
-                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border shrink-0 ${typeInfo.badge}`}>
-                      {typeInfo.label}
-                    </span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {post.isOfflinePending && (
+                        <span className="text-[9px] bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-md font-bold flex items-center gap-1">
+                          <Clock className="w-2.5 h-2.5 text-amber-700" />
+                          <span>Salvo no aparelho</span>
+                        </span>
+                      )}
+                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border shrink-0 ${typeInfo.badge}`}>
+                        {typeInfo.label}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Post body */}

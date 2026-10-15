@@ -28,6 +28,9 @@ export function useData() {
     bgOpacity: localDataService.getBgOpacity(),
     firebaseUser: localDataService.getFirebaseUser(),
     isConnectedToFirebase: localDataService.isConnectedToFirebase(),
+    cacheMetadata: localDataService.getCacheMetadata(),
+    syncPendingOfflineQueue: () => localDataService.syncPendingOfflineQueue(),
+    estimateStorageUsage: () => localDataService.estimateStorageUsage(),
     
     // Actions
     loginWithGoogle: () => localDataService.loginWithGoogle(),

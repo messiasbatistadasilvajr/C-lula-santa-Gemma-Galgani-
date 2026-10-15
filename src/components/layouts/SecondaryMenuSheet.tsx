@@ -17,11 +17,13 @@ import {
   Radio,
   Flame,
   Award,
-  QrCode
+  QrCode,
+  Cake
 } from 'lucide-react';
 import { UserRole } from '../../types';
 import { getSupabaseStatus } from '../../services/supabaseClient';
 import { localDataService } from '../../services/dataService';
+import { PWAInstallButton } from '../common/PWAInstallBanner';
 
 interface SecondaryMenuSheetProps {
   isOpen: boolean;
@@ -44,8 +46,15 @@ export const SecondaryMenuSheet: React.FC<SecondaryMenuSheetProps> = ({
 
   const menuItems = [
     {
+      id: 'aniversarios',
+      title: 'Lembrete de Aniversários & Mensagens 🎂',
+      subtitle: 'Aniversariante do dia, mensagens prontas e WhatsApp',
+      icon: Cake,
+      color: 'bg-amber-100 text-[#7B1113] border border-amber-300',
+    },
+    {
       id: 'membros',
-      title: 'Membros da Célula & Aniversários (48) 👥',
+      title: 'Membros da Célula & Cadastro (48) 👥',
       subtitle: 'Lista completa dos 48 nomes salvos, telefones, datas e SQL',
       icon: ShieldCheck,
       color: 'bg-[#7B1113] text-[#FFF0BE] border border-[#E5C158]',
@@ -172,7 +181,12 @@ export const SecondaryMenuSheet: React.FC<SecondaryMenuSheetProps> = ({
 
         {/* Menu Items */}
         <div className="p-3 space-y-1.5 flex-1">
-          <p className="px-2 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-[#8A7C75]">
+          {/* Botão de Instalação PWA Rápida se estiver no navegador */}
+          <div className="mb-2">
+            <PWAInstallButton variant="menu-item" />
+          </div>
+
+          <p className="px-2 pt-1 pb-1 text-[10px] font-bold uppercase tracking-wider text-[#8A7C75]">
             Acessos Especiais
           </p>
 

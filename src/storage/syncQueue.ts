@@ -39,6 +39,9 @@ class OfflineSyncQueueManager {
     const current = this.getQueue();
     current.push(item);
     this.saveQueue(current);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('offline-sync-queue-updated', { detail: { count: current.length } }));
+    }
     return item;
   }
 
@@ -52,6 +55,9 @@ class OfflineSyncQueueManager {
 
   public clearQueue(): void {
     localStorage.removeItem(STORAGE_KEYS.OFFLINE_QUEUE);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('offline-sync-queue-updated', { detail: { count: 0 } }));
+    }
   }
 }
 

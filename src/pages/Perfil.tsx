@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   User, 
   Calendar, 
@@ -14,12 +14,19 @@ import {
   CheckCircle,
   Download,
   Edit3,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Cloud,
+  Smartphone,
+  HardDrive,
+  Wifi,
+  WifiOff
 } from 'lucide-react';
 import { UserProfile, UserRole, CommunityPost, PrayerIntention, CalendarEvent, DonorProfile } from '../types';
 import { getSupabaseStatus } from '../services/supabaseClient';
 import { offlineSyncQueue } from '../storage/syncQueue';
+import { dataService } from '../services/dataService';
 import { usePWAInstall } from '../hooks/usePWAInstall';
+import { PWAInstallButton } from '../components/common/PWAInstallBanner';
 import { Modal } from '../components/common/Modal';
 
 interface PerfilProps {
@@ -61,10 +68,23 @@ export const Perfil: React.FC<PerfilProps> = ({
   const [showResetNotice, setShowResetNotice] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleManualSync = async () => {
+    setIsSyncing(true);
+    try {
+      await dataService.syncPendingOfflineQueue();
+      showToast('Cache e nuvem sincronizados com sucesso!');
+    } catch {
+      showToast('Cache local preservado no aparelho.');
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   // Edit form states
@@ -77,7 +97,21 @@ export const Perfil: React.FC<PerfilProps> = ({
 
   const supabaseStatus = getSupabaseStatus();
   const { isInstallable, isInstalled, install } = usePWAInstall();
-  const pendingSyncCount = offlineSyncQueue.getPendingCount();
+  const [pendingSyncCount, setPendingSyncCount] = useState<number>(() => offlineSyncQueue.getPendingCount());
+  const [isManualSyncing, setIsManualSyncing] = useState(false);
+  const [manualSyncMsg, setManualSyncMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleQueueChange = () => {
+      setPendingSyncCount(offlineSyncQueue.getPendingCount());
+    };
+    window.addEventListener('offline-sync-queue-updated', handleQueueChange);
+    window.addEventListener('storage', handleQueueChange);
+    return () => {
+      window.removeEventListener('offline-sync-queue-updated', handleQueueChange);
+      window.removeEventListener('storage', handleQueueChange);
+    };
+  }, []);
 
   const myPosts = posts.filter(p => p.authorName === currentUser.name || p.authorId === currentUser.id);
   const myPrayers = prayers.filter(p => p.authorName === currentUser.name || p.authorId === currentUser.id);
@@ -605,6 +639,41 @@ export const Perfil: React.FC<PerfilProps> = ({
                 )
               )}
 
+              {pendingSyncCount > 0 && (
+                <div className="p-3 rounded-xl bg-amber-50/90 border border-amber-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+                  <div className="text-xs text-amber-900 font-medium">
+                    <span className="font-bold">{pendingSyncCount}</span> {pendingSyncCount === 1 ? 'ação pendente' : 'ações pendentes'} para a nuvem
+                  </div>
+                  <button
+                    type="button"
+                    disabled={isManualSyncing}
+                    onClick={async () => {
+                      try {
+                        setIsManualSyncing(true);
+                        await dataService.syncPendingOfflineQueue();
+                        setManualSyncMsg('Sincronizado com sucesso!');
+                        setTimeout(() => setManualSyncMsg(null), 3000);
+                      } catch {
+                        setManualSyncMsg('Erro ao sincronizar.');
+                        setTimeout(() => setManualSyncMsg(null), 3000);
+                      } finally {
+                        setIsManualSyncing(false);
+                      }
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-[#276F50] text-white text-xs font-bold hover:bg-[#1E563E] active:scale-95 transition cursor-pointer flex items-center justify-center gap-1.5 shadow-xs disabled:opacity-50"
+                  >
+                    <Cloud className="w-3.5 h-3.5" />
+                    <span>{isManualSyncing ? 'Sincronizando...' : 'Sincronizar Agora'}</span>
+                  </button>
+                </div>
+              )}
+
+              {manualSyncMsg && (
+                <div className="p-2 rounded-lg bg-emerald-100 text-emerald-900 text-xs font-semibold text-center animate-in fade-in">
+                  {manualSyncMsg}
+                </div>
+              )}
+
               <div className="text-[11px] text-[#70645E] space-y-1 pt-1 border-t border-[#ECE7DF]">
                 <p>• <strong>Firestore:</strong> Sincronização em tempo real de posts, orações e escalas.</p>
                 <p>• <strong>Regras ABAC:</strong> Proteção de integridade e identidade ativa.</p>
@@ -613,25 +682,82 @@ export const Perfil: React.FC<PerfilProps> = ({
             </div>
 
             {/* PWA status block */}
-            <div className="bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xs border border-white/70 space-y-2">
+            <div className="bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xs border border-white/70 space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-xs text-[#241E1C]">Aplicativo PWA</span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                  {isInstalled ? 'Instalado' : 'Pronto p/ Instalação'}
+                <div className="flex items-center gap-2">
+                  <Smartphone className="w-4 h-4 text-[#7B1113]" />
+                  <span className="font-bold text-xs text-[#241E1C]">Aplicativo PWA (Tela Inicial)</span>
+                </div>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  isInstalled 
+                    ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' 
+                    : 'bg-amber-100 text-amber-900 border border-amber-300'
+                }`}>
+                  {isInstalled ? '✅ Instalado no Celular' : 'Pronto p/ Instalação'}
                 </span>
               </div>
-              <p className="text-xs text-[#70645E]">
-                Manifesto, Service Worker e ícones estão configurados para funcionamento offline e mobile.
+              <p className="text-xs text-[#70645E] leading-relaxed">
+                {isInstalled
+                  ? 'O aplicativo está rodando em modo nativo na tela inicial do celular com cache offline completo.'
+                  : 'Adicione à tela inicial do celular para acesso direto em 1 toque, sem precisar digitar endereço e com suporte offline.'}
               </p>
-              {isInstallable && (
-                <button
-                  onClick={install}
-                  className="w-full py-2 rounded-xl bg-[#7B1113] text-white text-xs font-bold hover:bg-[#580C14] transition flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Download className="w-4 h-4" />
-                  Instalar App Agora
-                </button>
+              {!isInstalled && (
+                <div className="pt-1">
+                  <PWAInstallButton variant="solid" className="w-full justify-center py-2.5" />
+                </div>
               )}
+            </div>
+
+            {/* Cache Persistente & Dados Offline */}
+            <div className="bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xs border border-white/70 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-[#7B1113]/10 text-[#7B1113] flex items-center justify-center">
+                    <HardDrive className="w-4 h-4 text-[#7B1113]" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-xs text-[#241E1C]">Cache Persistente da Célula</h4>
+                    <p className="text-[10px] text-[#70645E]">IndexedDB + LocalStorage ativo</p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  ● 100% Offline
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-center pt-1">
+                <div className="p-2.5 rounded-xl bg-[#FAF8F5] border border-[#ECE7DF]">
+                  <span className="text-base font-extrabold text-[#7B1113] font-cinzel block">
+                    {posts.length}
+                  </span>
+                  <span className="text-[10px] font-semibold text-[#554741]">Posts no Mural</span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-[#FAF8F5] border border-[#ECE7DF]">
+                  <span className="text-base font-extrabold text-[#7B1113] font-cinzel block">
+                    {prayers.length}
+                  </span>
+                  <span className="text-[10px] font-semibold text-[#554741]">Orações Salvas</span>
+                </div>
+              </div>
+
+              <p className="text-xs text-[#70645E] leading-relaxed">
+                Todas as publicações do mural e intenções de oração permanecem gravadas na memória do aparelho. Se você ficar sem sinal de celular no encontro ou em retiro, o conteúdo continuará visível normalmente.
+              </p>
+
+              <div className="pt-1 flex items-center justify-between">
+                <div className="text-[10px] text-[#8A7C75]">
+                  Fila offline: <strong>{offlineSyncQueue.getPendingCount()}</strong> pendente(s)
+                </div>
+                <button
+                  type="button"
+                  onClick={handleManualSync}
+                  disabled={isSyncing}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#7B1113] text-white text-xs font-bold shadow-xs hover:bg-[#580C14] active:scale-95 transition disabled:opacity-50 cursor-pointer"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+                  <span>{isSyncing ? 'Sincronizando...' : 'Sincronizar Cache'}</span>
+                </button>
+              </div>
             </div>
 
             {/* Reset data */}

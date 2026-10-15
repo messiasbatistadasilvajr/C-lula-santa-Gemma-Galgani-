@@ -21,5 +21,8 @@ export const STORAGE_KEYS = {
   CAMPAIGNS: 'sg_dizify_campaigns_v2',
   DONATIONS: 'sg_dizify_donations_v4',
   WHATSAPP_BOT_HISTORY: 'sg_dizify_whatsapp_bot_v3',
+  CACHE_METADATA: 'sg_cache_metadata_v1',
+  OFFLINE_PENDING_POSTS: 'sg_offline_pending_posts_v1',
+  OFFLINE_PENDING_PRAYERS: 'sg_offline_pending_prayers_v1',
 } as const;
 

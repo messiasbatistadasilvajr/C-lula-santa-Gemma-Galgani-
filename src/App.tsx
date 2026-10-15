@@ -18,6 +18,7 @@ import { TercoVirtual } from './pages/TercoVirtual';
 import { NovenaTestemunhos } from './pages/NovenaTestemunhos';
 import { ModoEncontro } from './pages/ModoEncontro';
 import { OfertasDizify } from './pages/OfertasDizify';
+import { Aniversarios } from './pages/Aniversarios';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<string>('home');
@@ -193,6 +194,15 @@ export default function App() {
           onDeleteCampaign={data.deleteCampaign}
           onCreatePixDonation={data.createPixDonation}
           onConfirmWebhook={data.confirmPixPaymentWebhook}
+          onBack={() => setCurrentTab('home')}
+        />
+      )}
+
+      {currentTab === 'aniversarios' && (
+        <Aniversarios
+          donors={data.donors}
+          currentUser={data.currentUser}
+          onAddPost={data.addPost}
           onBack={() => setCurrentTab('home')}
         />
       )}

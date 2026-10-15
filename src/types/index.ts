@@ -52,6 +52,7 @@ export interface CommunityPost {
   hasLiked: boolean;
   commentsCount: number;
   comments: PostComment[];
+  isOfflinePending?: boolean;
 }
 
 export type PrayerCategory = 
@@ -75,6 +76,18 @@ export interface PrayerIntention {
   createdAt: string;
   urgent?: boolean;
   answered?: boolean;
+  isOfflinePending?: boolean;
+}
+
+export interface PersistentCacheMetadata {
+  lastUpdated: string;
+  lastSyncedTimestamp: number;
+  postsCount: number;
+  prayersCount: number;
+  offlinePendingPostsCount: number;
+  offlinePendingPrayersCount: number;
+  isHealthy: boolean;
+  source: 'indexeddb' | 'localstorage' | 'network';
 }
 
 export type EventType = 
