@@ -352,6 +352,7 @@ export interface DonorProfile {
   maritalStatus?: string; // Ex: "Solteiro", "Casado", "Solteira"
   leadershipBadge?: string; // Ex: "Coordenador & Formador (Admin)"
   email?: string;
+  avatarUrl?: string;
   totalDonated: number;
   donationsCount: number;
   lastDonationAt?: string;

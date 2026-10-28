@@ -614,11 +614,21 @@ export const Aniversarios: React.FC<AniversariosProps> = ({
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <h4 className="text-xs font-bold text-[#241E1C]">
-                        {item.donor.name}
-                      </h4>
+                  <div className="flex items-start gap-2.5 min-w-0">
+                    <div className="w-10 h-10 rounded-xl overflow-hidden border border-[#7B1113]/30 bg-white shrink-0 shadow-2xs">
+                      {item.donor.avatarUrl ? (
+                        <img src={item.donor.avatarUrl} alt={item.donor.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-amber-100 to-rose-100 flex items-center justify-center text-[#7B1113] font-bold text-xs font-cinzel">
+                          {item.donor.name.split(' ').map(n => n[0]).slice(0, 2).join('')}
+                        </div>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <h4 className="text-xs font-bold text-[#241E1C]">
+                          {item.donor.name}
+                        </h4>
                       {item.donor.leadershipBadge &&
                         item.donor.leadershipBadge.includes('Coordenador') && (
                           <span className="text-[10px] font-bold text-[#7B1113]">
@@ -634,6 +644,7 @@ export const Aniversarios: React.FC<AniversariosProps> = ({
                       <span>📱 {item.donor.phone}</span>
                     </div>
                   </div>
+                </div>
 
                   <div className="text-right shrink-0">
                     <span

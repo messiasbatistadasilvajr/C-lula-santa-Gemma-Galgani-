@@ -230,13 +230,26 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
 
               {/* Caixa com o Link Oficial */}
-              <div className="bg-white p-2.5 rounded-xl border border-[#DFD8CE]">
-                <span className="text-[9px] font-bold uppercase text-[#70645E] block mb-0.5">
-                  Link Oficial do Aplicativo:
-                </span>
-                <p className="text-[11px] font-mono text-[#7B1113] font-bold break-all select-all">
+              <div className="bg-white p-3 rounded-xl border border-[#DFD8CE] space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase text-[#70645E]">
+                    Link de Acesso dos Irmãos:
+                  </span>
+                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    ● Ativo e Online
+                  </span>
+                </div>
+                <p className="text-[11px] font-mono text-[#7B1113] font-bold break-all select-all bg-[#FAF8F5] p-2 rounded-lg border border-[#EDE8E0]">
                   {shareUrl}
                 </p>
+                <div className="text-[10px] text-[#554741] bg-amber-50/80 p-2 rounded-lg border border-amber-200/80 space-y-1">
+                  <p className="font-bold text-amber-950">
+                    🔓 Como ativar o Acesso Público no Google AI Studio:
+                  </p>
+                  <p className="leading-relaxed">
+                    No topo superior direito da tela do AI Studio (fora desta janela), clique no botão <strong>"Share"</strong> (Compartilhar), mude para <strong>"Anyone with the link"</strong> e clique em <strong>Save/Publish</strong>. Isso ativa o link permanente para todos os irmãos sem bloqueios!
+                  </p>
+                </div>
               </div>
 
               <div className="bg-[#FAF8F5] p-2 rounded-xl border border-[#ECE7DF] text-[10px] text-[#554741] flex items-center gap-2">

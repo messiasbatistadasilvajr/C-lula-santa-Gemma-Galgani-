@@ -619,6 +619,833 @@ Nele temos a redenção, pelo seu sangue, a remissão dos pecados, segundo a riq
       },
     ],
   },
+
+  '2026-10-16': {
+    isoDate: '2026-10-16',
+    dayMonthKey: '16/10',
+    liturgy: {
+      date: 'Sexta-feira, 16 de Outubro de 2026',
+      liturgicalColor: 'Branco (ou Verde) • Memória de Santa Margarida Maria Alacoque',
+      headline: 'Sexta-feira da 28ª Semana do Tempo Comum • Santa Margarida Maria Alacoque & São Geraldo Majella',
+      firstReading: {
+        title: 'Primeira Leitura (Ef 1, 11-14)',
+        reference: 'Carta de São Paulo aos Efésios 1, 11-14',
+        text: `Irmãos: Em Cristo, fomos feitos herdeiros, predestinados segundo o desígnio daquele que realiza todas as coisas segundo a sua vontade, para sermos louvor da sua glória, nós que antes esperávamos em Cristo.
+Nele, também vós ouvistes a palavra da verdade, o evangelho da vossa salvação; nele crestes e fostes selados com o Espírito Santo prometido, que é o penhor da nossa herança.`,
+      },
+      psalm: {
+        reference: 'Salmo 32 (33), 1-2. 4-5. 12-13 (R. 12b)',
+        chorus: 'Feliz o povo que o Senhor escolheu por sua herança!',
+        verses: [
+          'Ó justos, alegrai-vos no Senhor! Aos retos fica bem louvar a Deus. Dai graças ao Senhor ao som da harpa, tocai em sua honra a lira de dez cordas!',
+          'Pois reta é a palavra do Senhor, e tudo o que ele faz merece fé. Ele ama a justiça e o direito; da bondade do Senhor está cheia a terra.',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 12, 1-7)',
+        reference: 'São Lucas 12, 1-7',
+        text: `Naquele tempo, milhares de pessoas se reuniram, a ponto de uns pisarem os outros. Jesus começou a dizer primeiro aos seus discípulos: "Tomai cuidado com o fermento dos fariseus, que é a hipocrisia. Não há nada de escondido que não venha a ser revelado, e não há nada em segredo que não venha a ser conhecido.
+Portanto, tudo o que tiverdes dito na escuridão será ouvido na claridade; e o que tiverdes sussurrado aos ouvidos nos quartos fechados será proclamado de cima dos telhados.
+A vós, meus amigos, eu digo: Não tenhais medo daqueles que matam o corpo e depois não podem fazer mais nada. Eu vos mostrarei a quem deveis temer: temei aquele que, depois de tirar a vida, tem o poder de lançar no inferno. Sim, eu vos digo, a esse deveis temer.
+Não se vendem cinco pardais por duas moedinhas? No entanto, nenhum deles é esquecido por Deus. Até mesmo os cabelos da vossa cabeça estão todos contados. Não tenhais medo! Vós valeis mais do que muitos pardais".`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'Jesus nos chama de "meus amigos" e nos assegura que até os cabelos da nossa cabeça estão contados pelo Pai. Santa Margarida Maria, cuja revelação do Sagrado Coração inspirou Santa Gemma, nos convida a confiar plenamente no Coração de Jesus que arde de amor por nós.',
+      },
+    },
+    saints: [
+      {
+        name: 'Santa Margarida Maria Alacoque e São Geraldo Majella',
+        title: 'Apóstola do Sagrado Coração de Jesus e Patrono das Mães e Gestantes',
+        feastDate: '16 de Outubro',
+        summary: 'Santa Margarida Maria recebeu de Jesus as doze promessas do Sagrado Coração; São Geraldo Majella é invocado com enorme carinho pelas mães e famílias na hora do parto.',
+        lifeStory: `Santa Margarida Maria Alacoque (1647–1690), religiosa da Visitação de Paray-le-Monial (França), recebeu as grandes revelações do Coração de Jesus: "Eis o Coração que tanto amou os homens". Seu testemunho foi pilar místico para Santa Gemma Galgani. No mesmo dia a Igreja celebra São Geraldo Majella (1726–1755), irmão redentorista modelo de pureza e socorro às mães em perigo de parto.`,
+        virtue: 'Reparação de amor ao Sagrado Coração e fé inabalável na Providência.',
+        prayer: `Sagrado Coração de Jesus, pelas preces de Santa Margarida Maria e de São Geraldo, protegei as mães, as crianças e as famílias de nossa célula. Jesus manso e humilde de coração, fazei o nosso coração semelhante ao Vosso! Amém.`,
+      },
+    ],
+  },
+
+  '2026-10-17': {
+    isoDate: '2026-10-17',
+    dayMonthKey: '17/10',
+    liturgy: {
+      date: 'Sábado, 17 de Outubro de 2026',
+      liturgicalColor: 'Vermelho • Memória de Santo Inácio de Antioquia',
+      headline: 'Memória de Santo Inácio de Antioquia, Bispo e Mártir',
+      firstReading: {
+        title: 'Primeira Leitura (Ef 1, 15-23)',
+        reference: 'Carta de São Paulo aos Efésios 1, 15-23',
+        text: `Irmãos: Tendo ouvido falar da vossa fé no Senhor Jesus e do vosso amor para com todos os santos, não cesso de dar graças por vós, lembrando-me de vós em minhas orações.
+Peço que o Deus de nosso Senhor Jesus Cristo, o Pai da glória, vos dê um espírito de sabedoria e de revelação, que vos faça conhecê-lo plenamente. Que ele ilumine os olhos do vosso coração, para que compreendais qual é a esperança à qual vos chamou, qual é a riqueza da glória da sua herança entre os santos.`,
+      },
+      psalm: {
+        reference: 'Salmo 8, 2-3a. 4-5. 6-7 (R. 7)',
+        chorus: 'Destes ao vosso Filho poder sobre tudo!',
+        verses: [
+          'Ó Senhor, nosso Deus, como é grande vosso nome por todo o universo! Desdobrastes no céu vossa glória, com a voz de crianças e infantes.',
+          'Contemplando este céu que teus dedos moldaram, a lua e as estrelas que ali fixastes: Que é o homem, para dele te lembrares? O ser humano, para que o visites?',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 12, 8-12)',
+        reference: 'São Lucas 12, 8-12',
+        text: `Naquele tempo, disse Jesus aos seus discípulos: "Todo aquele que der testemunho de mim diante dos homens, também o Filho do Homem dará testemunho dele diante dos anjos de Deus. Mas aquele que me renegar diante dos homens, será renegado diante dos anjos de Deus.
+Todo aquele que disser uma palavra contra o Filho do Homem será perdoado; mas quem blasfemar contra o Espírito Santo não será perdoado.
+Quando vos conduzirem diante das sinagogas, magistrados e autoridades, não vos preocupeis como ou com que haveis de vos defender, ou com o que haveis de dizer; pois, naquela hora, o Espírito Santo vos ensinará o que deveis dizer".`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'Santo Inácio de Antioquia, a caminho do martírio no Coliseu de Roma, declarou: "Sou trigo de Cristo, para ser moído pelos dentes dos leões a fim de me tornar pão imaculado". A promessa de Jesus em Lc 12 de que o Espírito Santo nos ensinará o que falar anima o testemunho corajoso de nossa célula.',
+      },
+    },
+    saints: [
+      {
+        name: 'Santo Inácio de Antioquia, Bispo e Mártir',
+        title: 'Discípulo de São João Evangelista e Padre Apostólico da Igreja',
+        feastDate: '17 de Outubro',
+        summary: 'Segundo sucessor de São Pedro na Sé de Antioquia, foi condenado às feras em Roma no ano 107. Suas sete célebres cartas são tesouro de amor à Igreja e à Eucaristia.',
+        lifeStory: `Santo Inácio foi pastor vigoroso e profundamente enamorado por Jesus Cristo. Ao ser conduzido sob escolta militar para o martírio em Roma, escreveu cartas às comunidades cristãs exortando à unidade com os bispos e amor incondicional ao Corpo Eucarístico de Cristo.`,
+        virtue: 'Coragem inabalável no testemunho cristão e zelo pela unidade da Igreja.',
+        prayer: `Senhor Jesus, que destes a Santo Inácio de Antioquia a graça de se oferecer como trigo moído pelo Vosso amor, concedei à nossa célula a fidelidade e a coragem de jamais renegar o Vosso Santo Nome. Amém.`,
+      },
+    ],
+  },
+
+  '2026-10-18': {
+    isoDate: '2026-10-18',
+    dayMonthKey: '18/10',
+    liturgy: {
+      date: 'Domingo, 18 de Outubro de 2026',
+      liturgicalColor: 'Verde (ou Vermelho na Festa Litúrgica) • 29º Domingo do Tempo Comum',
+      headline: '29º Domingo do Tempo Comum (Ano C) • Festa de São Lucas Evangelista, Padroeiro dos Médicos',
+      firstReading: {
+        title: 'Primeira Leitura (Ex 17, 8-13 ou 2Tm 4, 9-17b)',
+        reference: 'Êxodo 17, 8-13 (29º Domingo) / 2Timóteo 4, 9-17b (Festa de São Lucas)',
+        text: `Naqueles dias, os amalecitas vieram atacar Israel em Refidim. Moisés disse a Josué: "Escolhe homens e vai combater contra os amalecitas. Amanhã eu estarei de pé no alto da colina, com a vara de Deus na mão". Josué fez como Moisés lhe ordenara e foi combater os amalecitas, enquanto Moisés, Aarão e Hur subiram ao alto da colina.
+Quando Moisés mantinha a mão levantada, Israel vencia; mas quando a abaixava, vencia Amalec. Como as mãos de Moisés ficassem pesadas, pegaram uma pedra e a colocaram debaixo dele para que se sentasse; e Aarão e Hur sustentavam suas mãos, um de cada lado.
+Assim suas mãos permaneceram firmes até o pôr do sol. E Josué derrotou Amalec e sua gente ao fio da espada.`,
+      },
+      psalm: {
+        reference: 'Salmo 120 (121), 1-2. 3-4. 5-6. 7-8 (R. cf. 2)',
+        chorus: 'O meu socorro virá do Senhor, que fez o céu e a terra!',
+        verses: [
+          'Eu levanto os meus olhos para os montes: de onde pode vir o meu socorro? Do Senhor é que me vem o meu socorro, do Senhor que fez o céu e fez a terra!',
+          'Ele não deixa tropeçar os teus pés, nem dorme quem te guarda. Não há de dormir nem cochilar o guarda de Israel!',
+          'O Senhor é o teu guarda, o teu protetor, à tua direita ele está como tua sombra. De dia o sol não te fará mal, nem a lua durante a noite.',
+          'O Senhor te guardará de todo mal, ele guardará a tua vida. O Senhor guardará tua entrada e tua saída, agora e para sempre!',
+        ],
+      },
+      secondReading: {
+        title: 'Segunda Leitura (2Tm 3, 14 – 4, 2)',
+        reference: 'Segunda Carta de São Paulo a Timóteo 3, 14 – 4, 2',
+        text: `Caríssimo: Permanece firme naquilo que aprendeste e aceitaste como certo, sabendo de quem o aprendeste. Desde a infância conheces as Sagradas Escrituras; elas têm o poder de te comunicar a sabedoria que conduz à salvação pela fé em Jesus Cristo.
+Toda a Escritura é inspirada por Deus e útil para ensinar, para repreender, para corrigir e para formar na justiça. Por ela, o homem de Deus se torna perfeito e capacitado para toda boa obra.
+Eu te peço com insistência diante de Deus e de Jesus Cristo: proclama a Palavra, insiste a tempo e a contratempo, admoesta, repreende, aconselha com toda paciência e zelo pedagógico.`,
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 18, 1-8 ou Lc 10, 1-9)',
+        reference: 'São Lucas 18, 1-8 (Parábola da Oração Insistente)',
+        text: `Naquele tempo, Jesus contou aos discípulos uma parábola sobre a necessidade de rezar sempre e nunca desanimar, dizendo:
+"Numa cidade havia um juiz que não temia a Deus e não respeitava homem algum. Na mesma cidade havia uma viúva que vinha à sua procura, pedindo: 'Faze-me justiça contra o meu adversário!'
+Durante muito tempo o juiz não quis atender. Mas depois disse consigo mesmo: 'É bem verdade que não temo a Deus e não respeito homem algum. Mas esta viúva já me está aborrecendo. Vou fazer-lhe justiça, para que ela não venha a agredir-me!'".
+E o Senhor acrescentou: "Escutai o que diz este juiz injusto! E Deus, não fará justiça aos seus eleitos, que clamam por ele dia e noite, mesmo que os faça esperar?
+Eu vos declaro que ele lhes fará justiça bem depressa. Mas o Filho do Homem, quando vier, encontrará fé sobre a terra?"`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'Neste domingo, 18 de outubro de 2026, a Palavra de Deus nos entrega o segredo da perseverança cristã: rezar sempre e nunca esmorecer! Como Aarão e Hur sustentaram os braços de Moisés na colina (Ex 17), assim nós na célula sustentamos uns aos outros pela intercessão fraterna diária.',
+      },
+    },
+    saints: [
+      {
+        name: 'São Lucas, Evangelista',
+        title: 'Médico Amado, Evangelista da Misericórdia e Historiador da Salvação',
+        feastDate: '18 de Outubro',
+        summary: 'Médico nascido em Antioquia e companheiro fiel de São Paulo ("Só Lucas está comigo"). Escreveu o terceiro Evangelho — o Evangelho da ternura e da oração — e o livro dos Atos dos Apóstolos.',
+        lifeStory: `São Lucas foi médico e grego de origem. Após sua conversão, tornou-se colaborador incansável de São Paulo em suas viagens missionárias. Seu Evangelho é conhecido pela ênfase na misericórdia de Deus (Parábolas do Bom Samaritano, da Ovelha Perdida e do Filho Pródigo), na oração perseverante e no papel luminoso de Nossa Senhora, tendo recolhido os relatos da infância diretamente do coração da Mãe de Deus. É o padroeiro dos médicos e cirurgiões.`,
+        virtue: 'Sensibilidade pastoral, fidelidade nos momentos difíceis e anúncio da misericórdia.',
+        prayer: `Senhor nosso Deus, que escolhestes São Lucas para revelar em palavras e atos o mistério do Vosso amor pelos pobres e enfermos, abençoai todos os médicos e concedei aos irmãos da nossa célula a graça da oração perseverante que nunca desanima. Por Cristo nosso Senhor. Amém!`,
+      },
+    ],
+  },
+
+  '2026-10-19': {
+    isoDate: '2026-10-19',
+    dayMonthKey: '19/10',
+    liturgy: {
+      date: 'Segunda-feira, 19 de Outubro de 2026',
+      liturgicalColor: 'Verde (ou Branco na Memória Passionista)',
+      headline: 'Segunda-feira da 29ª Semana do Tempo Comum • São Paulo da Cruz & Santos Mártires Canadenses',
+      firstReading: {
+        title: 'Primeira Leitura (Ef 2, 1-10)',
+        reference: 'Carta de São Paulo aos Efésios 2, 1-10',
+        text: `Irmãos: Vós estáveis mortos por causa de vossas faltas e pecados... Mas Deus, que é rico em misericórdia, pelo grande amor com que nos amou, a nós que estávamos mortos por causa dos nossos pecados, deu-nos a vida juntamente com Cristo. É por graça que fostes salvos!
+Com ele nos ressuscitou e nos fez sentar nos céus, em Cristo Jesus. De fato, é pela graça que fostes salvos, mediante a fé. E isto não vem de vós, é dom de Deus; não vem das obras, para que ninguém se glorie. Pois nós somos obra de Deus, criados em Cristo Jesus para as boas obras que Deus preparou de antemão para que as praticássemos.`,
+      },
+      psalm: {
+        reference: 'Salmo 99 (100), 2. 3. 4. 5 (R. 3b)',
+        chorus: 'O Senhor nos fez, a ele pertencemos!',
+        verses: [
+          'Aclamai o Senhor, ó terra inteira, servi ao Senhor com alegria; vinde a ele cantando jubilosos!',
+          'Sabei que o Senhor só ele é Deus, ele mesmo nos fez e somos seus; somos o seu povo e o rebanho do seu pasto.',
+          'Entrai por suas portas dando graças e cantando louvores em seus átrios; bendizei para sempre o seu santo nome!',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 12, 13-21)',
+        reference: 'São Lucas 12, 13-21',
+        text: `Naquele tempo, alguém do meio da multidão disse a Jesus: "Mestre, dize a meu irmão que reparta a herança comigo". Mas Jesus respondeu: "Homem, quem me encarregou de julgar ou de dividir vossos bens?"
+E disse a todos: "Atenção! Tomai cuidado contra todo tipo de ganância, porque, mesmo que alguém tenha muitas coisas, a sua vida não consiste na abundância dos seus bens".
+E contou-lhes uma parábola: "Havia um homem rico, cujas terras deram uma grande colheita. Ele pensava consigo mesmo: 'O que vou fazer? Não tenho onde guardar minha colheita'. Então disse: 'Já sei: vou derrubar meus celeiros e construir outros maiores... E direi à minha alma: Alma, tens uma grande quantidade de bens em reserva para muitos anos. Descansa, come, bebe e aproveita a vida!'
+Mas Deus lhe disse: 'Insensato! Ainda nesta noite tua vida te será reclamada. E aquilo que guardaste, para quem vai ficar?' Assim acontece com quem ajunta tesouros para si mesmo, mas não é rico diante de Deus".`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'Neste encontro de segunda-feira da nossa célula, Jesus nos convida a sermos "ricos diante de Deus". Celebrando São Paulo da Cruz, fundador dos Padres Passionistas cuja espiritualidade moldou a vida de nossa padroeira Santa Gemma, recordamos que a maior riqueza da alma é a Paixão redentora de Jesus.',
+      },
+    },
+    saints: [
+      {
+        name: 'São Paulo da Cruz, Presbítero',
+        title: 'Fundador da Congregação da Paixão de Jesus Cristo (Passionistas)',
+        feastDate: '19 de Outubro',
+        summary: 'Místico italiano do século XVIII que fundou os Passionistas para manter viva a memória da Paixão de Jesus, berço espiritual e congregação venerada por Santa Gemma Galgani.',
+        lifeStory: `São Paulo da Cruz (1694–1775) nasceu em Ovada (Itália). Recebeu inspirações místicas para reunir companheiros que vestissem o hábito negro com o emblema do Coração com a Cruz branca (o "Jesu XPI Passio") e pregassem missões populares com ardente amor ao Crucificado. Santa Gemma Galgani viveu em profunda consonância com essa congregação e foi sepultada no Mosteiro Passionista de Lucca.`,
+        virtue: 'Amor contemplativo à Paixão de Cristo e zelo missionário pelas almas.',
+        prayer: `Ó Deus, que destes a São Paulo da Cruz um singular amor pela Cruz de Cristo, concedei aos membros da Célula Santa Gemma Galgani a graça de encontrar na Paixão de Jesus a fonte de toda paz e santidade. Amém.`,
+      },
+    ],
+  },
+
+  '2026-10-20': {
+    isoDate: '2026-10-20',
+    dayMonthKey: '20/10',
+    liturgy: {
+      date: 'Terça-feira, 20 de Outubro de 2026',
+      liturgicalColor: 'Verde (29ª Semana do Tempo Comum)',
+      headline: 'Terça-feira da 29ª Semana do Tempo Comum • Santa Maria Bertilla Boscardin',
+      firstReading: {
+        title: 'Primeira Leitura (Ef 2, 12-22)',
+        reference: 'Carta de São Paulo aos Efésios 2, 12-22',
+        text: `Irmãos: Lembrai-vos de que outrora éreis pagãos... Mas agora, em Cristo Jesus, vós que antes estáveis longe, fostes aproximados graças ao sangue de Cristo.
+De fato, ele é a nossa paz; dos dois povos fez um só, derrubando o muro de separação, a inimizade... Ele veio para anunciar a paz a vós que estáveis longe, e a paz aos que estavam perto. Pois, por meio dele, uns e outros temos acesso junto ao Pai, num só Espírito.
+Assim já não sois forasteiros nem hóspedes, mas concidadãos dos santos e membros da família de Deus.`,
+      },
+      psalm: {
+        reference: 'Salmo 84 (85), 9ab-10. 11-12. 13-14 (R. cf. 9a)',
+        chorus: 'O Senhor anunciará a paz ao seu povo!',
+        verses: [
+          'Quero ouvir o que diz o Senhor Deus: é um anúncio de paz ao seu povo e a seus santos. A salvação está perto dos que o temem, e a glória habitará na nossa terra.',
+          'A verdade e o amor se encontrarão, a justiça e a paz se abraçarão; da terra brotará a fidelidade, e a justiça olhará lá dos céus.',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 12, 35-38)',
+        reference: 'São Lucas 12, 35-38',
+        text: `Naquele tempo, disse Jesus aos seus discípulos: "Que vossos rins estejam cingidos e vossas lâmpadas acesas! Sede como homens que estão esperando o seu senhor voltar de uma festa de casamento, para lhe abrirem a porta logo que ele chegar e bater.
+Felizes os servos que o senhor encontrar acordados quando chegar! Em verdade vos digo, ele mesmo vai cingir-se, fazê-los sentar à mesa e, passando de um a outro, os servirá. E se chegar à meia-noite ou de madrugada, e assim os encontrar, felizes serão eles!"`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'Jesus nos pede prontidão de espírito e lâmpadas acesas na fé e na caridade. Na vida fraterna da célula, manter a lâmpada acesa é cultivar a oração pessoal diária e a fidelidade aos irmãos.',
+      },
+    },
+    saints: [
+      {
+        name: 'Santa Maria Bertilla Boscardin',
+        title: 'Virgem e Religiosa do Cuidado aos Enfermos',
+        feastDate: '20 de Outubro',
+        summary: 'Religiosa italiana que dedicou a vida com caridade heróica aos doentes e crianças enfermas durante a Primeira Guerra Mundial, sob o lema "Para Deus tudo, para o próximo nada além do amor, para mim o desprezo".',
+        lifeStory: `Nasceu em Brendola (Itália) em 1888 em família camponesa modesta. Ingressou nas Irmãs Mestras de Santa Doroteia, servindo nos hospitais de Treviso. Canonizada por São João XXIII em 1961, é modelo de ternura desinteressada com os que sofrem.`,
+        virtue: 'Simplicidade de coração e solicitude incansável pelos enfermos.',
+        prayer: `Senhor Deus, concedei-nos a mansidão de Santa Maria Bertilla para servirmos com amor e sem vanglória cada irmão que passa por provação. Amém.`,
+      },
+    ],
+  },
+
+  '2026-10-21': {
+    isoDate: '2026-10-21',
+    dayMonthKey: '21/10',
+    liturgy: {
+      date: 'Quarta-feira, 21 de Outubro de 2026',
+      liturgicalColor: 'Verde (29ª Semana do Tempo Comum)',
+      headline: 'Quarta-feira da 29ª Semana do Tempo Comum • Santa Úrsula e Companheiras Mártires',
+      firstReading: {
+        title: 'Primeira Leitura (Ef 3, 2-12)',
+        reference: 'Carta de São Paulo aos Efésios 3, 2-12',
+        text: `Irmãos: Vós certamente ouvistes falar da graça que Deus me concedeu para o vosso bem... Esse mistério é que os pagãos são admitidos à mesma herança, membros do mesmo corpo e associados à mesma promessa em Jesus Cristo, por meio do Evangelho...
+A mim, o menor de todos os santos, foi dada a graça de anunciar aos pagãos a insondável riqueza de Cristo e iluminar a todos sobre a realização do mistério escondido desde os séculos em Deus.`,
+      },
+      psalm: {
+        reference: 'Cântico de Isaías 12, 2-3. 4bcd. 5-6 (R. cf. 3)',
+        chorus: 'Com alegria bebereis do manancial da salvação!',
+        verses: [
+          'Eis o Deus, meu Salvador, eu confio e nada temo; o Senhor é minha força, meu louvor e salvação. Com alegria bebereis nas fontes da salvação!',
+          'Louvai ao Senhor, invocai o seu nome santo, anunciai suas maravilhas entre os povos, proclamai que o seu nome é sublime!',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 12, 39-48)',
+        reference: 'São Lucas 12, 39-48',
+        text: `Naquele tempo, disse Jesus aos seus discípulos: "Compreendei bem isto: se o dono da casa soubesse a que hora viria o ladrão, não deixaria que arrombassem sua casa. Vós também ficai preparados! Porque o Filho do Homem vai chegar na hora em que menos pensais".
+Pedro disse: "Senhor, estás contando esta parábola para nós ou para todos?"
+E o Senhor respondeu: "Quem é o administrador fiel e prudente que o senhor vai colocar à frente do pessoal de sua casa para dar-lhes a comida no tempo certo? Feliz o servo a quem o senhor, ao chegar, encontrar procedendo assim! Em verdade vos digo: ele o colocará à frente de todos os seus bens...
+A quem muito foi dado, muito será pedido; a quem muito foi confiado, muito mais será exigido".`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: '"A quem muito foi dado, muito será pedido". Recebemos da Comunidade Católica Shalom o tesouro do Carisma da Paz e a intercessão de Santa Gemma. Que saibamos administrar com zelo e alegria a nossa vocação.',
+      },
+    },
+    saints: [
+      {
+        name: 'Santa Úrsula e Companheiras Mártires e Santo Hilarião',
+        title: 'Testemunhas da Fidelidade Cristã e da Pureza Virginal',
+        feastDate: '21 de Outubro',
+        summary: 'Virgem cristã do século IV que liderou jovens na fidelidade corajosa a Cristo até o martírio às margens do Reno; Santo Hilarião foi pioneiro da vida monástica na Palestina.',
+        lifeStory: `Santa Úrsula, princesa britânica cristã, preferiu o martírio em Colônia a renegar a fé e a pureza. Sua memória inspirou a fundação das Ursulinas por Santa Ângela Mérici dedicada à educação de meninas. Santo Hilarião (291–371), discípulo de Santo Antão do Deserto, santificou Gaza com oração incessante e prodígios.`,
+        virtue: 'Fidelidade à vocação e pureza de intenções no serviço a Deus.',
+        prayer: `Senhor Jesus, pela intercessão de Santa Úrsula e de Santo Hilarião, preservai os jovens e famílias de nossa célula nos caminhos da santidade e da fidelidade ao Evangelho. Amém.`,
+      },
+    ],
+  },
+
+  '2026-10-22': {
+    isoDate: '2026-10-22',
+    dayMonthKey: '22/10',
+    liturgy: {
+      date: 'Quinta-feira, 22 de Outubro de 2026',
+      liturgicalColor: 'Branco • Memória de São João Paulo II, Papa',
+      headline: 'Memória de São João Paulo II, Papa • O Peregrino do Amor e Apóstolo da Juventude',
+      firstReading: {
+        title: 'Primeira Leitura (Ef 3, 14-21)',
+        reference: 'Carta de São Paulo aos Efésios 3, 14-21',
+        text: `Irmãos: Dobro os joelhos diante do Pai, de quem toda família no céu e na terra recebe o seu nome. Peço-lhe que, segundo a riqueza da sua glória, vos conceda a graça de serdes fortalecidos pelo seu Espírito no homem interior.
+Que Cristo habite pela fé em vossos corações e estejais enraizados e fundamentados no amor, para que possais compreender com todos os santos qual é a largura, o comprimento, a altura e a profundeza do amor de Cristo, que ultrapassa todo conhecimento, a fim de ficardes repletos de toda a plenitude de Deus.`,
+      },
+      psalm: {
+        reference: 'Salmo 32 (33), 1-2. 4-5. 11-12. 18-19 (R. 5b)',
+        chorus: 'Da bondade do Senhor está cheia a terra!',
+        verses: [
+          'Ó justos, alegrai-vos no Senhor! Aos retos fica bem louvar a Deus. Dai graças ao Senhor ao som da harpa, tocai em sua honra a lira de dez cordas!',
+          'Os planos do Senhor são para sempre, os pensamentos do seu coração de geração em geração. Feliz o povo cujo Deus é o Senhor, a nação que ele escolheu para sua herança!',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 12, 49-53)',
+        reference: 'São Lucas 12, 49-53',
+        text: `Naquele tempo, disse Jesus aos seus discípulos: "Eu vim para lançar fogo sobre a terra, e como gostaria que já estivesse aceso! Devo receber um batismo, e como estou ansioso até que ele se cumpra!
+Pensais que eu vim trazer a paz à terra? Não, eu vos digo, mas a divisão. Pois de agora em diante, numa casa com cinco pessoas, três ficarão divididas contra duas e duas contra três: o pai contra o filho e o filho contra o pai; a mãe contra a filha e a filha contra a mãe; a sogra contra a nora e a nora contra a sogra".`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'Nesta memória luminosa de São João Paulo II, o Papa das Jornadas Mundiais da Juventude que tanto amou o Brasil, ecoa o seu brado de inauguração do pontificado em 1978: "Não tenhais medo! Abri, melhor, escancarais as portas a Cristo!". Que o fogo do Espírito Santo inflame a nossa célula!',
+      },
+    },
+    saints: [
+      {
+        name: 'São João Paulo II, Papa',
+        title: 'Apóstolo da Juventude, Peregrino da Paz e Testemunha da Misericórdia',
+        feastDate: '22 de Outubro',
+        summary: 'Karol Wojtyła governou a Igreja por 27 anos com ardor missionário inesgotável, canonizou Santa Gemma Galgani e consagrou o terceiro milênio à Divina Misericórdia sob o lema "Totus Tuus".',
+        lifeStory: `Nascido em Wadowice (Polônia) em 1920, foi eleito Papa em 1978. Criou as Jornadas Mundiais da Juventude, sobreviveu ao atentado na Praça de São Pedro em 1981 creditando sua salvação a Nossa Senhora de Fátima, promulgou o Catecismo da Igreja Católica e proclamou o Domingo da Divina Misericórdia. Faleceu santamente em 2005 e foi canonizado em 2014.`,
+        virtue: 'Coragem apostólica sem medo, amor à juventude e consagração total a Maria.',
+        prayer: `São João Paulo II, que tantas vezes abençoastes as famílias e os jovens com amor ardente, intercedei pela nossa célula Santa Gemma Galgani para que sejamos sentinelas da manhã e apóstolos da paz de Cristo. Amém!`,
+      },
+    ],
+  },
+
+  '2026-10-23': {
+    isoDate: '2026-10-23',
+    dayMonthKey: '23/10',
+    liturgy: {
+      date: 'Sexta-feira, 23 de Outubro de 2026',
+      liturgicalColor: 'Verde (ou Branco) • Memória de São João de Capistrano',
+      headline: 'Sexta-feira da 29ª Semana do Tempo Comum • São João de Capistrano, Presbítero',
+      firstReading: {
+        title: 'Primeira Leitura (Ef 4, 1-6)',
+        reference: 'Carta de São Paulo aos Efésios 4, 1-6',
+        text: `Irmãos: Eu, prisioneiro no Senhor, vos exorto a vos comportardes de maneira digna da vocação a que fostes chamados: com toda a humildade e mansidão, com paciência, suportando-vos uns aos outros com amor, empenhai-vos em guardar a unidade do Espírito pelo vínculo da paz.
+Há um só corpo e um só Espírito, como também é uma só a esperança à qual fostes chamados. Há um só Senhor, uma só fé, um só batismo, um só Deus e Pai de todos, que reina sobre todos, age por meio de todos e está em todos.`,
+      },
+      psalm: {
+        reference: 'Salmo 23 (24), 1-2. 3-4ab. 5-6 (R. cf. 6)',
+        chorus: 'É assim a geração dos que procuram o Senhor!',
+        verses: [
+          'Ao Senhor pertence a terra e o que ela encerra, o mundo inteiro com os seus habitantes. Porque ele a fundou sobre as águas e sobre os rios a fixou firmemente.',
+          'Quem subirá até o monte do Senhor, quem ficará em seu santo lugar? Aquele que tem as mãos limpas e o coração puro, que não leva sua alma para a vaidade.',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 12, 54-59)',
+        reference: 'São Lucas 12, 54-59',
+        text: `Naquele tempo, dizia Jesus às multidões: "Quando vedes uma nuvem subindo no poente, logo dizeis: 'Vem chuva'. E assim acontece. E quando sentis soprar o vento do sul, dizeis: 'Vai fazer calor'. E assim acontece.
+Hipócritas! Sabeis discernir o aspecto da terra e do céu; como não sabeis discernir este tempo?
+Por que não julgais por vós mesmos o que é justo? Quando fores com o teu adversário ao tribunal, esforça-te para entrar em acordo com ele pelo caminho; para que ele não te arraste perante o juiz, o juiz te entregue ao carcereiro e o carcereiro te jogue na prisão.
+Eu te digo: não sairás de lá enquanto não pagares até o último centavo".`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'Neste encontro de sexta-feira, São Paulo nos convida a viver "o vínculo da paz com toda humildade, mansidão e paciência, suportando-vos com amor". Que o Espírito Santo purifique nossos corações de todo ressentimento para sermos verdadeiros pacificadores.',
+      },
+    },
+    saints: [
+      {
+        name: 'São João de Capistrano, Presbítero',
+        title: 'Frade Franciscano, Grande Pregador e Patrono dos Capelães Militares',
+        feastDate: '23 de Outubro',
+        summary: 'Frade menor franciscano italiano do século XV dotado de profunda oração e eloquência que renovou espiritualmente a Europa Central e defendeu a cristandade em Belgrado.',
+        lifeStory: `Brilhante jurista e governador de Perugia, renunciou aos cargos e bens materiais para ingressar na Ordem dos Frades Menores. Percorreu a Europa a pé pregando a penitência, o Santo Nome de Jesus e a paz entre os povos cristãos. Faleceu na Croácia em 1456.`,
+        virtue: 'Coragem na pregação da conversão e reconciliação fraterna.',
+        prayer: `Senhor Deus, que suscitastes São João de Capistrano para consolar o Vosso povo na tribulação, guardai a nossa célula em contínua paz sob o impulso do Espírito Santo. Amém.`,
+      },
+    ],
+  },
+
+  '2026-10-24': {
+    isoDate: '2026-10-24',
+    dayMonthKey: '24/10',
+    liturgy: {
+      date: 'Sábado, 24 de Outubro de 2026',
+      liturgicalColor: 'Verde (ou Branco) • Santo Antônio Maria Claret',
+      headline: 'Sábado da 29ª Semana do Tempo Comum • Santo Antônio Maria Claret, Bispo',
+      firstReading: {
+        title: 'Primeira Leitura (Ef 4, 7-16)',
+        reference: 'Carta de São Paulo aos Efésios 4, 7-16',
+        text: `Irmãos: A cada um de nós foi dada a graça na medida do dom de Cristo... E ele mesmo a uns constituiu apóstolos; a outros, profetas; a outros, evangelistas; a outros, pastores e doutores, para o aperfeiçoamento dos santos, para o ministério do serviço, para a edificação do corpo de Cristo, até que todos cheguemos à unidade da fé e do conhecimento do Filho de Deus, ao estado de homem perfeito, à medida da estatura da plenitude de Cristo.`,
+      },
+      psalm: {
+        reference: 'Salmo 121 (122), 1-2. 3-4a. 4b-5 (R. 1)',
+        chorus: 'Que alegria quando me disseram: Vamos à casa do Senhor!',
+        verses: [
+          'Que alegria quando ouvi que me disseram: "Vamos à casa do Senhor!" E agora nossos pés já se detêm diante de tuas portas, ó Jerusalém!',
+          'Jerusalém, cidade bem edificada num conjunto harmonioso; para lá sobem as tribos de Israel, as tribos do Senhor!',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 13, 1-9)',
+        reference: 'São Lucas 13, 1-9',
+        text: `Naquele momento chegaram algumas pessoas trazendo a Jesus notícias a respeito dos galileus cujo sangue Pilatos tinha misturado com o dos sacrifícios que eles realizavam.
+Jesus respondeu-lhes: "Pensais vós que esses galileus eram mais pecadores do que todos os outros galileus, por terem sofrido tal coisa? Eu vos digo que não. Mas se vós não vos converterdes, perecereis todos do mesmo modo...
+E propôs esta parábola: "Certo homem tinha uma figueira plantada na sua vinha. Foi até ela procurar fruto e não encontrou. Então disse ao vinhateiro: 'Já faz três anos que venho procurando fruto nesta figueira e não encontro nada. Corta-a! Para que está ela inutilizando a terra?'
+O vinhateiro, porém, respondeu: 'Senhor, deixa-a ainda este ano. Vou cavar ao redor dela e adubá-la. Talvez ela dê frutos no futuro. Se não der, então a cortarás'".`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'A parábola da figueira revela a paciência incansável de Deus, que não desiste de nós mas cava ao redor da nossa alma e nos alimenta com Sua graça. Aproveitemos o tempo oportuno para produzir frutos saborosos de conversão e caridade na célula.',
+      },
+    },
+    saints: [
+      {
+        name: 'Santo Antônio Maria Claret, Bispo',
+        title: 'Fundador dos Missionários Claretianos e Apóstolo da Boa Imprensa',
+        feastDate: '24 de Outubro',
+        summary: 'Arcebispo de Santiago de Cuba e confessor da Rainha da Espanha, utilizou os livros e a imprensa católica para semear a semente do Evangelho com audácia missionária.',
+        lifeStory: `Nascido na Catalunha (1807), foi tecelão antes de ser ordenado padre. Pregou incansavelmente por toda a Espanha e nas Ilhas Canárias. Fundou os Filhos do Imaculado Coração de Maria (Claretianos). Como arcebispo em Cuba, defendeu os escravizados e fundou cooperativas para os camponeses.`,
+        virtue: 'Ardor missionário de evangelizar por todos os meios possíveis.',
+        prayer: `Santo Antônio Maria Claret, alcançai para os irmãos de nossa célula o ardor missionário de anunciar a boa nova de Jesus Cristo a todos os corações. Amém.`,
+      },
+    ],
+  },
+
+  '2026-10-25': {
+    isoDate: '2026-10-25',
+    dayMonthKey: '25/10',
+    liturgy: {
+      date: 'Domingo, 25 de Outubro de 2026',
+      liturgicalColor: 'Verde • 30º Domingo do Tempo Comum',
+      headline: '30º Domingo do Tempo Comum (Ano C) • Santo Antônio de Sant\'Ana Galvão (Frei Galvão, 1º Santo Brasileiro)',
+      firstReading: {
+        title: 'Primeira Leitura (Eclo 35, 12-14. 16-18)',
+        reference: 'Livro do Eclesiástico 35, 12-14. 16-18',
+        text: `O Senhor é um juiz que não faz acepção de pessoas. Ele não faz discriminação contra o pobre, mas ouve a súplica do oprimido. Não despreza a oração do órfão, nem a viúva que desafoga a sua queixa.
+Quem serve a Deus com todo o coração é acolhido, e a sua oração sobe até as nuvens. A prece do humilde atravessa as nuvens; ele não se consola enquanto ela não chegar a Deus, e não se afasta até que o Altíssimo olhe para ele, faça justiça e execute o julgamento.`,
+      },
+      psalm: {
+        reference: 'Salmo 33 (34), 2-3. 17-18. 19 e 23 (R. 7a)',
+        chorus: 'O pobre clama a Deus e ele escuta: o Senhor liberta a vida dos seus servos!',
+        verses: [
+          'Bendirei o Senhor em todo o tempo, seu louvor estará sempre em minha boca. Minha alma se gloria no Senhor; que os humildes escutem e se alegrem!',
+          'O Senhor volta o seu rosto contra os maus para apagar sua lembrança da terra. Os justos clamam e o Senhor os ouve, livrando-os de todas as suas angústias.',
+          'O Senhor está perto dos corações contritos e salva os de espírito abatido. O Senhor liberta a vida dos seus servos, quem nele se abriga não será condenado.',
+        ],
+      },
+      secondReading: {
+        title: 'Segunda Leitura (2Tm 4, 6-8. 16-18)',
+        reference: 'Segunda Carta de São Paulo a Timóteo 4, 6-8. 16-18',
+        text: `Caríssimo: Quanto a mim, eu já estou sendo oferecido em libação, e o tempo da minha partida se aproxima.
+Combati o bom combate, terminei a corrida, guardei a fé. Desde já me está reservada a coroa da justiça, que o Senhor, justo juiz, me dará naquele dia; e não somente a mim, mas também a todos os que amaram a sua manifestação.
+Na minha primeira defesa, ninguém me assistiu, todos me abandonaram... O Senhor, porém, esteve ao meu lado e me encheu de força, para que por meu intermédio a mensagem fosse plenamente anunciada. A ele a glória pelos séculos dos séculos. Amém!`,
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 18, 9-14)',
+        reference: 'São Lucas 18, 9-14',
+        text: `Naquele tempo, Jesus contou esta parábola para alguns que confiavam na sua própria justiça e desprezavam os outros:
+"Dois homens subiram ao Templo para rezar: um era fariseu e o outro cobrador de impostos.
+O fariseu, de pé, rezava assim em seu íntimo: 'Ó Deus, eu te dou graças porque não sou como os outros homens: ladrões, injustos, adúlteros, nem como este cobrador de impostos. Jejuo duas vezes por semana e pago o dízimo de tudo o que recebo'.
+O cobrador de impostos, porém, ficou à distância e nem se atrevia a levantar os olhos para o céu; mas batia no peito, dizendo: 'Meu Deus, tem piedade de mim, que sou pecador!'
+Eu vos digo: este último voltou para casa justificado, o outro não. Pois todo aquele que se eleva será humilhado, e quem se humilha será elevado".`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'A oração humilde do pecador que bate no peito ("Meu Deus, tem piedade de mim") alcança o coração do Pai mais do que toda a vanglória. Neste domingo celebramos também São Frei Galvão, o primeiro santo nascido no Brasil, que dedicou sua vida a levar a paz aos lares e a saúde aos aflitos.',
+      },
+    },
+    saints: [
+      {
+        name: 'Santo Antônio de Sant\'Ana Galvão (Frei Galvão)',
+        title: 'Primeiro Santo Nascido no Brasil • O Homem da Paz e da Caridade',
+        feastDate: '25 de Outubro',
+        summary: 'Frade franciscano brasileiro nascido em Guaratinguetá (SP) em 1739, fundador do Mosteiro da Luz em São Paulo e célebre pelas Pílulas de Frei Galvão que alcançam curas prodigiosas para enfermos e parturientes.',
+        lifeStory: `Santo Antônio de Sant'Ana Galvão viveu inteiramente consagrado à oração e à caridade em São Paulo colonial. Famoso por sua doçura franciscana, bilocava-se para atender agonizantes e acolhia todos com compaixão. Canonizado pelo Papa Bento XVI no Campo de Marte em São Paulo em 11 de maio de 2007.`,
+        virtue: 'Humildade franciscana, mansidão com os aflitos e devoção filial à Imaculada Conceição.',
+        prayer: `Deus de amor e Pai de misericórdia, que fizestes de Santo Antônio de Sant'Ana Galvão um instrumento de paz e de caridade para o povo brasileiro, concedei aos 48 irmãos da nossa célula a humildade de coração e a graça da reconciliação fraterna. Por Cristo nosso Senhor. Amém!`,
+      },
+    ],
+  },
+
+  '2026-10-26': {
+    isoDate: '2026-10-26',
+    dayMonthKey: '26/10',
+    liturgy: {
+      date: 'Segunda-feira, 26 de Outubro de 2026',
+      liturgicalColor: 'Verde (30ª Semana do Tempo Comum)',
+      headline: 'Segunda-feira da 30ª Semana do Tempo Comum • Santo Evaristo, Papa e Mártir',
+      firstReading: {
+        title: 'Primeira Leitura (Ef 4, 32 – 5, 8)',
+        reference: 'Carta de São Paulo aos Efésios 4, 32 – 5, 8',
+        text: `Irmãos: Sede bondosos e compassivos uns para com os outros, perdoando-vos mutuamente, como Deus vos perdoou em Cristo.
+Sede imitadores de Deus como filhos muito amados. E andai no amor, como Cristo vos amou e se entregou a si mesmo por nós, como oferenda e sacrifício de suave odor a Deus...
+Outrora éreis trevas, mas agora sois luz no Senhor. Andai como filhos da luz!`,
+      },
+      psalm: {
+        reference: 'Salmo 1, 1-2. 3. 4 e 6 (R. cf. Ef 5, 1)',
+        chorus: 'Sede imitadores de Deus como filhos muito amados!',
+        verses: [
+          'Feliz é todo aquele que não anda conforme os conselhos dos perversos; mas tem seu prazer na lei de Deus e a medita dia e noite!',
+          'Ele é como árvore plantada junto às águas correntes: dá fruto no devido tempo e suas folhas nunca murcham; em tudo o que faz tem sucesso.',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 13, 10-17)',
+        reference: 'São Lucas 13, 10-17',
+        text: `Naquele tempo, Jesus estava ensinando numa sinagoga, em dia de sábado. Havia ali uma mulher que há dezoito anos estava com um espírito que a tornava doente: andava curvada e não conseguia de modo algum endireitar-se.
+Ao vê-la, Jesus a chamou e lhe disse: "Mulher, estás livre da tua doença". Pôs as mãos sobre ela, e ela imediatamente se endireitou e começou a louvar a Deus.
+O chefe da sinagoga, indignado porque Jesus curava no sábado, tomou a palavra e disse à multidão: "Há seis dias para trabalhar. Vinde, pois, nesses dias para serdes curados, e não em dia de sábado!"
+O Senhor, porém, respondeu-lhe: "Hipócritas! Cada um de vós não desamarra no sábado o seu boi ou o seu jumento da manjedoura para levá-lo a beber? E esta filha de Abraão, a quem Satanás prendeu durante dezoito anos, não deveria ser liberta desta prisão em dia de sábado?"
+Ao ouvir isso, todos os seus adversários ficaram envergonhados, e a multidão se alegrava com todas as maravilhas que Jesus realizava.`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'No nosso encontro de segunda-feira das 19h às 21h, Jesus se aproxima de cada irmão que se sente encurvado pelo peso das preocupações e diz: "Estás livre da tua aflição!". A compaixão de Cristo cura, ergue e põe o cântico de louvor em nossos lábios.',
+      },
+    },
+    saints: [
+      {
+        name: 'Santo Evaristo, Papa e Mártir',
+        title: 'Quinto Papa da Igreja de Roma e Organizador das Paróquias',
+        feastDate: '26 de Outubro',
+        summary: 'Sucessor de São Clemente no final do século I, organizou a divisão pastoral da diocese de Roma e ordenou os primeiros diáconos para o auxílio dos fiéis sob perseguição do imperador Trajano.',
+        lifeStory: `Nascido em Belém de família judaica, converteu-se e tornou-se pastor em Roma. Durante o império de Trajano guiou com sabedoria e ternura a comunidade cristã nas catacumbas, derramando seu sangue por amor a Cristo por volta do ano 108.`,
+        virtue: 'Organização pastoral serena e perseverança nas perseguições.',
+        prayer: `Senhor Deus, concedei à Célula Santa Gemma Galgani o zelo pastoral de Santo Evaristo, para que vivamos em comunhão fraterna como autênticos filhos da luz. Amém.`,
+      },
+    ],
+  },
+
+  '2026-10-27': {
+    isoDate: '2026-10-27',
+    dayMonthKey: '27/10',
+    liturgy: {
+      date: 'Terça-feira, 27 de Outubro de 2026',
+      liturgicalColor: 'Verde (30ª Semana do Tempo Comum)',
+      headline: 'Terça-feira da 30ª Semana do Tempo Comum • São Gonçalo de Lagos',
+      firstReading: {
+        title: 'Primeira Leitura (Ef 5, 21-33)',
+        reference: 'Carta de São Paulo aos Efésios 5, 21-33',
+        text: `Irmãos: Sede submissos uns aos outros no temor de Cristo... Vós, maridos, amai as vossas mulheres, como Cristo amou a Igreja e se entregou por ela, a fim de purificá-la com o banho da água e a palavra...
+Por isso o homem deixará pai e mãe e se unirá à sua mulher, e os dois serão uma só carne. Este mistério é grande: refiro-me a Cristo e à Igreja!`,
+      },
+      psalm: {
+        reference: 'Salmo 127 (128), 1-2. 3. 4-5 (R. 1a)',
+        chorus: 'Felizes os que temem o Senhor e trilham seus caminhos!',
+        verses: [
+          'Feliz és tu se temes o Senhor e trilhas seus caminhos! Do trabalho de tuas mãos hás de viver, serás feliz e tudo irá bem.',
+          'Tua esposa será como videira fecunda no coração de tua casa; teus filhos como brotos de oliveira ao redor de tua mesa.',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 13, 18-21)',
+        reference: 'São Lucas 13, 18-21',
+        text: `Naquele tempo, Jesus dizia: "A que é semelhante o Reino de Deus e a que poderei compará-lo? Ele é semelhante a um grão de mostarda que um homem pegou e plantou no seu jardim. O grão cresceu, tornou-se uma grande árvore e as aves do céu fizeram ninhos nos seus ramos".
+E disse ainda: "A que poderei comparar o Reino de Deus? Ele é semelhante ao fermento que uma mulher pegou e misturou em três medidas de farinha, até que tudo ficasse levedado".`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'O Reino de Deus na célula começa pequeno como um grão de mostarda ou um punhado de fermento: um sorriso, uma oração de escuta, uma acolhida sincera. De passo em passo, o amor de Cristo transforma os nossos lares.',
+      },
+    },
+    saints: [
+      {
+        name: 'São Gonçalo de Lagos e Beato Bartolomeu dos Mártires',
+        title: 'Religioso Agostiniano • Mestre da Catequese das Crianças',
+        feastDate: '27 de Outubro',
+        summary: 'Frei agostiniano português do século XV que dedicou seus talentos à instrução religiosa dos mais simples, aos pobres e aos pescadores.',
+        lifeStory: `Nascido em Lagos (Algarve, Portugal), renunciou a cargos de destaque para ensinar a doutrina cristã aos pequeninos. Notabilizou-se por milagres com o pão dos pobres e orações contínuas diante do Sacrário.`,
+        virtue: 'Paciência no ensino da fé e predileção pelos mais pequeninos.',
+        prayer: `Senhor Jesus, fazei frutificar na nossa célula a semente do Teu Reino, tornando-nos fermento de amor e paz onde quer que estejamos. Amém.`,
+      },
+    ],
+  },
+
+  '2026-10-28': {
+    isoDate: '2026-10-28',
+    dayMonthKey: '28/10',
+    liturgy: {
+      date: 'Quarta-feira, 28 de Outubro de 2026',
+      liturgicalColor: 'Vermelho • Festa de São Simão e São Judas Tadeu',
+      headline: 'Festa dos Santos Apóstolos Simão e Judas Tadeu • Padroeiro das Causas Impossíveis',
+      firstReading: {
+        title: 'Primeira Leitura (Ef 2, 19-22)',
+        reference: 'Carta de São Paulo aos Efésios 2, 19-22',
+        text: `Irmãos: Já não sois estrangeiros nem hóspedes, mas concidadãos dos santos e membros da família de Deus, edificados sobre o fundamento dos apóstolos e dos profetas, tendo como pedra angular o próprio Cristo Jesus.
+É nele que toda a construção bem ajustada cresce para formar um templo santo no Senhor; e vós também sois integrados nessa construção para vos tornardes morada de Deus no Espírito.`,
+      },
+      psalm: {
+        reference: 'Salmo 18 (19A), 2-3. 4-5 (R. 5a)',
+        chorus: 'Seu som ressoa e se espalha em toda a terra!',
+        verses: [
+          'Os céus proclamam a glória do Senhor e o firmamento anuncia as obras de suas mãos; o dia ao dia transmite esta mensagem, a noite à noite publica este saber.',
+          'Não são discursos nem frases ou palavras, nem são vozes que possam ser ouvidas; seu som ressoa e se espalha em toda a terra, chega aos confins do universo a sua voz.',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 6, 12-16)',
+        reference: 'São Lucas 6, 12-16',
+        text: `Naqueles dias, Jesus foi à montanha para rezar e passou a noite toda em oração a Deus.
+Ao amanhecer, chamou os seus discípulos e escolheu doze dentre eles, aos quais deu o nome de apóstolos:
+Simão, a quem deu o nome de Pedro, e seu irmão André; Tiago e João; Filipe e Bartolomeu; Mateus e Tomé; Tiago, filho de Alfeu, e Simão, chamado Zelota; Judas, filho de Tiago, e Judas Iscariotes, que se tornou traidor.`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'Antes de tomar qualquer decisão ou escolher os Doze Apóstolos, Jesus passou a noite inteira em oração no alto da montanha. Que a nossa célula aprenda do Mestre a prioridade absoluta da oração pessoal antes de cada projeto.',
+      },
+    },
+    saints: [
+      {
+        name: 'São Simão e São Judas Tadeu, Apóstolos',
+        title: 'Apóstolos de Jesus e Patrono das Causas Aflitas e Desesperadas',
+        feastDate: '28 de Outubro',
+        summary: 'Apóstolos mártires que pregaram juntos o Evangelho na Pérsia. São Judas Tadeu é mundialmente invocado pelos fiéis nas causas mais difíceis e impossíveis.',
+        lifeStory: `São Judas Tadeu, primo de Jesus segundo a carne e irmão de São Tiago Menor, é autor de uma das cartas do Novo Testamento. Na Última Ceia perguntou a Jesus: "Senhor, como é que te manifestarás a nós e não ao mundo?". Levou o fogo do Evangelho até o martírio ao lado de São Simão Zelota. É refúgio certo nas aflições de saúde, trabalho e família.`,
+        virtue: 'Intercessão infalível e fidelidade irrestrita à fé apostólica.',
+        prayer: `São Judas Tadeu, apóstolo fiel e amigo de Jesus, socorrei as causas impossíveis e aflitas dos membros de nossa Célula Santa Gemma Galgani. Apresentai nossas preces diante de Deus para que nunca percamos a esperança. Amém!`,
+      },
+    ],
+  },
+
+  '2026-10-29': {
+    isoDate: '2026-10-29',
+    dayMonthKey: '29/10',
+    liturgy: {
+      date: 'Quinta-feira, 29 de Outubro de 2026',
+      liturgicalColor: 'Verde (30ª Semana do Tempo Comum)',
+      headline: 'Quinta-feira da 30ª Semana do Tempo Comum • São Narciso de Jerusalém',
+      firstReading: {
+        title: 'Primeira Leitura (Ef 6, 10-20)',
+        reference: 'Carta de São Paulo aos Efésios 6, 10-20',
+        text: `Irmãos: Fortalecei-vos no Senhor e na força do seu poder soberano. Revesti-vos da armadura de Deus para que possais resistir às ciladas do diabo...
+Calçai os pés com a prontidão para o Evangelho da paz; empunhai sempre o escudo da fé, com o qual podereis apagar todos os dardos inflamados do maligno; tomai o capacete da salvação e a espada do Espírito, que é a palavra de Deus.
+Orai sem cessar no Espírito com toda oração e súplica!`,
+      },
+      psalm: {
+        reference: 'Salmo 143 (144), 1. 2. 9-10 (R. 1a)',
+        chorus: 'Bendito seja o Senhor, meu rochedo!',
+        verses: [
+          'Bendito seja o Senhor, o meu rochedo, que adestrou minhas mãos para o combate e meus dedos para a batalha!',
+          'Ele é meu amor e meu refúgio, minha fortaleza e meu libertador; ele é meu escudo e em quem me abrigo, que submete os povos ao meu poder.',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 13, 31-35)',
+        reference: 'São Lucas 13, 31-35',
+        text: `Naquele momento, alguns fariseus aproximaram-se de Jesus e disseram-lhe: "Sai daqui e vai embora, porque Herodes quer te matar".
+Jesus respondeu-lhes: "Ide dizer àquela raposa: 'Eu expulso demônios e faço curas hoje e amanhã, e no terceiro dia terminarei meu caminho'. No entanto, preciso continuar meu caminho hoje, amanhã e depois de amanhã, porque não convém que um profeta morra fora de Jerusalém.
+Jerusalém, Jerusalém, que matas os profetas e apedrejas os que te são enviados! Quantas vezes eu quis reunir teus filhos como a galinha recolhe os pintainhos debaixo das asas, e tu não quiseste! Eis que a vossa casa vos ficará abandonada..."`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'São Paulo nos recorda a armadura de Deus: a verdade, a fé como escudo e a Palavra de Deus como espada do Espírito. Com Santa Gemma, que lutou bravamente contra as investidas do maligno com o seu Anjo da Guarda, permaneçamos vigilantes na oração.',
+      },
+    },
+    saints: [
+      {
+        name: 'São Narciso de Jerusalém, Bispo',
+        title: 'Bispo de Jerusalém no Século II • Exemplo de Pureza e Oração Paciente',
+        feastDate: '29 de Outubro',
+        summary: 'Bispo centenário da Cidade Santa lembrado pela oração fervorosa que transformava água em azeite para as lâmpadas da Vigília Pascal e pela mansidão perante calúnias.',
+        lifeStory: `Governou a Igreja de Jerusalém no final do século II, presidindo com o Papa São Vítor a data da Páscoa. Vítima de falsas acusações, retirou-se pacificamente para o deserto na oração, sendo mais tarde chamado de volta pelo povo quando sua santidade foi comprovada.`,
+        virtue: 'Paciência inalterável perante as incompreensões e confiança na justiça divina.',
+        prayer: `Senhor Deus, concedei-nos o escudo da fé de São Narciso e a pureza de Santa Gemma para vencermos todas as tentações do desânimo. Amém.`,
+      },
+    ],
+  },
+
+  '2026-10-30': {
+    isoDate: '2026-10-30',
+    dayMonthKey: '30/10',
+    liturgy: {
+      date: 'Sexta-feira, 30 de Outubro de 2026',
+      liturgicalColor: 'Verde (30ª Semana do Tempo Comum)',
+      headline: 'Sexta-feira da 30ª Semana do Tempo Comum • São Marcelo, Centurião Mártir',
+      firstReading: {
+        title: 'Primeira Leitura (Fl 1, 1-11)',
+        reference: 'Carta de São Paulo aos Filipenses 1, 1-11',
+        text: `Paulo e Timóteo, servos de Cristo Jesus, a todos os santos em Cristo Jesus que estão em Filipos... Dou graças a meu Deus cada vez que me lembro de vós; em todas as minhas orações por vós, peço sempre com alegria, pela vossa comunhão no anúncio do Evangelho, desde o primeiro dia até agora.
+Tenho certeza de que aquele que começou em vós tão boa obra há de levá-la a bom termo até o Dia de Cristo Jesus... E peço que o vosso amor cresça mais e mais em conhecimento e em todo discernimento.`,
+      },
+      psalm: {
+        reference: 'Salmo 110 (111), 1-2. 3-4. 5-6 (R. 2a)',
+        chorus: 'Grandiosas são as obras do Senhor!',
+        verses: [
+          'Eu agradeço a Deus de todo o coração, junto com todos os seus justos reunidos! Que grandiosas são as obras do Senhor, elas merecem todo o amor e admiração!',
+          'Majestade e esplendor são suas obras, sua justiça permanece para sempre. O Senhor fez portentos memoráveis, o Senhor é piedade e compaixão.',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 14, 1-6)',
+        reference: 'São Lucas 14, 1-6',
+        text: `Aconteceu que, num sábado, Jesus foi comer na casa de um dos chefes dos fariseus; e eles o observavam atentamente. Diante dele estava um homem com hidropisia.
+Jesus perguntou aos mestres da Lei e aos fariseus: "É permitido curar no sábado ou não?" Mas eles ficaram calados.
+Então Jesus tomou o homem pela mão, curou-o e despediu-o. Depois disse a eles: "Se algum de vós tiver um filho ou um boi que cair num poço, não o tirará logo, mesmo em dia de sábado?" E eles não foram capazes de responder nada a isso.`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'No nosso encontro de sexta-feira, São Paulo nos consola com a certeza de que Aquele que começou em nossa célula esta boa obra há de levá-la à perfeição! Jesus não hesita em estender a mão para curar qualquer dor ou hidropisia da alma.',
+      },
+    },
+    saints: [
+      {
+        name: 'São Marcelo, Mártir',
+        title: 'Centurião Romano que Depôs as Armas por Amor a Jesus Cristo',
+        feastDate: '30 de Outubro',
+        summary: 'Oficial militar romano em Tânger que declarou: "Eu sou soldado de Jesus Cristo, o Rei Eterno; não posso mais servir aos deuses falsos", entregando a vida pela fé.',
+        lifeStory: `Centurião da Legião Trajana na África no ano 298, durante a festa do imperador recusou-se a prestar culto pagão, desarmou-se publicamente e foi martirizado pela sua fidelidade irrenunciável ao Evangelho da Paz.`,
+        virtue: 'Coerência de vida e primazia absoluta de Cristo sobre qualquer conveniência humana.',
+        prayer: `Senhor Jesus, dai aos irmãos da nossa célula a coragem serena de São Marcelo para testemunharmos a Tua verdade em todas as circunstâncias de nossa vida profissional e familiar. Amém.`,
+      },
+    ],
+  },
+
+  '2026-10-31': {
+    isoDate: '2026-10-31',
+    dayMonthKey: '31/10',
+    liturgy: {
+      date: 'Sábado, 31 de Outubro de 2026',
+      liturgicalColor: 'Verde (ou Branco) • Santo Afonso Rodrigues',
+      headline: 'Sábado da 30ª Semana do Tempo Comum • Véspera da Solenidade de Todos os Santos',
+      firstReading: {
+        title: 'Primeira Leitura (Fl 1, 18b-26)',
+        reference: 'Carta de São Paulo aos Filipenses 1, 18b-26',
+        text: `Irmãos: Quer por fingimento, quer com sinceridade, Cristo é anunciado; e nisso me alegro e hei de alegrar-me sempre. Pois sei que isto contribuirá para a minha salvação...
+Para mim, de fato, o viver é Cristo e o morrer é lucro. Mas se, vivendo no corpo, eu posso produzir fruto de trabalho, não sei o que escolher. Sinto-me atraído pelos dois lados: tenho o desejo de partir e estar com Cristo, o que seria muito melhor; mas por vossa causa é mais necessário que eu permaneça no corpo.`,
+      },
+      psalm: {
+        reference: 'Salmo 41 (42), 2. 3. 5bcd (R. 3a)',
+        chorus: 'A minha alma tem sede de Deus!',
+        verses: [
+          'Assim como a corça suspira pelas águas correntes, assim suspira minha alma por vós, ó meu Deus! A minha alma tem sede de Deus, do Deus vivo; quando irei contemplar a face de Deus?',
+          'Recordo estas coisas com a alma em lágrimas: como eu ia em festa no meio do povo, caminhando com eles até a casa de Deus, entre cantos de júbilo e de ação de graças!',
+        ],
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Lucas (Lc 14, 1. 7-11)',
+        reference: 'São Lucas 14, 1. 7-11',
+        text: `Aconteceu que, num sábado, Jesus foi comer na casa de um dos chefes dos fariseus. Jesus notava como os convidados escolhiam os primeiros lugares e contou-lhes esta parábola:
+"Quando fores convidado para um casamento, não te sentes no primeiro lugar. Pode ser que tenha sido convidada uma pessoa mais importante do que tu, e o dono da casa venha te dizer: 'Dá o lugar a este'. Então, envergonhado, terás de ocupar o último lugar.
+Mas quando fores convidado, vai sentar-te no último lugar; para que, quando vier o dono da casa, te diga: 'Amigo, vem mais para cima!' Então isso será uma honra para ti diante de todos os convidados.
+Pois todo aquele que se eleva será humilhado, e quem se humilha será elevado".`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: '"Para mim o viver é Cristo!". Na vigília da Solenidade de Todos os Santos, Jesus nos ensina a humildade de sentar no último lugar. Como ensinava Santo Afonso Rodrigues, o porteiro santo, quem atende a porta do coração com caridade acolhe o próprio Cristo.',
+      },
+    },
+    saints: [
+      {
+        name: 'Santo Afonso Rodrigues',
+        title: 'Irmão Jesuíta e Porteiro da Santidade • Conselheiro de São Pedro Claver',
+        feastDate: '31 de Outubro',
+        summary: 'Comerciante espanhol que, após enviuvar e perder os filhos, ingressou como irmão leigo jesuíta e serviu como porteiro do colégio em Maiorca por 46 anos, recebendo a todos como a Jesus Cristo.',
+        lifeStory: `Nascido em Segóvia (Espanha) em 1532, superou dolorosas perdas familiares refugiando-se na oração e no Santo Terço. Como porteiro no Colégio de Montesión em Palma de Maiorca, atendeu milhares de necessitados repetindo ao tocar da campainha: "Já vou, Senhor!". Foi o grande conselheiro espiritual que motivou o jovem São Pedro Claver a partir em missão para evangelizar os escravizados na América.`,
+        virtue: 'Acolhida humilde dos outros como se fossem o próprio Cristo e oração contínua.',
+        prayer: `Senhor Deus, concedei à Célula Santa Gemma Galgani a simplicidade de Santo Afonso Rodrigues para abrirmos as portas de nosso coração e acolhermos com alegria cada irmão que busca a Deus. Amém!`,
+      },
+    ],
+  },
+
+  '2026-11-01': {
+    isoDate: '2026-11-01',
+    dayMonthKey: '01/11',
+    liturgy: {
+      date: 'Domingo, 01 de Novembro de 2026',
+      liturgicalColor: 'Branco • Solenidade de Todos os Santos',
+      headline: 'Solenidade de Todos os Santos • A Grande Multidão Celeste e a Vocação Universal à Santidade',
+      firstReading: {
+        title: 'Primeira Leitura (Ap 7, 2-4. 9-14)',
+        reference: 'Livro do Apocalipse de São João 7, 2-4. 9-14',
+        text: `Eu, João, vi outro anjo subir do lado onde nasce o sol, trazendo o selo do Deus vivo... Depois disso, vi uma grande multidão que ninguém podia contar, de todas as nações, tribos, povos e línguas. Estavam de pé diante do trono e diante do Cordeiro, vestidos com túnicas brancas e trazendo palmas na mão...
+Estes são os que vieram da grande tribulação; lavaram suas vestes e as alvejaram no sangue do Cordeiro.`,
+      },
+      psalm: {
+        reference: 'Salmo 23 (24), 1-2. 3-4ab. 5-6 (R. cf. 6)',
+        chorus: 'É assim a geração dos que procuram o Senhor!',
+        verses: [
+          'Ao Senhor pertence a terra e o que ela encerra, o mundo inteiro com os seus habitantes. Porque ele a fundou sobre as águas e sobre os rios a fixou firmemente.',
+          'Quem subirá até o monte do Senhor, quem ficará em seu santo lugar? Aquele que tem mãos limpas e o coração puro, que não leva sua alma para a vaidade.',
+          'Ele receberá a bênção do Senhor e a recompensa de Deus, seu Salvador. É assim a geração dos que o procuram, que buscam a face do Deus de Jacó!',
+        ],
+      },
+      secondReading: {
+        title: 'Segunda Leitura (1Jo 3, 1-3)',
+        reference: 'Primeira Carta de São João 3, 1-3',
+        text: `Caríssimos: Vede que grande presente de amor o Pai nos deu: sermos chamados filhos de Deus! E nós o somos! Se o mundo não nos conhece, é porque não conheceu o Pai.
+Caríssimos, desde já somos filhos de Deus, mas o que nós seremos ainda não se manifestou. Sabemos que, quando ele se manifestar, seremos semelhantes a ele, porque o veremos tal como ele é.
+Todo aquele que tem nele esta esperança purifica-se a si mesmo, assim como ele é puro.`,
+      },
+      gospel: {
+        title: 'Proclamação do Evangelho de Jesus Cristo segundo São Mateus (Mt 5, 1-12a)',
+        reference: 'São Mateus 5, 1-12a',
+        text: `Naquele tempo, vendo Jesus as multidões, subiu ao monte e sentou-se. Os seus discípulos aproximaram-se dele, e ele começou a ensiná-los:
+"Bem-aventurados os pobres em espírito, porque deles é o Reino dos Céus.
+Bem-aventurados os aflitos, porque serão consolados.
+Bem-aventurados os mansos, porque possuirão a terra.
+Bem-aventurados os que têm fome e sede de justiça, porque serão saciados.
+Bem-aventurados os misericordiosos, porque alcançarão misericórdia.
+Bem-aventurados os puros de coração, porque verão a Deus.
+Bem-aventurados os pacificadores, porque serão chamados filhos de Deus.
+Bem-aventurados os que sofrem perseguição por causa da justiça, porque deles é o Reino dos Céus.
+Bem-aventurados sois vós, quando vos injuriarem e perseguirem, e, mentindo, disserem todo tipo de mal contra vós por minha causa. Alegrai-vos e exultai, porque é grande a vossa recompensa nos céus!"`,
+      },
+      reflection: {
+        author: 'Liturgia Diária • Célula Santa Gemma Galgani',
+        text: 'A santidade não é privilégio de heróis inalcançáveis, mas a alegria dos Bem-Aventurados! Com nossa padroeira Santa Gemma Galgani e a multidão incontável dos santos no Céu, celebramos a nossa vocação comum de sermos santos na vida cotidiana da célula.',
+      },
+    },
+    saints: [
+      {
+        name: 'Solenidade de Todos os Santos',
+        title: 'A Igreja Triunfante e Todos os Amigos de Deus no Céu',
+        feastDate: '01 de Novembro',
+        summary: 'Festa solene de todos os santos conhecidos e desconhecidos que perseveraram na fé e agora intercedem por nós junto de Deus na glória eterna.',
+        lifeStory: `Neste dia a Igreja na terra une-se à liturgia dos Céus para contemplar a multidão incontável dos santos que lavaram suas vestes no Sangue de Jesus. A comunhão dos santos nos sustenta na caminhada fraterna até o encontro definitivo na Casa do Pai.`,
+        virtue: 'Vocação universal à santidade e caridade fraterna.',
+        prayer: `Santos e Santas de Deus, amigos e intercessores da nossa Célula Santa Gemma Galgani, rogai por nós e conduzi nossos passos no Caminho da Paz! Amém.`,
+      },
+    ],
+  },
 };
 
 /**
@@ -648,13 +1475,13 @@ export function getLiturgyAndSaintForDate(isoDate?: string): CompleteDayLiturgyA
     };
   }
 
-  // Fallback padrão para o dia 08/10/2026 com a data formatada corretamente
-  const base08 = OFFICIAL_OCTOBER_2026_LITURGY['2026-10-08'];
+  // Fallback inteligente para a data de Hoje (18/10/2026, Domingo)
+  const baseToday = OFFICIAL_OCTOBER_2026_LITURGY['2026-10-18'] || OFFICIAL_OCTOBER_2026_LITURGY['2026-10-08'];
   return {
-    ...base08,
+    ...baseToday,
     isoDate: targetIso,
     liturgy: {
-      ...base08.liturgy,
+      ...baseToday.liturgy,
       date: formatIsoDateToPtBr(targetIso),
     },
   };

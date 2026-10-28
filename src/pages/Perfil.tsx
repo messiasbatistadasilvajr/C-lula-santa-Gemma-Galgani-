@@ -19,7 +19,8 @@ import {
   Smartphone,
   HardDrive,
   Wifi,
-  WifiOff
+  WifiOff,
+  Camera
 } from 'lucide-react';
 import { UserProfile, UserRole, CommunityPost, PrayerIntention, CalendarEvent, DonorProfile } from '../types';
 import { getSupabaseStatus } from '../services/supabaseClient';
@@ -28,6 +29,7 @@ import { dataService } from '../services/dataService';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { PWAInstallButton } from '../components/common/PWAInstallBanner';
 import { Modal } from '../components/common/Modal';
+import { PhotoChangeModal } from '../components/common/PhotoChangeModal';
 
 interface PerfilProps {
   currentUser: UserProfile;
@@ -65,6 +67,7 @@ export const Perfil: React.FC<PerfilProps> = ({
   onLogoutFirebase,
 }) => {
   const [activeTab, setActiveTab] = useState<'posts' | 'prayers' | 'events' | 'settings'>('posts');
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [showResetNotice, setShowResetNotice] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -151,6 +154,7 @@ export const Perfil: React.FC<PerfilProps> = ({
         birthday: editBirthday.trim(),
         ministry: editMinistry.trim(),
       });
+      showToast('Perfil atualizado com sucesso!');
     }
     setIsEditModalOpen(false);
   };
@@ -169,11 +173,36 @@ export const Perfil: React.FC<PerfilProps> = ({
       <section className="rounded-2xl bg-white/90 backdrop-blur-md p-4 shadow-sm border border-white/70 space-y-3">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-3.5">
-            <img
-              src={currentUser.avatarUrl}
-              alt={currentUser.name}
-              className="w-16 h-16 rounded-2xl object-cover border-2 border-[#7B1113]/20 shadow-xs"
-            />
+            {/* Interactive Avatar with Camera Badge */}
+            <div className="relative group shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsPhotoModalOpen(true)}
+                title="Toque para trocar sua foto de perfil"
+                className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-[#7B1113] shadow-xs relative block cursor-pointer group active:scale-95 transition-transform"
+              >
+                <img
+                  src={currentUser.avatarUrl}
+                  alt={currentUser.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                />
+                <span className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                  <Camera className="w-5 h-5 text-[#E5C158]" />
+                </span>
+                <span className="absolute bottom-0 right-0 w-5 h-5 rounded-tl-lg bg-[#7B1113] text-[#E5C158] flex items-center justify-center shadow-xs">
+                  <Camera className="w-3 h-3" />
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsPhotoModalOpen(true)}
+                className="mt-1 text-[10px] font-bold text-[#7B1113] hover:underline flex items-center justify-center gap-1 cursor-pointer w-full"
+              >
+                <Camera className="w-2.5 h-2.5" />
+                <span>Trocar</span>
+              </button>
+            </div>
+
             <div className="flex-1 min-w-0">
               <h2 className="text-base font-bold text-[#241E1C] truncate">
                 {currentUser.name}
@@ -794,6 +823,31 @@ export const Perfil: React.FC<PerfilProps> = ({
         subtitle="Atualize suas informações pessoais na célula"
       >
         <form onSubmit={handleSaveProfile} className="space-y-3">
+          {/* Foto de Perfil dentro do Modal de Edição */}
+          <div className="flex items-center gap-3 p-3 rounded-2xl bg-[#FAF8F5] border border-[#ECE7DF]">
+            <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-[#7B1113] bg-white shrink-0 shadow-xs">
+              <img
+                src={currentUser.avatarUrl}
+                alt={currentUser.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <span className="text-xs font-bold text-[#36070D] block">Foto de Perfil</span>
+              <p className="text-[10px] text-[#70645E]">Toque para tirar foto, escolher da galeria ou selecionar avatar</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsPhotoModalOpen(true);
+                }}
+                className="mt-1.5 px-3 py-1 rounded-xl bg-[#7B1113] text-white text-[10px] font-bold inline-flex items-center gap-1 shadow-2xs hover:bg-[#580C14] transition cursor-pointer"
+              >
+                <Camera className="w-3 h-3 text-[#E5C158]" />
+                <span>Trocar Foto de Perfil</span>
+              </button>
+            </div>
+          </div>
+
           <div>
             <label className="block text-xs font-bold text-[#36070D] mb-1">
               Nome Completo *
@@ -876,6 +930,20 @@ export const Perfil: React.FC<PerfilProps> = ({
           </div>
         </form>
       </Modal>
+
+      {/* Modal de Troca de Foto de Perfil */}
+      <PhotoChangeModal
+        isOpen={isPhotoModalOpen}
+        onClose={() => setIsPhotoModalOpen(false)}
+        currentPhotoUrl={currentUser.avatarUrl}
+        targetName={currentUser.name}
+        onSavePhoto={(newPhoto) => {
+          if (onUpdateProfile) {
+            onUpdateProfile({ avatarUrl: newPhoto });
+          }
+          showToast('Foto de perfil atualizada com sucesso!');
+        }}
+      />
     </div>
   );
 };

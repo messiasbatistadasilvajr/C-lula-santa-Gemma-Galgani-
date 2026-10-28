@@ -19,6 +19,8 @@ import { NovenaTestemunhos } from './pages/NovenaTestemunhos';
 import { ModoEncontro } from './pages/ModoEncontro';
 import { OfertasDizify } from './pages/OfertasDizify';
 import { Aniversarios } from './pages/Aniversarios';
+import { SantosDoDia } from './pages/SantosDoDia';
+import { Membros } from './pages/Membros';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<string>('home');
@@ -64,6 +66,14 @@ export default function App() {
           liturgy={data.dailyLiturgy}
           saint={data.saintOfDay}
           onBack={() => setCurrentTab('home')}
+          onNavigate={(tab) => setCurrentTab(tab)}
+        />
+      )}
+
+      {currentTab === 'santos' && (
+        <SantosDoDia
+          onBack={() => setCurrentTab('home')}
+          onNavigate={(tab) => setCurrentTab(tab)}
         />
       )}
 
@@ -180,14 +190,31 @@ export default function App() {
         />
       )}
 
-      {(currentTab === 'ofertas' || currentTab === 'membros') && (
+      {currentTab === 'membros' && (
+        <Membros
+          donors={data.donors}
+          currentUser={data.currentUser}
+          currentRole={data.currentUser.role}
+          onBack={() => setCurrentTab('home')}
+          onNavigate={(tab) => setCurrentTab(tab)}
+          onUpsertDonor={data.upsertDonor}
+          onDeleteDonor={data.deleteDonor}
+          onUpdateDonorPhoto={data.updateDonorPhoto}
+          onUpdateProfile={data.updateProfile}
+          onSwitchUser={(user) => {
+            data.updateProfile(user);
+          }}
+        />
+      )}
+
+      {currentTab === 'ofertas' && (
         <OfertasDizify
           donors={data.donors}
           campaigns={data.campaigns}
           donations={data.donations}
           currentRole={data.currentUser.role}
           userName={data.currentUser.name}
-          initialTab={currentTab === 'membros' ? 'membros-db' : 'whatsapp-bot'}
+          initialTab="whatsapp-bot"
           onUpsertDonor={data.upsertDonor}
           onDeleteDonor={data.deleteDonor}
           onAddCampaign={data.addCampaign}

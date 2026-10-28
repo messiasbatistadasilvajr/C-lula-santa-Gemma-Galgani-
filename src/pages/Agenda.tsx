@@ -35,6 +35,7 @@ import {
   sendCellPushNotification,
   downloadRecurringCellCalendarIcs,
 } from '../services/cellReminders';
+import { getTodayIsoDate } from '../services/liturgyCalendar';
 
 interface AgendaProps {
   events: CalendarEvent[];
@@ -61,8 +62,9 @@ export const Agenda: React.FC<AgendaProps> = ({
   const [showRoleAlertModal, setShowRoleAlertModal] = useState(false);
 
   // Form states for new event
+  const todayIso = getTodayIsoDate();
   const [newTitle, setNewTitle] = useState('');
-  const [newDate, setNewDate] = useState('2026-10-09');
+  const [newDate, setNewDate] = useState(() => getTodayIsoDate());
   const [newTime, setNewTime] = useState('19:00');
   const [newLocation, setNewLocation] = useState('Célula Santa Gemma Galgani • Shalom');
   const [newLeader, setNewLeader] = useState('Cristiane Alves & Francisco José');
@@ -137,17 +139,39 @@ export const Agenda: React.FC<AgendaProps> = ({
     );
   };
 
-  // Days for the visual mini-calendar header strip (Destaque Segunda e Sexta: dias de Célula 19h às 21h)
-  const calendarDays = [
-    { day: 'SEG', num: '05', isToday: false, hasEvent: true, dateStr: '2026-10-05' }, // Encontro de Segunda
-    { day: 'TER', num: '06', isToday: true, hasEvent: false, dateStr: '2026-10-06' },
-    { day: 'QUA', num: '07', isToday: false, hasEvent: false, dateStr: '2026-10-07' },
-    { day: 'QUI', num: '08', isToday: false, hasEvent: false, dateStr: '2026-10-08' },
-    { day: 'SEX', num: '09', isToday: false, hasEvent: true, dateStr: '2026-10-09' }, // Encontro de Sexta
-    { day: 'SÁB', num: '10', isToday: false, hasEvent: true, dateStr: '2026-10-10' }, // Retiro / Missa
-    { day: 'SEG', num: '12', isToday: false, hasEvent: true, dateStr: '2026-10-12' }, // Encontro de Segunda
-    { day: 'SEX', num: '16', isToday: false, hasEvent: true, dateStr: '2026-10-16' }, // Encontro de Sexta
-  ];
+  // Dias consecutivos do calendário móvel (sequência contínua, sem falhas, destacando Hoje 18/10 Domingo)
+  const calendarDays = React.useMemo(() => {
+    const weekdayLabels = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+    const days: Array<{ day: string; num: string; isToday: boolean; hasEvent: boolean; dateStr: string }> = [];
+
+    // Dias consecutivos de Outubro de 2026 (do dia 12 ao 31 de Outubro)
+    for (let d = 12; d <= 31; d++) {
+      const numStr = String(d).padStart(2, '0');
+      const dateStr = `2026-10-${numStr}`;
+      const dt = new Date(2026, 9, d);
+      const isToday = dateStr === todayIso; // 18/10/2026 é Domingo e Hoje
+      const hasEvent = events.some(e => e.date === dateStr);
+      days.push({
+        day: weekdayLabels[dt.getDay()],
+        num: numStr,
+        isToday,
+        hasEvent,
+        dateStr,
+      });
+    }
+
+    // 01 de Novembro (Solenidade de Todos os Santos)
+    const nov1 = new Date(2026, 10, 1);
+    days.push({
+      day: weekdayLabels[nov1.getDay()],
+      num: '01',
+      isToday: '2026-11-01' === todayIso,
+      hasEvent: events.some(e => e.date === '2026-11-01'),
+      dateStr: '2026-11-01',
+    });
+
+    return days;
+  }, [todayIso, events]);
 
   const typeConfig: Record<EventType, { label: string; badge: string }> = {
     encontro: { label: 'Encontro de Célula', badge: 'bg-[#7B1113]/10 text-[#7B1113] border-[#7B1113]/30' },

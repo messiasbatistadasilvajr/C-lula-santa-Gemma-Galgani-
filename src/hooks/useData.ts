@@ -54,6 +54,7 @@ export function useData() {
     updateSong: (id: string, partial: Parameters<typeof localDataService.updateSong>[1]) => localDataService.updateSong(id, partial),
     deleteSong: (id: string) => localDataService.deleteSong(id),
     upsertDonor: (donor: Parameters<typeof localDataService.upsertDonor>[0]) => localDataService.upsertDonor(donor),
+    updateDonorPhoto: (donorId: string, avatarUrl: string) => localDataService.updateDonorPhoto(donorId, avatarUrl),
     deleteDonor: (donorId: string) => localDataService.deleteDonor(donorId),
     addCampaign: (campaign: Parameters<typeof localDataService.addCampaign>[0]) => localDataService.addCampaign(campaign),
     deleteCampaign: (campaignId: string) => localDataService.deleteCampaign(campaignId),

@@ -25,7 +25,8 @@ import {
   Image as ImageIcon,
   Trash2,
   WifiOff,
-  HardDrive
+  HardDrive,
+  Moon
 } from 'lucide-react';
 import { CommunityPost, PostType, UserRole, DonorProfile } from '../types';
 import { Modal } from '../components/common/Modal';
@@ -37,6 +38,7 @@ import {
 } from '../services/cellReminders';
 import { parseDonorBirthday } from './Aniversarios';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
+import { getUpcomingVigilias, generateVigiliaWhatsAppText } from '../services/vigiliaService';
 
 interface HomeProps {
   currentUser: {
@@ -332,6 +334,95 @@ export const Home: React.FC<HomeProps> = ({
         )}
       </section>
 
+      {/* 3.1 Vigília Mensal Todo Dia 26 (Cris & Francisco / Raquel & Regina em alternância consecutiva) */}
+      {(() => {
+        const upcomingVigilias = getUpcomingVigilias(3, 2026, 10);
+        const nextVigilia = upcomingVigilias[1] || upcomingVigilias[0];
+        if (!nextVigilia) return null;
+
+        return (
+          <section className="rounded-2xl bg-gradient-to-br from-[#1E1215] via-[#350A10] to-[#500D15] p-4 text-white shadow-md border border-[#E5C158]/50 space-y-3 relative overflow-hidden">
+            <div className="absolute -right-6 -bottom-8 w-28 h-28 rounded-full bg-[#E5C158]/10 blur-xl pointer-events-none" />
+            
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-[#E5C158]/20 text-[#E5C158] flex items-center justify-center font-bold">
+                  <Moon className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-[#E5C158] block">
+                    Vigília Mensal • Todo Dia 26
+                  </span>
+                  <h3 className="text-xs font-bold text-white">
+                    {nextVigilia.dataFormatada} ({nextVigilia.diaDaSemana})
+                  </h3>
+                </div>
+              </div>
+
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#E5C158] text-[#36070D]">
+                Em Alternância ✓
+              </span>
+            </div>
+
+            {/* Escala dos 2 horários */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div className="bg-black/30 p-2.5 rounded-xl border border-white/10">
+                <div className="flex items-center justify-between text-[11px] text-[#E5C158] font-bold">
+                  <span>1° Horário ({nextVigilia.horario1.timeRange})</span>
+                </div>
+                <p className="font-extrabold text-white mt-1">
+                  {nextVigilia.horario1.rotulo}
+                </p>
+                <p className="text-[10px] text-white/70">
+                  {nextVigilia.horario1.membros.map(m => m.nomeCurto).join(' e ')}
+                </p>
+              </div>
+
+              <div className="bg-black/30 p-2.5 rounded-xl border border-white/10">
+                <div className="flex items-center justify-between text-[11px] text-[#E5C158] font-bold">
+                  <span>2° Horário ({nextVigilia.horario2.timeRange})</span>
+                </div>
+                <p className="font-extrabold text-white mt-1">
+                  {nextVigilia.horario2.rotulo}
+                </p>
+                <p className="text-[10px] text-white/70">
+                  {nextVigilia.horario2.membros.map(m => m.nomeCurto).join(' e ')}
+                </p>
+              </div>
+            </div>
+
+            {/* Ações */}
+            <div className="pt-1 border-t border-white/10 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  if (navigator.clipboard) {
+                    const txt = generateVigiliaWhatsAppText(nextVigilia);
+                    navigator.clipboard.writeText(txt);
+                    showToast('Escala da Vigília copiada para compartilhar!');
+                  }
+                }}
+                className="text-[11px] font-bold text-[#FFF0BE] hover:text-white flex items-center gap-1 cursor-pointer"
+              >
+                <Share2 className="w-3 h-3 text-[#E5C158]" />
+                <span>Copiar para WhatsApp</span>
+              </button>
+
+              {onNavigate && (
+                <button
+                  type="button"
+                  onClick={() => onNavigate('escalas')}
+                  className="px-2.5 py-1 rounded-lg bg-[#E5C158] hover:bg-[#f3cf65] text-[#36070D] text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+                >
+                  <span>Ver Todos os Meses</span>
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+          </section>
+        );
+      })()}
+
       {/* 3.2 Lembrete de Aniversário do Dia / Próximos Aniversariantes */}
       {onNavigate && donors.length > 0 && (() => {
         const sortedBdays = [...donors]
@@ -517,6 +608,20 @@ export const Home: React.FC<HomeProps> = ({
                 Sta. Gemma
               </h4>
               <p className="text-[9px] text-amber-900 font-medium truncate">Vidro Fosco ✨</p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate('santos')}
+              className="p-2.5 rounded-xl bg-gradient-to-br from-amber-100/90 to-white hover:bg-white border-2 border-[#E5C158] shadow-2xs text-left group transition active:scale-95 flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-7 h-7 rounded-lg bg-[#7B1113] text-[#E5C158] flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform font-bold text-xs">
+                🕊️
+              </div>
+              <h4 className="text-[11px] font-bold text-[#7B1113] group-hover:text-[#580C14] transition leading-tight">
+                Santos do Dia
+              </h4>
+              <p className="text-[9px] text-amber-950 font-semibold truncate">História & Vida ✨</p>
             </button>
           </div>
         </section>

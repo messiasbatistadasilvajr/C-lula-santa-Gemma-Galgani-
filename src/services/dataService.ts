@@ -94,13 +94,69 @@ class DataService {
     // Hidratação imediata da camada de cache persistente para visualização offline instantânea
     this.posts = persistentCacheService.getPostsSync(this.loadFromStorage(STORAGE_KEYS.POSTS, INITIAL_POSTS));
     this.prayers = persistentCacheService.getPrayersSync(this.loadFromStorage(STORAGE_KEYS.PRAYERS, INITIAL_PRAYERS));
-    this.events = this.loadFromStorage(STORAGE_KEYS.EVENTS, INITIAL_EVENTS);
+    const storedEvents = this.loadFromStorage<CalendarEvent[]>(STORAGE_KEYS.EVENTS, INITIAL_EVENTS);
+    const eventMap = new Map<string, CalendarEvent>();
+    INITIAL_EVENTS.forEach(e => eventMap.set(e.id, e));
+    storedEvents.forEach(e => eventMap.set(e.id, e));
+    this.events = Array.from(eventMap.values()).sort((a, b) => a.date.localeCompare(b.date));
+    this.saveToStorage(STORAGE_KEYS.EVENTS, this.events);
     this.chatMessages = this.loadFromStorage(STORAGE_KEYS.CHAT_MESSAGES, INITIAL_MESSAGES);
     this.albums = this.loadFromStorage(STORAGE_KEYS.ALBUMS, INITIAL_ALBUMS);
     this.notices = this.loadFromStorage(STORAGE_KEYS.NOTICES, INITIAL_NOTICES);
     this.scales = this.loadFromStorage(STORAGE_KEYS.SCALES, INITIAL_SCALES);
     this.songs = this.loadFromStorage(STORAGE_KEYS.SONGS, INITIAL_SONGS);
     this.donors = this.loadFromStorage(STORAGE_KEYS.DONORS, INITIAL_DONORS);
+    // Garantir que os formadores e coordenação com acesso total estejam sempre atualizados
+    this.donors = this.donors.map(d => {
+      const lower = d.name.toLowerCase();
+      if (lower.includes('cristiane alves')) {
+        return {
+          ...d,
+          leadershipBadge: '👑 Formadora Principal & Coordenadora (Acesso Total)',
+        };
+      }
+      if (lower.includes('francisco josé') || lower.includes('francisco jose')) {
+        return {
+          ...d,
+          leadershipBadge: '⭐ Formador Auxiliar & Coordenador (Acesso Total)',
+        };
+      }
+      if (lower.includes('raquel barbosa')) {
+        return {
+          ...d,
+          leadershipBadge: '⭐ Formadora Auxiliar (Acesso Total)',
+          avatarUrl: d.avatarUrl || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+        };
+      }
+      return d;
+    });
+    this.saveToStorage(STORAGE_KEYS.DONORS, this.donors);
+
+    // Atualiza currentUser se for um dos formadores
+    const currentLower = this.currentUser.name.toLowerCase();
+    if (currentLower.includes('cristiane alves')) {
+      this.currentUser = {
+        ...this.currentUser,
+        role: 'admin',
+        ministry: 'Formadora Principal & Coordenadora da Célula',
+      };
+      this.saveToStorage(STORAGE_KEYS.CURRENT_USER, this.currentUser);
+    } else if (currentLower.includes('francisco josé') || currentLower.includes('francisco jose')) {
+      this.currentUser = {
+        ...this.currentUser,
+        role: 'admin',
+        ministry: 'Formador Auxiliar & Coordenador da Célula',
+      };
+      this.saveToStorage(STORAGE_KEYS.CURRENT_USER, this.currentUser);
+    } else if (currentLower.includes('raquel barbosa')) {
+      this.currentUser = {
+        ...this.currentUser,
+        role: 'admin',
+        ministry: 'Formadora Auxiliar da Célula (Acesso Total)',
+      };
+      this.saveToStorage(STORAGE_KEYS.CURRENT_USER, this.currentUser);
+    }
+
     this.campaigns = this.loadFromStorage(STORAGE_KEYS.CAMPAIGNS, INITIAL_CAMPAIGNS);
     this.donations = this.loadFromStorage(STORAGE_KEYS.DONATIONS, INITIAL_DONATIONS);
     const todayLiturgyData = getLiturgyAndSaintForDate();
@@ -183,17 +239,26 @@ class DataService {
         this.firebaseUser = user;
         if (user) {
           this.isFirebaseConnected = true;
-          const isCoordinatorOrFormador =
-            user.displayName?.toLowerCase().includes('cristiane alves') ||
-            user.displayName?.toLowerCase().includes('francisco josé') ||
-            user.displayName?.toLowerCase().includes('francisco jose');
+          const displayName = (user.displayName || '').toLowerCase();
+          const email = (user.email || '').toLowerCase();
+          const isCristiane = displayName.includes('cristiane alves') || email.includes('cristiane');
+          const isFrancisco = displayName.includes('francisco josé') || displayName.includes('francisco jose') || email.includes('francisco');
+          const isRaquel = displayName.includes('raquel barbosa') || email.includes('raquel');
+          const hasFullAccess = isCristiane || isFrancisco || isRaquel;
+
+          let resolvedMinistry = this.currentUser.ministry;
+          if (isCristiane) resolvedMinistry = 'Formadora Principal & Coordenadora da Célula';
+          else if (isFrancisco) resolvedMinistry = 'Formador Auxiliar & Coordenador da Célula';
+          else if (isRaquel) resolvedMinistry = 'Formadora Auxiliar da Célula (Acesso Total)';
+
           this.currentUser = {
             ...this.currentUser,
             id: user.uid,
             name: user.displayName || this.currentUser.name,
             email: user.email || this.currentUser.email,
             avatarUrl: user.photoURL || this.currentUser.avatarUrl,
-            role: isCoordinatorOrFormador ? 'admin' : 'membro',
+            role: hasFullAccess ? 'admin' : 'membro',
+            ministry: resolvedMinistry,
           };
           this.saveToStorage(STORAGE_KEYS.CURRENT_USER, this.currentUser);
           this.setupFirestoreListeners();
@@ -567,17 +632,26 @@ class DataService {
     const user = await fbLoginWithGoogle();
     if (user) {
       this.firebaseUser = user;
-      const isCoordinatorOrFormador =
-        user.displayName?.toLowerCase().includes('cristiane alves') ||
-        user.displayName?.toLowerCase().includes('francisco josé') ||
-        user.displayName?.toLowerCase().includes('francisco jose');
+      const displayName = (user.displayName || '').toLowerCase();
+      const email = (user.email || '').toLowerCase();
+      const isCristiane = displayName.includes('cristiane alves') || email.includes('cristiane');
+      const isFrancisco = displayName.includes('francisco josé') || displayName.includes('francisco jose') || email.includes('francisco');
+      const isRaquel = displayName.includes('raquel barbosa') || email.includes('raquel');
+      const hasFullAccess = isCristiane || isFrancisco || isRaquel;
+
+      let resolvedMinistry = 'Membro Shalom';
+      if (isCristiane) resolvedMinistry = 'Formadora Principal & Coordenadora da Célula';
+      else if (isFrancisco) resolvedMinistry = 'Formador Auxiliar & Coordenador da Célula';
+      else if (isRaquel) resolvedMinistry = 'Formadora Auxiliar da Célula (Acesso Total)';
+
       this.currentUser = {
         ...this.currentUser,
         id: user.uid,
         name: user.displayName || 'Membro Shalom',
         email: user.email || '',
         avatarUrl: user.photoURL || this.currentUser.avatarUrl,
-        role: isCoordinatorOrFormador ? 'admin' : 'membro',
+        role: hasFullAccess ? 'admin' : 'membro',
+        ministry: resolvedMinistry,
       };
       this.saveToStorage(STORAGE_KEYS.CURRENT_USER, this.currentUser);
       this.setupFirestoreListeners();
@@ -619,6 +693,20 @@ class DataService {
     };
     this.saveToStorage(STORAGE_KEYS.CURRENT_USER, this.currentUser);
     offlineSyncQueue.enqueue('UPDATE', 'profile', data as Record<string, unknown>);
+
+    // If avatar was updated, also sync with corresponding member in donors list
+    if (data.avatarUrl) {
+      const cleanPhone = (this.currentUser.phone || '').replace(/\D/g, '');
+      const matchedDonor = this.donors.find(
+        d => (cleanPhone && d.phone.replace(/\D/g, '') === cleanPhone) ||
+             d.name.trim().toLowerCase() === this.currentUser.name.trim().toLowerCase()
+      );
+      if (matchedDonor) {
+        matchedDonor.avatarUrl = data.avatarUrl;
+        this.saveToStorage(STORAGE_KEYS.DONORS, this.donors);
+        setDoc(doc(db, 'donors', matchedDonor.id), matchedDonor, { merge: true }).catch(() => {});
+      }
+    }
 
     // Firestore sync if connected
     if (this.firebaseUser) {
@@ -1264,22 +1352,37 @@ class DataService {
     return this.donors;
   }
 
-  public upsertDonor(data: Omit<DonorProfile, 'id' | 'totalDonated' | 'donationsCount' | 'createdAt'> & { id?: string }): DonorProfile {
+  public upsertDonor(data: Omit<DonorProfile, 'id' | 'totalDonated' | 'donationsCount' | 'createdAt'> & { id?: string; totalDonated?: number; donationsCount?: number; createdAt?: string }): DonorProfile {
     const cleanPhone = data.phone.trim();
     const existing = this.donors.find(
-      d => d.id === data.id || d.phone.replace(/\D/g, '') === cleanPhone.replace(/\D/g, '')
+      d => (data.id && d.id === data.id) || (cleanPhone && d.phone.replace(/\D/g, '') === cleanPhone.replace(/\D/g, ''))
     );
 
     if (existing) {
       const updated: DonorProfile = {
         ...existing,
-        name: data.name.trim() || existing.name,
+        name: data.name?.trim() || existing.name,
         phone: cleanPhone || existing.phone,
-        birthDate: data.birthDate.trim() || existing.birthDate,
+        birthDate: data.birthDate?.trim() || existing.birthDate,
         email: data.email !== undefined ? data.email : existing.email,
+        avatarUrl: data.avatarUrl !== undefined ? data.avatarUrl : existing.avatarUrl,
+        maritalStatus: data.maritalStatus !== undefined ? data.maritalStatus : existing.maritalStatus,
+        leadershipBadge: data.leadershipBadge !== undefined ? data.leadershipBadge : existing.leadershipBadge,
       };
       this.donors = this.donors.map(d => (d.id === existing.id ? updated : d));
       this.saveToStorage(STORAGE_KEYS.DONORS, this.donors);
+
+      // If updated donor matches current user, sync currentUser avatar as well
+      const currentCleanPhone = (this.currentUser.phone || '').replace(/\D/g, '');
+      if (
+        (currentCleanPhone && updated.phone.replace(/\D/g, '') === currentCleanPhone) ||
+        updated.name.trim().toLowerCase() === this.currentUser.name.trim().toLowerCase()
+      ) {
+        if (updated.avatarUrl && updated.avatarUrl !== this.currentUser.avatarUrl) {
+          this.currentUser = { ...this.currentUser, avatarUrl: updated.avatarUrl };
+          this.saveToStorage(STORAGE_KEYS.CURRENT_USER, this.currentUser);
+        }
+      }
 
       setDoc(doc(db, 'donors', updated.id), updated).catch(err =>
         console.warn('Erro ao atualizar contribuinte no Firestore:', err)
@@ -1291,12 +1394,14 @@ class DataService {
       id: data.id || `donor_${Date.now()}`,
       name: data.name.trim(),
       phone: cleanPhone,
-      birthDate: data.birthDate.trim() || '14/10/1998',
+      birthDate: data.birthDate?.trim() || '14/10/1998',
       leadershipBadge: data.leadershipBadge || 'Membro',
+      maritalStatus: data.maritalStatus || 'Solteiro(a)',
+      avatarUrl: data.avatarUrl || '',
       email: data.email || '',
-      totalDonated: 0,
-      donationsCount: 0,
-      createdAt: new Date().toLocaleDateString('pt-BR'),
+      totalDonated: data.totalDonated || 0,
+      donationsCount: data.donationsCount || 0,
+      createdAt: data.createdAt || new Date().toLocaleDateString('pt-BR'),
     };
 
     this.donors = [created, ...this.donors];
@@ -1307,6 +1412,34 @@ class DataService {
     );
 
     return created;
+  }
+
+  public updateDonorPhoto(donorId: string, avatarUrl: string): DonorProfile | null {
+    const existing = this.donors.find(d => d.id === donorId);
+    if (!existing) return null;
+
+    const updated: DonorProfile = {
+      ...existing,
+      avatarUrl,
+    };
+    this.donors = this.donors.map(d => (d.id === donorId ? updated : d));
+    this.saveToStorage(STORAGE_KEYS.DONORS, this.donors);
+
+    // Sync with currentUser if names or phone match
+    const currentCleanPhone = (this.currentUser.phone || '').replace(/\D/g, '');
+    if (
+      (currentCleanPhone && updated.phone.replace(/\D/g, '') === currentCleanPhone) ||
+      updated.name.trim().toLowerCase() === this.currentUser.name.trim().toLowerCase()
+    ) {
+      this.currentUser = { ...this.currentUser, avatarUrl };
+      this.saveToStorage(STORAGE_KEYS.CURRENT_USER, this.currentUser);
+    }
+
+    setDoc(doc(db, 'donors', updated.id), updated, { merge: true }).catch(err =>
+      console.warn('Erro ao salvar foto do membro no Firestore:', err)
+    );
+
+    return updated;
   }
 
   public deleteDonor(donorId: string): void {

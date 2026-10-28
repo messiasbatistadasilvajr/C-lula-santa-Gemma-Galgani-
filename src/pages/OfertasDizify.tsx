@@ -26,6 +26,7 @@ import {
   Zap,
   Award,
   AlertCircle,
+  Camera,
 } from 'lucide-react';
 import {
   DonorProfile,
@@ -37,6 +38,7 @@ import {
   PaymentGatewayType,
 } from '../types';
 import { generatePixCopyPaste, generateQrMatrixFromString } from '../utils/pixGenerator';
+import { PhotoChangeModal } from '../components/common/PhotoChangeModal';
 
 interface OfertasDizifyProps {
   donors: DonorProfile[];
@@ -44,7 +46,7 @@ interface OfertasDizifyProps {
   donations: DonationRecord[];
   currentRole: UserRole;
   userName: string;
-  onUpsertDonor: (donor: Omit<DonorProfile, 'id' | 'totalDonated' | 'donationsCount' | 'createdAt'> & { id?: string }) => DonorProfile;
+  onUpsertDonor: (donor: Omit<DonorProfile, 'id' | 'totalDonated' | 'donationsCount' | 'createdAt'> & { id?: string; totalDonated?: number; donationsCount?: number; createdAt?: string }) => DonorProfile;
   onDeleteDonor: (donorId: string) => void;
   onAddCampaign: (campaign: Omit<DonationCampaign, 'id' | 'currentAmount'>) => DonationCampaign;
   onDeleteCampaign: (campaignId: string) => void;
@@ -134,6 +136,7 @@ export const OfertasDizify: React.FC<OfertasDizifyProps> = ({
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [webhookToast, setWebhookToast] = useState<string | null>(null);
   const [isSendingBot, setIsSendingBot] = useState(false);
+  const [editingPhotoDonor, setEditingPhotoDonor] = useState<DonorProfile | null>(null);
 
   // Estado do Chat do Bot de WhatsApp
   const activeDonor =
@@ -1334,10 +1337,13 @@ export const OfertasDizify: React.FC<OfertasDizifyProps> = ({
                           : d.birthDate;
                       const cleanPhone = d.phone.replace(/\D/g, '');
                       const roleSql =
-                        d.name === 'Cristiane Alves Nunes de Oliveira' ||
-                        d.name === 'Francisco José de Oliveira'
-                          ? 'Administrador e Formador'
-                          : 'Membro';
+                        d.name === 'Cristiane Alves Nunes de Oliveira'
+                          ? 'Formadora Principal (Acesso Total)'
+                          : d.name === 'Francisco José de Oliveira'
+                          ? 'Formador Auxiliar & Coordenador (Acesso Total)'
+                          : d.name === 'Raquel Barbosa Gomes'
+                          ? 'Formadora Auxiliar (Acesso Total)'
+                          : d.leadershipBadge || 'Membro';
                       return `  ('${cleanName}', ${marital}, '${isoDate}', '${cleanPhone}', '${roleSql}')`;
                     })
                     .join(',\n');
@@ -1469,39 +1475,66 @@ export const OfertasDizify: React.FC<OfertasDizifyProps> = ({
                   className="bg-white/95 rounded-2xl p-3.5 border border-[#ECE7DF] shadow-2xs space-y-2.5"
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h4 className="text-sm font-bold text-[#241E1C]">{donor.name}</h4>
-                        {donor.leadershipBadge && (
-                          <span
-                            className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
-                              donor.leadershipBadge.includes('Coordenador')
-                                ? 'bg-[#7B1113] text-[#FFF0BE] border-[#E5C158] shadow-2xs'
-                                : 'bg-rose-50 text-rose-900 border-rose-200'
-                            }`}
-                          >
-                            {donor.leadershipBadge}
+                    <div className="flex items-start gap-3 min-w-0">
+                      {/* Avatar do Membro com Botão de Trocar Foto */}
+                      <div className="relative shrink-0 group">
+                        <button
+                          type="button"
+                          onClick={() => setEditingPhotoDonor(donor)}
+                          title="Toque para trocar a foto deste membro"
+                          className="w-12 h-12 rounded-xl overflow-hidden border-2 border-[#7B1113]/30 hover:border-[#7B1113] shadow-2xs bg-[#FAF8F5] relative block cursor-pointer active:scale-95 transition"
+                        >
+                          {donor.avatarUrl ? (
+                            <img
+                              src={donor.avatarUrl}
+                              alt={donor.name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-amber-100 to-rose-100 flex items-center justify-center text-[#7B1113] font-bold text-xs font-cinzel">
+                              {donor.name.split(' ').map(n => n[0]).slice(0, 2).join('')}
+                            </div>
+                          )}
+                          <span className="absolute bottom-0 right-0 w-4 h-4 bg-[#7B1113] text-[#E5C158] rounded-tl-md flex items-center justify-center shadow-xs">
+                            <Camera className="w-2.5 h-2.5" />
                           </span>
-                        )}
-                        {donor.maritalStatus && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200">
-                            {donor.maritalStatus}
-                          </span>
-                        )}
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                          R$ {donor.totalDonated.toFixed(2).replace('.', ',')} doados
-                        </span>
+                        </button>
                       </div>
-                      <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#70645E] mt-1">
-                        <span className="flex items-center gap-1">
-                          <Phone className="w-3 h-3 text-[#7B1113]" /> {donor.phone}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Cake className="w-3 h-3 text-amber-600" /> Nasc: <strong>{donor.birthDate}</strong>
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <TrendingUp className="w-3 h-3 text-emerald-700" /> {donor.donationsCount} ofertas
-                        </span>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h4 className="text-sm font-bold text-[#241E1C] leading-tight">{donor.name}</h4>
+                          {donor.leadershipBadge && (
+                            <span
+                              className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
+                                donor.leadershipBadge.includes('Coordenador')
+                                  ? 'bg-[#7B1113] text-[#FFF0BE] border-[#E5C158] shadow-2xs'
+                                  : 'bg-rose-50 text-rose-900 border-rose-200'
+                              }`}
+                            >
+                              {donor.leadershipBadge}
+                            </span>
+                          )}
+                          {donor.maritalStatus && (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200">
+                              {donor.maritalStatus}
+                            </span>
+                          )}
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                            R$ {donor.totalDonated.toFixed(2).replace('.', ',')} doados
+                          </span>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#70645E] mt-1.5">
+                          <span className="flex items-center gap-1">
+                            <Phone className="w-3 h-3 text-[#7B1113]" /> {donor.phone}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Cake className="w-3 h-3 text-amber-600" /> Nasc: <strong>{donor.birthDate}</strong>
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <TrendingUp className="w-3 h-3 text-emerald-700" /> {donor.donationsCount} ofertas
+                          </span>
+                        </div>
                       </div>
                     </div>
 
@@ -1655,6 +1688,21 @@ export const OfertasDizify: React.FC<OfertasDizifyProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal de Troca de Foto de Membro */}
+      {editingPhotoDonor && (
+        <PhotoChangeModal
+          isOpen={Boolean(editingPhotoDonor)}
+          onClose={() => setEditingPhotoDonor(null)}
+          currentPhotoUrl={editingPhotoDonor.avatarUrl || ''}
+          targetName={editingPhotoDonor.name}
+          onSavePhoto={(newPhoto) => {
+            onUpsertDonor({ ...editingPhotoDonor, avatarUrl: newPhoto });
+            showNotice(`Foto de ${editingPhotoDonor.name.split(' ')[0]} atualizada com sucesso!`);
+            setEditingPhotoDonor(null);
+          }}
+        />
       )}
     </div>
   );

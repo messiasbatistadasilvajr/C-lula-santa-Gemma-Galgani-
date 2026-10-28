@@ -27,9 +27,10 @@ interface LiturgiaProps {
   liturgy: DailyLiturgy;
   saint: SaintOfDay;
   onBack: () => void;
+  onNavigate?: (tab: string) => void;
 }
 
-export const Liturgia: React.FC<LiturgiaProps> = ({ onBack }) => {
+export const Liturgia: React.FC<LiturgiaProps> = ({ onBack, onNavigate }) => {
   const todayIso = getTodayIsoDate();
   const [selectedIsoDate, setSelectedIsoDate] = useState<string>(todayIso);
   const [activeSubTab, setActiveSubTab] = useState<'liturgia' | 'santo'>('liturgia');
@@ -100,11 +101,14 @@ export const Liturgia: React.FC<LiturgiaProps> = ({ onBack }) => {
       `✨ *Santo do Dia:* ${saintHeadline}\n` +
       `🙏 *Reflexão da Célula:* ${currentLiturgy.reflection.text}`;
 
-    window.open(
-      `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`,
-      '_blank',
-      'noopener,noreferrer'
-    );
+    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   const textClass = fontSize === 'large' ? 'text-base leading-relaxed' : 'text-xs leading-relaxed';
@@ -195,18 +199,18 @@ export const Liturgia: React.FC<LiturgiaProps> = ({ onBack }) => {
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1">
           <button
             type="button"
-            onClick={() => setSelectedIsoDate('2026-10-08')}
+            onClick={() => setSelectedIsoDate(todayIso)}
             className={`px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition cursor-pointer ${
-              selectedIsoDate === '2026-10-08'
+              selectedIsoDate === todayIso
                 ? 'bg-[#7B1113] text-[#FFF0BE] shadow-2xs'
                 : 'bg-amber-100 text-[#36070D] hover:bg-amber-200'
             }`}
           >
-            Hoje • 08/10 (Lc 11,5-13)
+            Hoje • {todayIso.split('-')[2]}/{todayIso.split('-')[1]} (Domingo • Lc 18,1-8)
           </button>
 
           {octoberDatesList
-            .filter(d => d !== '2026-10-08')
+            .filter(d => d !== todayIso)
             .map(iso => {
               const item = OFFICIAL_OCTOBER_2026_LITURGY[iso];
               const isSelected = selectedIsoDate === iso;
@@ -521,6 +525,19 @@ export const Liturgia: React.FC<LiturgiaProps> = ({ onBack }) => {
               “{activeSaint.prayer}”
             </p>
           </div>
+
+          {onNavigate && (
+            <div className="pt-1">
+              <button
+                type="button"
+                onClick={() => onNavigate('santos')}
+                className="w-full py-2.5 px-4 rounded-xl bg-linear-to-r from-[#7B1113] to-[#5C0D12] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-xs hover:bg-[#4A0A10] active:scale-95 transition cursor-pointer border border-[#E5C158]/40"
+              >
+                <Sparkles className="w-4 h-4 text-[#E5C158]" />
+                <span>Explorar Página Completa de Santos & Histórias</span>
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

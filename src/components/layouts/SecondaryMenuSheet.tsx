@@ -95,9 +95,16 @@ export const SecondaryMenuSheet: React.FC<SecondaryMenuSheetProps> = ({
       color: 'bg-rose-100 text-rose-900',
     },
     {
+      id: 'santos',
+      title: 'Santos do Dia & História 🕊️',
+      subtitle: 'Nome, resumo da história, virtudes, biografias e orações',
+      icon: Sparkles,
+      color: 'bg-amber-100 text-[#7B1113] border border-amber-300',
+    },
+    {
       id: 'liturgia',
-      title: 'Liturgia Diária & Santo do Dia',
-      subtitle: 'Leituras bíblicas, salmo, evangelho e virtudes',
+      title: 'Liturgia Diária & Leituras',
+      subtitle: 'Leituras bíblicas, salmo, evangelho e lectio divina',
       icon: Sun,
       color: 'bg-emerald-100 text-emerald-900',
     },
